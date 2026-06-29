@@ -2,487 +2,590 @@
 <html lang="en-GB">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Music Library</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#1A3A6B">
+<title>Practice Journal</title>
 <link rel="apple-touch-icon" href="Violaness_logo_blue.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --ink:#05270B;
-    --forest:#2F5C1A;
-    --bright:#8AB640;
-    --steel:#29789E;
-    --sky:#46C6E5;
-    --paper:#FBF9F3;
-    --card:#FFFFFF;
-    --line: rgba(5,39,11,0.14);
-    --shadow: 0 2px 8px rgba(5,39,11,0.08);
-  }
-  *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
-  html,body{margin:0; padding:0; height:100%; background:var(--paper); color:var(--ink); font-family:'Special Elite', monospace; -webkit-font-smoothing:antialiased;}
-  body{ padding-bottom: 90px; }
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Special+Elite&display=swap');
 
-  /* ---------- Header ---------- */
-  header.top{
-    position:sticky; top:0; z-index:30;
-    background:var(--ink); color:var(--paper);
-    padding: 14px 16px 12px;
-    box-shadow: var(--shadow);
-  }
-  header.top h1{
-    margin:0; font-size:1.3rem; letter-spacing:0.5px; font-weight:400;
-    display:flex; align-items:baseline; gap:8px;
-  }
-  header.top h1 .mark{ color:var(--sky); }
-  header.top .sub{ margin:2px 0 0; font-size:0.72rem; opacity:0.7; letter-spacing:0.5px;}
+:root {
+  --ink:        #1A3A6B;
+  --paper:      #EEF4FB;
+  --warm:       #E3EDF7;
+  --navy:       #1A3A6B;
+  --forest:     #2E7D32;
+  --mid-blue:   #7BB8E8;
+  --light-blue: #D6EAF8;
+  --deep-green: #1B3A2D;
+  --card-bg:    #FFFFFF;
+  --muted:      #6B85A0;
+  --shadow:     0 2px 12px rgba(26,58,107,0.09);
+  --radius:     14px;
 
-  .stats-strip{
-    display:flex; gap:10px; padding:10px 16px 0; overflow-x:auto;
-    -webkit-overflow-scrolling:touch;
-  }
-  .stat-pill{
-    flex:0 0 auto; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.18);
-    border-radius:14px; padding:5px 11px; font-size:0.68rem; white-space:nowrap; letter-spacing:0.3px;
-  }
-  .stat-pill b{ color:var(--bright); font-size:0.78rem; }
+  /* Post-it colours — pastel from the palette */
+  --postit-1: #D6EAF8;  /* light blue */
+  --postit-2: #D6EEE3;  /* light green */
+  --postit-3: #DDE8F5;  /* periwinkle */
+  --postit-4: #CBE5F5;  /* sky */
+  --postit-5: #D4ECD8;  /* mint */
+  --postit-6: #C9DFF0;  /* steel blue light */
+}
 
-  /* ---------- Search & filters ---------- */
-  .controls{
-    position:sticky; top:64px; z-index:25;
-    background:var(--paper);
-    padding:10px 16px 8px;
-    border-bottom:1px solid var(--line);
-  }
-  .search-row{ display:flex; gap:8px; }
-  .search-row input[type="text"]{
-    flex:1; min-width:0;
-    font-family:'Special Elite', monospace;
-    font-size:0.92rem;
-    padding:10px 12px;
-    border:1.5px solid var(--line);
-    border-radius:10px;
-    background:var(--card);
-    color:var(--ink);
-  }
-  .search-row input[type="text"]:focus{ outline:none; border-color:var(--steel); }
-  .icon-btn{
-    flex:0 0 auto; width:42px; height:42px; border-radius:10px;
-    border:1.5px solid var(--line); background:var(--card);
-    display:flex; align-items:center; justify-content:center;
-    font-size:1.1rem; cursor:pointer; color:var(--ink);
-  }
-  .icon-btn.active{ background:var(--ink); color:var(--paper); border-color:var(--ink); }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Special Elite', cursive;
+  background: var(--paper);
+  color: var(--ink);
+  min-height: 100vh;
+  line-height: 1.65;
+  font-size: 1rem;
+  padding-bottom: 30px;
+}
 
-  .chip-row{
-    display:flex; gap:6px; overflow-x:auto; margin-top:8px; padding-bottom:2px;
-    -webkit-overflow-scrolling:touch;
-  }
-  .chip{
-    flex:0 0 auto; font-family:'Special Elite', monospace;
-    font-size:0.7rem; padding:6px 11px; border-radius:13px;
-    border:1.3px solid var(--line); background:var(--card); color:var(--ink);
-    cursor:pointer; white-space:nowrap; letter-spacing:0.3px;
-  }
-  .chip.on{ background:var(--forest); color:#fff; border-color:var(--forest); }
+/* ── HEADER ── */
+header {
+  background: var(--navy);
+  padding: 0;
+  padding-top: env(safe-area-inset-top, 0px);
+  position: sticky; top: 0; z-index: 100;
+  border-bottom: 3px solid var(--mid-blue);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+}
+.hdr-top {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 18px 8px;
+}
+.hdr-top h1 {
+  font-family: 'DM Serif Display', serif;
+  color: var(--light-blue);
+  font-size: 1.25rem; margin: 0;
+}
+.hdr-right { display: flex; align-items: center; gap: 10px; }
 
-  /* ---------- List ---------- */
-  main{ padding:12px 14px 4px; }
-  .empty-state{
-    text-align:center; padding:60px 20px; color:var(--ink); opacity:0.55;
-  }
-  .empty-state .big{ font-size:2.2rem; margin-bottom:8px; }
-  .empty-state p{ font-size:0.85rem; line-height:1.5; max-width:280px; margin:6px auto 0; }
+/* Tab strip */
+.tab-strip {
+  display: flex; align-items: flex-end;
+  padding: 0 12px 0; gap: 3px;
+}
+.tab-btn {
+  flex: 1; padding: 7px 4px 9px;
+  border: none; border-radius: 8px 8px 0 0;
+  font-family: 'Special Elite', cursive; font-size: 0.78rem;
+  cursor: pointer; white-space: nowrap;
+  background: rgba(255,255,255,0.10);
+  color: rgba(255,255,255,0.55);
+  transition: all 0.15s; text-align: center;
+  clip-path: polygon(0% 100%, 0% 18%, 6% 0%, 94% 0%, 100% 18%, 100% 100%);
+}
+.tab-btn:hover { background: rgba(255,255,255,0.18); color: rgba(255,255,255,0.85); }
+.tab-btn.active {
+  color: var(--navy); font-weight: 700;
+  z-index: 2; padding-top: 9px; padding-bottom: 10px;
+}
+.tab-btn.tab-today.active  { background: var(--light-blue); }
+.tab-btn.tab-history.active { background: #7BB8E8; color: #fff; }
 
-  .group-label{
-    font-size:0.7rem; letter-spacing:1px; text-transform:uppercase;
-    color:var(--forest); margin:16px 4px 6px; opacity:0.8;
-  }
-  .group-label:first-child{ margin-top:4px; }
+/* ── VIEWS ── */
+.view { display: none; padding: 18px 16px; max-width: 700px; margin: 0 auto; }
+.view.active { display: block; }
 
-  .item-card{
-    background:var(--card); border:1px solid var(--line); border-radius:12px;
-    padding:11px 13px; margin-bottom:8px; box-shadow:var(--shadow);
-    display:flex; gap:10px; align-items:flex-start; cursor:pointer;
-  }
-  .item-card:active{ transform: scale(0.99); }
-  .type-tag{
-    flex:0 0 auto; width:34px; height:34px; border-radius:9px;
-    display:flex; align-items:center; justify-content:center;
-    font-size:0.95rem; color:#fff; margin-top:1px;
-  }
-  .type-tag.book{ background:var(--forest); }
-  .type-tag.anthology{ background:var(--steel); }
-  .type-tag.single{ background:var(--sky); }
+/* ── DATE STRIP ── */
+.date-heading {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.3rem; color: var(--navy);
+  margin-bottom: 2px;
+}
+.date-sub { font-size: 0.8rem; color: var(--muted); margin-bottom: 18px; }
 
-  .item-body{ flex:1; min-width:0; }
-  .item-title{ font-size:0.95rem; line-height:1.3; margin:0 0 2px; word-break:break-word; }
-  .item-composer{ font-size:0.78rem; color:var(--ink); opacity:0.65; margin:0 0 6px; }
-  .item-meta{ display:flex; flex-wrap:wrap; gap:5px; }
-  .meta-tag{
-    font-size:0.62rem; padding:3px 8px; border-radius:10px;
-    background:rgba(47,92,26,0.09); color:var(--forest); letter-spacing:0.2px;
-  }
-  .meta-tag.loc{ background:rgba(41,120,158,0.1); color:var(--steel); }
-  .meta-tag.fs-yes{ background:rgba(138,182,64,0.18); color:var(--ink); }
-  .meta-tag.fs-no{ background:rgba(5,39,11,0.07); color:var(--ink); opacity:0.6; }
+/* ── CALENDAR ── */
+.calendar-section {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px 18px;
+  margin-bottom: 20px;
+}
+.cal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.cal-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1rem; color: var(--navy);
+}
+.cal-nav {
+  background: none; border: 1.5px solid var(--warm);
+  border-radius: 8px; padding: 4px 10px;
+  font-family: 'Special Elite', cursive; font-size: 0.8rem;
+  color: var(--muted); cursor: pointer;
+}
+.cal-nav:hover { border-color: var(--mid-blue); color: var(--navy); }
+.cal-grid {
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;
+}
+.cal-day-label {
+  text-align: center; font-size: 0.62rem;
+  color: var(--muted); padding-bottom: 4px;
+  font-weight: 700; letter-spacing: 0.04em;
+}
+.cal-day {
+  aspect-ratio: 1;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 8px; font-size: 0.78rem;
+  cursor: pointer; border: 1.5px solid transparent;
+  transition: all 0.12s; color: var(--ink);
+  background: var(--paper);
+}
+.cal-day:hover { border-color: var(--mid-blue); }
+.cal-day.empty { cursor: default; background: transparent; }
+.cal-day.today { border-color: var(--mid-blue); font-weight: 700; color: var(--navy); }
+.cal-day.practiced {
+  background: var(--forest);
+  color: #fff; border-color: var(--forest);
+  font-weight: 700;
+}
+.cal-day.future { color: var(--muted); cursor: default; }
 
-  /* ---------- FAB ---------- */
-  .fab{
-    position:fixed; right:18px; bottom:22px; z-index:40;
-    width:58px; height:58px; border-radius:50%;
-    background:var(--forest); color:#fff; border:none;
-    font-size:1.7rem; box-shadow:0 4px 14px rgba(5,39,11,0.3);
-    display:flex; align-items:center; justify-content:center; cursor:pointer;
-  }
-  .fab-secondary{
-    position:fixed; right:18px; bottom:90px; z-index:40;
-    width:46px; height:46px; border-radius:50%;
-    background:var(--steel); color:#fff; border:none;
-    font-size:1.2rem; box-shadow:0 4px 12px rgba(5,39,11,0.25);
-    display:flex; align-items:center; justify-content:center; cursor:pointer;
-  }
-  .fab-tertiary{
-    position:fixed; right:18px; bottom:150px; z-index:40;
-    width:46px; height:46px; border-radius:50%;
-    background:var(--sky); color:var(--ink); border:none;
-    font-size:1.2rem; box-shadow:0 4px 12px rgba(5,39,11,0.25);
-    display:flex; align-items:center; justify-content:center; cursor:pointer;
-  }
+.cal-legend {
+  display: flex; align-items: center; gap: 14px;
+  margin-top: 10px; font-size: 0.72rem; color: var(--muted);
+}
+.cal-legend-dot {
+  width: 10px; height: 10px; border-radius: 3px;
+  display: inline-block; margin-right: 4px;
+}
 
-  /* ---------- Sheet / Modal ---------- */
-  .sheet-backdrop{
-    position:fixed; inset:0; background:rgba(5,39,11,0.45); z-index:50;
-    display:none; align-items:flex-end; justify-content:center;
-  }
-  .sheet-backdrop.show{ display:flex; }
-  .sheet{
-    background:var(--paper); width:100%; max-width:560px;
-    border-radius:18px 18px 0 0; max-height:92vh; overflow-y:auto;
-    -webkit-overflow-scrolling:touch;
-    padding:6px 18px calc(24px + env(safe-area-inset-bottom));
-    animation: slideUp 0.22s ease-out;
-  }
-  @keyframes slideUp{ from{ transform:translateY(24px); opacity:0.4;} to{ transform:translateY(0); opacity:1; } }
-  .sheet-handle{ width:38px; height:4px; background:var(--line); border-radius:3px; margin:10px auto 14px; }
-  .sheet h2{ font-size:1.1rem; font-weight:400; margin:0 0 14px; display:flex; justify-content:space-between; align-items:center; }
-  .sheet h2 .close-x{ font-size:1.3rem; color:var(--ink); opacity:0.5; cursor:pointer; padding:4px 8px; }
+/* ── CATEGORY SECTIONS ── */
+.category-section { margin-bottom: 18px; }
+.category-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 8px;
+}
+.category-label {
+  font-size: 0.7rem; font-weight: 700;
+  color: var(--muted); letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.add-item-btn {
+  background: none; border: 1.5px dashed var(--mid-blue);
+  border-radius: 8px; padding: 4px 12px;
+  font-family: 'Special Elite', cursive; font-size: 0.75rem;
+  color: var(--mid-blue); cursor: pointer;
+}
+.add-item-btn:hover { background: var(--light-blue); }
 
-  .field{ margin-bottom:13px; }
-  .field label{ display:block; font-size:0.7rem; letter-spacing:0.4px; text-transform:uppercase; color:var(--forest); margin-bottom:5px; opacity:0.85; }
-  .field input[type="text"], .field select, .field textarea{
-    width:100%; font-family:'Special Elite', monospace; font-size:0.92rem;
-    padding:10px 12px; border:1.5px solid var(--line); border-radius:10px;
-    background:var(--card); color:var(--ink);
-  }
-  .field textarea{ resize:vertical; min-height:64px; }
-  .field input:focus, .field select:focus, .field textarea:focus{ outline:none; border-color:var(--steel); }
+/* ── POST-IT CARDS ── */
+.postit-grid {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.postit-card {
+  border-radius: 10px;
+  padding: 12px 14px;
+  box-shadow: 0 2px 8px rgba(26,58,107,0.08);
+  display: flex; gap: 10px; align-items: flex-start;
+  position: relative;
+  transition: transform 0.1s;
+}
+.postit-card:active { transform: scale(0.99); }
 
-  .seg{ display:flex; gap:6px; }
-  .seg button{
-    flex:1; font-family:'Special Elite', monospace; font-size:0.78rem;
-    padding:9px 4px; border-radius:9px; border:1.5px solid var(--line);
-    background:var(--card); color:var(--ink); cursor:pointer;
-  }
-  .seg button.on{ background:var(--forest); color:#fff; border-color:var(--forest); }
-  .seg.three button.on:nth-child(2){ background:var(--steel); border-color:var(--steel); }
-  .seg.three button.on:nth-child(3){ background:var(--sky); border-color:var(--sky); color:var(--ink); }
+.postit-tick {
+  flex-shrink: 0; width: 26px; height: 26px;
+  border-radius: 50%; border: 2px solid rgba(26,58,107,0.25);
+  background: rgba(255,255,255,0.6);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 0.9rem; margin-top: 1px;
+  transition: all 0.15s;
+}
+.postit-tick.ticked {
+  background: var(--forest);
+  border-color: var(--forest);
+  color: #fff;
+}
+.postit-body { flex: 1; min-width: 0; }
+.postit-title {
+  font-size: 0.92rem; line-height: 1.35;
+  color: var(--navy);
+}
+.postit-title.done {
+  text-decoration: line-through;
+  opacity: 0.55;
+}
+.postit-note {
+  font-size: 0.75rem; color: var(--ink);
+  opacity: 0.65; margin-top: 3px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+}
+.postit-actions {
+  display: flex; gap: 6px; margin-top: 8px;
+}
+.postit-action-btn {
+  background: rgba(255,255,255,0.5);
+  border: 1px solid rgba(26,58,107,0.15);
+  border-radius: 6px; padding: 3px 9px;
+  font-family: 'Special Elite', cursive;
+  font-size: 0.7rem; color: var(--navy);
+  cursor: pointer;
+}
+.postit-action-btn:hover { background: rgba(255,255,255,0.8); }
+.postit-action-btn.carry { color: var(--forest); }
+.postit-action-btn.remove { color: #a33; }
 
-  .fs-seg button.on{ background:var(--steel); border-color:var(--steel); }
+.carryover-badge {
+  font-size: 0.62rem; padding: 2px 7px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.5);
+  color: var(--navy); opacity: 0.7;
+  margin-left: 6px; vertical-align: middle;
+}
 
-  .pieces-list{ margin-top:6px; }
-  .piece-row{
-    display:flex; gap:6px; margin-bottom:6px; align-items:center;
-  }
-  .piece-row input{ flex:1; }
-  .piece-row .rm{
-    flex:0 0 auto; width:34px; height:34px; border-radius:8px;
-    border:1.3px solid var(--line); background:var(--card); color:var(--ink);
-    opacity:0.6; font-size:1rem; cursor:pointer;
-  }
-  .add-piece-btn{
-    width:100%; padding:9px; border-radius:9px; border:1.5px dashed var(--line);
-    background:transparent; color:var(--forest); font-family:'Special Elite', monospace;
-    font-size:0.8rem; cursor:pointer; margin-top:2px;
-  }
+/* ── EMPTY CATEGORY ── */
+.category-empty {
+  font-size: 0.8rem; color: var(--muted);
+  font-style: italic; padding: 6px 2px;
+}
 
-  .sheet-actions{ display:flex; gap:8px; margin-top:18px; }
-  .btn{
-    flex:1; padding:12px; border-radius:11px; border:none;
-    font-family:'Special Elite', monospace; font-size:0.88rem; cursor:pointer;
-  }
-  .btn-primary{ background:var(--forest); color:#fff; }
-  .btn-ghost{ background:transparent; color:var(--ink); border:1.5px solid var(--line); }
-  .btn-danger{ background:transparent; color:#A33; border:1.5px solid rgba(170,51,51,0.3); }
+/* ── HEADER ICON BUTTONS ── */
+.hdr-icon-btn {
+  background: rgba(255,255,255,0.12);
+  border: 1.5px solid rgba(255,255,255,0.2);
+  border-radius: 8px; padding: 6px 10px;
+  color: rgba(255,255,255,0.85);
+  font-family: 'Special Elite', cursive;
+  font-size: 0.75rem; cursor: pointer;
+}
+.hdr-icon-btn:hover { background: rgba(255,255,255,0.2); }
 
-  /* tag input chips inside detail */
-  .tag-input-row{ display:flex; flex-wrap:wrap; gap:6px; padding:9px 10px; border:1.5px solid var(--line); border-radius:10px; background:var(--card); }
-  .tag-chip{ background:rgba(47,92,26,0.12); color:var(--forest); font-size:0.72rem; padding:4px 9px; border-radius:10px; display:flex; align-items:center; gap:5px; }
-  .tag-chip span.x{ cursor:pointer; opacity:0.6; }
-  .tag-input-row input{ flex:1; min-width:80px; border:none; background:transparent; font-family:'Special Elite', monospace; font-size:0.85rem; padding:4px; }
-  .tag-input-row input:focus{ outline:none; }
+/* ── HISTORY VIEW ── */
+.history-section {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px 18px;
+  margin-bottom: 16px;
+}
+.history-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1rem; color: var(--navy);
+  margin-bottom: 14px;
+}
+.streak-display {
+  text-align: center; padding: 10px 0 6px;
+}
+.streak-number {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.8rem; color: var(--forest);
+  line-height: 1;
+}
+.streak-label {
+  font-size: 0.78rem; color: var(--muted);
+  margin-top: 4px;
+}
 
-  /* bulk add */
-  .bulk-textarea{
-    width:100%; min-height:200px; font-family:'Special Elite', monospace; font-size:0.85rem;
-    padding:12px; border:1.5px solid var(--line); border-radius:10px; background:var(--card); color:var(--ink);
-    line-height:1.6;
-  }
-  .bulk-hint{ font-size:0.74rem; opacity:0.65; line-height:1.5; margin:6px 0 12px; }
-  .bulk-hint code{ background:rgba(5,39,11,0.06); padding:1px 5px; border-radius:4px; }
-  .bulk-preview{ margin-top:14px; }
-  .bulk-preview-row{
-    display:flex; justify-content:space-between; gap:8px; padding:9px 11px;
-    background:var(--card); border:1px solid var(--line); border-radius:9px; margin-bottom:6px; font-size:0.8rem;
-  }
-  .bulk-preview-row .bp-title{ flex:1; }
-  .bulk-preview-row .bp-composer{ opacity:0.6; }
-  .bulk-count{ font-size:0.78rem; color:var(--forest); margin-bottom:8px; }
+/* Bar chart */
+.bar-chart { display: flex; align-items: flex-end; gap: 6px; height: 80px; margin-top: 10px; }
+.bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.bar {
+  width: 100%; border-radius: 5px 5px 0 0;
+  background: var(--mid-blue);
+  min-height: 4px;
+  transition: height 0.3s;
+}
+.bar-label { font-size: 0.6rem; color: var(--muted); }
 
-  .toast{
-    position:fixed; left:50%; bottom:96px; transform:translateX(-50%) translateY(8px);
-    background:var(--ink); color:var(--paper); padding:10px 18px; border-radius:20px;
-    font-size:0.8rem; z-index:80; opacity:0; pointer-events:none; transition: all 0.25s ease;
-    white-space:nowrap; box-shadow:0 4px 12px rgba(0,0,0,0.25);
-  }
-  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+/* Category pie-ish breakdown */
+.breakdown-row {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 8px;
+}
+.breakdown-bar-wrap { flex: 1; background: var(--warm); border-radius: 4px; height: 8px; overflow: hidden; }
+.breakdown-bar { height: 100%; border-radius: 4px; background: var(--mid-blue); }
+.breakdown-label { font-size: 0.75rem; color: var(--ink); min-width: 120px; }
+.breakdown-count { font-size: 0.72rem; color: var(--muted); min-width: 24px; text-align: right; }
 
-  /* ---------- Photo Scan ---------- */
-  .scan-dropzone{
-    border:2px dashed var(--line); border-radius:14px; padding:28px 16px;
-    text-align:center; cursor:pointer; background:var(--card);
-  }
-  .scan-dropzone .icon{ font-size:2rem; margin-bottom:8px; }
-  .scan-dropzone p{ font-size:0.82rem; opacity:0.65; margin:4px 0 0; line-height:1.5; }
-  .scan-hint{ font-size:0.74rem; opacity:0.6; line-height:1.5; margin:10px 0 0; }
+/* ── MODAL / SHEET ── */
+.sheet-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(26,58,107,0.4);
+  z-index: 200; display: none;
+  align-items: flex-end; justify-content: center;
+}
+.sheet-backdrop.show { display: flex; }
+.sheet {
+  background: var(--paper);
+  width: 100%; max-width: 560px;
+  border-radius: 18px 18px 0 0;
+  max-height: 88vh; overflow-y: auto;
+  padding: 6px 18px calc(28px + env(safe-area-inset-bottom));
+  animation: slideUp 0.2s ease-out;
+}
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0.5; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+.sheet-handle {
+  width: 38px; height: 4px;
+  background: rgba(26,58,107,0.15);
+  border-radius: 3px; margin: 10px auto 16px;
+}
+.sheet h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.1rem; font-weight: 400;
+  color: var(--navy);
+  margin: 0 0 16px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.close-x {
+  font-size: 1.4rem; color: var(--muted);
+  cursor: pointer; padding: 2px 6px; line-height: 1;
+}
 
-  .thumb-grid{
-    display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin:14px 0;
-  }
-  .thumb-wrap{ position:relative; border-radius:10px; overflow:hidden; aspect-ratio:1; background:var(--card); border:1px solid var(--line); }
-  .thumb-wrap img{ width:100%; height:100%; object-fit:cover; display:block; }
-  .thumb-wrap .thumb-rm{
-    position:absolute; top:4px; right:4px; width:22px; height:22px; border-radius:50%;
-    background:rgba(5,39,11,0.7); color:#fff; border:none; font-size:0.8rem;
-    display:flex; align-items:center; justify-content:center; cursor:pointer;
-  }
-  .thumb-wrap .thumb-status{
-    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
-    background:rgba(5,39,11,0.55); color:#fff; font-size:0.7rem; text-align:center; padding:6px;
-  }
+.field { margin-bottom: 14px; }
+.field label {
+  display: block; font-size: 0.68rem;
+  letter-spacing: 0.05em; text-transform: uppercase;
+  color: var(--forest); margin-bottom: 5px; font-weight: 700;
+}
+.field input[type="text"],
+.field textarea,
+.field select {
+  width: 100%;
+  font-family: 'Special Elite', cursive; font-size: 0.92rem;
+  padding: 10px 12px;
+  border: 1.5px solid #ccdaec;
+  border-radius: 10px;
+  background: var(--card-bg); color: var(--ink);
+}
+.field textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+.field input:focus, .field textarea:focus, .field select:focus {
+  outline: none; border-color: var(--mid-blue);
+}
 
-  .scan-progress{ text-align:center; padding:24px 10px; }
-  .scan-progress .spin{
-    width:34px; height:34px; border-radius:50%; border:3px solid var(--line);
-    border-top-color:var(--steel); margin:0 auto 12px; animation:spin 0.9s linear infinite;
-  }
-  @keyframes spin{ to{ transform:rotate(360deg); } }
-  .scan-progress p{ font-size:0.85rem; opacity:0.7; }
+.sheet-actions { display: flex; gap: 8px; margin-top: 18px; }
+.btn {
+  flex: 1; padding: 12px; border-radius: 11px; border: none;
+  font-family: 'Special Elite', cursive; font-size: 0.88rem; cursor: pointer;
+}
+.btn-primary { background: var(--navy); color: #fff; }
+.btn-ghost { background: transparent; color: var(--ink); border: 1.5px solid #ccdaec; }
+.btn-danger { background: transparent; color: #a33; border: 1.5px solid rgba(170,51,51,0.3); }
 
-  .scan-error{
-    background:rgba(170,51,51,0.08); border:1px solid rgba(170,51,51,0.25); border-radius:10px;
-    padding:14px; font-size:0.83rem; line-height:1.5; color:#7a2424; margin:14px 0;
-  }
-  .scan-error b{ display:block; margin-bottom:4px; }
+/* ── WINS / REALISATIONS ── */
+.daily-notes-section { margin-top: 20px; }
+.daily-note-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+.daily-note-label {
+  font-size: 0.68rem; font-weight: 700;
+  color: var(--muted); letter-spacing: 0.05em;
+  text-transform: uppercase; margin-bottom: 8px;
+  display: flex; align-items: center; gap: 6px;
+}
+.daily-note-textarea {
+  width: 100%;
+  font-family: 'Special Elite', cursive;
+  font-size: 0.9rem;
+  border: 1.5px dashed #ccdaec;
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: var(--paper);
+  color: var(--ink);
+  resize: none;
+  line-height: 1.6;
+  min-height: 70px;
+}
+.daily-note-textarea:focus { outline: none; border-color: var(--mid-blue); background: #fff; }
 
-  .yield-notice{
-    background:rgba(41,120,158,0.08); border:1px solid rgba(41,120,158,0.25); border-radius:10px;
-    padding:13px 14px; font-size:0.82rem; line-height:1.5; color:var(--ink); margin-bottom:14px;
-  }
-  .yield-notice b{ display:block; margin-bottom:3px; color:var(--steel); }
+/* ── SMALL STREAK ── */
+.streak-small {
+  text-align: center;
+  padding: 8px 0 2px;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+.streak-small b { color: var(--forest); }
 
-  .bp-source{ font-size:0.65rem; opacity:0.5; }
-  .bulk-preview-row.editable{ flex-direction:column; align-items:stretch; gap:6px; }
-  .bulk-preview-row.editable .bp-edit-row{ display:flex; gap:6px; }
-  .bulk-preview-row.editable input{
-    flex:1; font-family:'Special Elite', monospace; font-size:0.8rem;
-    padding:6px 8px; border:1px solid var(--line); border-radius:6px; background:var(--paper); color:var(--ink);
-  }
-  .bp-discard{ flex:0 0 auto; width:28px; height:28px; border-radius:6px; border:1px solid var(--line); background:var(--card); color:var(--ink); opacity:0.6; cursor:pointer; }
+/* ── TOTAL DAYS ── */
+.total-display {
+  text-align: center; padding: 10px 0 6px;
+}
+.total-number {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.8rem; color: var(--forest);
+  line-height: 1;
+}
+.total-label {
+  font-size: 0.78rem; color: var(--muted);
+  margin-top: 4px;
+}
 
-  ::-webkit-scrollbar{ width:0; height:0; }
+/* ── TOAST ── */
+.toast {
+  position: fixed; left: 50%; bottom: 80px;
+  transform: translateX(-50%) translateY(8px);
+  background: var(--navy); color: #fff;
+  padding: 10px 18px; border-radius: 20px;
+  font-size: 0.8rem; z-index: 300;
+  opacity: 0; pointer-events: none;
+  transition: all 0.25s; white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── BACKUP SHEET ── */
+.backup-btn-row { display: flex; flex-direction: column; gap: 10px; margin-top: 6px; }
+.backup-action-btn {
+  width: 100%; padding: 13px; border-radius: 11px; border: none;
+  font-family: 'Special Elite', cursive; font-size: 0.88rem; cursor: pointer;
+  text-align: center;
+}
+.backup-action-btn.primary { background: var(--forest); color: #fff; }
+.backup-action-btn.secondary { background: var(--mid-blue); color: #fff; }
+.backup-hint {
+  font-size: 0.75rem; color: var(--muted);
+  line-height: 1.5; margin-bottom: 12px;
+}
 </style>
 </head>
 <body>
 
-<header class="top">
-  <h1><span class="mark">&#9834;</span> Music Library</h1>
-  <p class="sub">Vanessa's sheet music catalogue</p>
-  <div class="stats-strip" id="statsStrip"></div>
+<header>
+  <div class="hdr-top">
+    <h1>🎵 Practice Journal</h1>
+    <div class="hdr-right">
+      <button class="hdr-icon-btn" id="backupBtn">⬆ Backup</button>
+    </div>
+  </div>
+  <div class="tab-strip">
+    <button class="tab-btn tab-today active" data-tab="today">Today</button>
+    <button class="tab-btn tab-history" data-tab="history">History</button>
+  </div>
 </header>
 
-<div class="controls">
-  <div class="search-row">
-    <input type="text" id="searchInput" placeholder="Search title, composer, tag…" autocomplete="off">
-    <button class="icon-btn" id="filterToggle" title="Filters">&#9776;</button>
-  </div>
-  <div class="chip-row" id="filterChips"></div>
-</div>
+<!-- TODAY VIEW -->
+<div class="view active" id="view-today">
 
-<main id="mainList"></main>
+  <div class="date-heading" id="todayHeading"></div>
+  <div class="date-sub" id="todayStreak"></div>
 
-<button class="fab-tertiary" id="scanFab" title="Scan photos">&#128247;</button>
-<button class="fab-secondary" id="bulkFab" title="Bulk add">&#128221;</button>
-<button class="fab" id="addFab" title="Add item">+</button>
-
-<!-- Add/Edit Sheet -->
-<div class="sheet-backdrop" id="editBackdrop">
-  <div class="sheet">
-    <div class="sheet-handle"></div>
-    <h2><span id="editTitle">Add Item</span><span class="close-x" id="editClose">&times;</span></h2>
-
-    <div class="field">
-      <label>Type</label>
-      <div class="seg three" id="typeSeg">
-        <button data-val="book" class="on">Book</button>
-        <button data-val="anthology">Anthology</button>
-        <button data-val="single">Single piece</button>
+  <!-- Calendar -->
+  <div class="calendar-section">
+    <div class="cal-header">
+      <div class="cal-title" id="calMonthLabel"></div>
+      <div style="display:flex;gap:6px;">
+        <button class="cal-nav" id="calPrev">‹</button>
+        <button class="cal-nav" id="calNext">›</button>
       </div>
     </div>
+    <div class="cal-grid" id="calGrid"></div>
+    <div class="cal-legend">
+      <span><span class="cal-legend-dot" style="background:var(--forest);"></span>Practised</span>
+      <span><span class="cal-legend-dot" style="background:var(--paper);border:1.5px solid var(--mid-blue);"></span>Today</span>
+    </div>
+  </div>
 
+  <!-- Categories -->
+  <div id="categoriesWrap"></div>
+
+  <!-- Wins & Realisations -->
+  <div class="daily-notes-section">
+    <div class="daily-note-card">
+      <div class="daily-note-label">🌟 Today's wins</div>
+      <textarea class="daily-note-textarea" id="todayWins" placeholder="What went well today?"></textarea>
+    </div>
+    <div class="daily-note-card">
+      <div class="daily-note-label">💡 Today's realisations</div>
+      <textarea class="daily-note-textarea" id="todayRealisations" placeholder="What did you notice or figure out?"></textarea>
+    </div>
+  </div>
+
+</div>
+
+<!-- HISTORY VIEW -->
+<div class="view" id="view-history">
+  <div class="history-section">
+    <div class="history-title">Total days practised</div>
+    <div class="total-display">
+      <div class="total-number" id="totalDaysNumber">0</div>
+      <div class="total-label">days practised in total</div>
+    </div>
+    <div class="streak-small">Current streak: <b><span id="streakNumber">0</span> days in a row</b></div>
+  </div>
+
+  <div class="history-section">
+    <div class="history-title">Last 8 weeks</div>
+    <div class="bar-chart" id="weeklyChart"></div>
+  </div>
+
+  <div class="history-section">
+    <div class="history-title">What you've been working on</div>
+    <div id="breakdownChart"></div>
+  </div>
+</div>
+
+<!-- Add/Edit Item Sheet -->
+<div class="sheet-backdrop" id="itemSheet">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <h2><span id="itemSheetTitle">Add item</span><span class="close-x" id="itemSheetClose">&times;</span></h2>
+    <div class="field">
+      <label>Category</label>
+      <select id="fCategory">
+        <option value="warmup">Warm-up</option>
+        <option value="scales">Scales &amp; studies</option>
+        <option value="mypieces">My pieces</option>
+        <option value="orchestra">Orchestra</option>
+        <option value="pupilpieces">Pupil pieces to know</option>
+        <option value="nyso">NYSO coaching</option>
+      </select>
+    </div>
     <div class="field">
       <label>Title</label>
-      <input type="text" id="fTitle" placeholder="e.g. 44 Duos for Two Violas">
+      <input type="text" id="fTitle" placeholder="e.g. Bartók Viola Concerto, mvt 1">
     </div>
-
     <div class="field">
-      <label>Composer / Arranger</label>
-      <input type="text" id="fComposer" placeholder="e.g. Bartók">
+      <label>Reminder / focus note</label>
+      <textarea id="fNote" placeholder="e.g. Focus on bar 23 — shifting in tune"></textarea>
     </div>
-
-    <div class="field">
-      <label>Grade / Level</label>
-      <input type="text" id="fGrade" placeholder="e.g. Grade 5, or leave blank">
-    </div>
-
-    <div class="field">
-      <label>Location</label>
-      <input type="text" id="fLocation" placeholder="e.g. Shelf 2, Box A, Studio drawer">
-    </div>
-
-    <div class="field">
-      <label>forScore status</label>
-      <div class="seg fs-seg" id="fsSeg">
-        <button data-val="physical" class="on">Physical only</button>
-        <button data-val="forscore">In forScore</button>
-        <button data-val="both">Both</button>
-      </div>
-    </div>
-
-    <div class="field">
-      <label>Tags</label>
-      <div class="tag-input-row" id="tagInputRow">
-        <input type="text" id="fTagInput" placeholder="Add a tag, press enter…">
-      </div>
-    </div>
-
-    <div class="field" id="piecesField">
-      <label>Pieces inside (optional)</label>
-      <div class="pieces-list" id="piecesList"></div>
-      <button class="add-piece-btn" id="addPieceBtn">+ Add a piece</button>
-    </div>
-
-    <div class="field">
-      <label>Notes</label>
-      <textarea id="fNotes" placeholder="Anything else worth remembering…"></textarea>
-    </div>
-
     <div class="sheet-actions">
-      <button class="btn btn-danger" id="deleteBtn" style="display:none;">Delete</button>
-      <button class="btn btn-ghost" id="cancelBtn">Cancel</button>
-      <button class="btn btn-primary" id="saveBtn">Save</button>
+      <button class="btn btn-danger" id="itemDeleteBtn" style="display:none;">Delete</button>
+      <button class="btn btn-ghost" id="itemCancelBtn">Cancel</button>
+      <button class="btn btn-primary" id="itemSaveBtn">Save</button>
     </div>
   </div>
 </div>
 
-<!-- Bulk Add Sheet -->
-<div class="sheet-backdrop" id="bulkBackdrop">
+<!-- Backup Sheet -->
+<div class="sheet-backdrop" id="backupSheet">
   <div class="sheet">
     <div class="sheet-handle"></div>
-    <h2><span>Bulk Add</span><span class="close-x" id="bulkClose">&times;</span></h2>
-    <p class="bulk-hint">
-      One item per line. Format: <code>Title, Composer, Grade, Location</code> — composer, grade and location are all optional. Examples:<br>
-      <code>44 Duos for Two Violas, Bartók, , Shelf 2</code><br>
-      <code>Suzuki Viola School Vol 3</code><br>
-      <code>Songs My Mother Taught Me, Dvořák, Grade 6</code>
-    </p>
-    <textarea class="bulk-textarea" id="bulkTextarea" placeholder="Paste or type your list here, one item per line…"></textarea>
-    <div class="bulk-preview" id="bulkPreviewWrap" style="display:none;">
-      <div class="bulk-count" id="bulkCount"></div>
-      <div id="bulkPreview"></div>
-    </div>
-    <div class="sheet-actions">
-      <button class="btn btn-ghost" id="bulkCancelBtn">Cancel</button>
-      <button class="btn btn-primary" id="bulkPreviewBtn">Preview</button>
-    </div>
-    <div class="sheet-actions" id="bulkConfirmRow" style="display:none;">
-      <button class="btn btn-ghost" id="bulkBackBtn">Back</button>
-      <button class="btn btn-primary" id="bulkConfirmBtn">Add all</button>
+    <h2><span>Back up &amp; restore</span><span class="close-x" id="backupClose">&times;</span></h2>
+    <p class="backup-hint">Back up saves a JSON file to your Downloads (or Files on iPad). Restore loads it back. Keep backups in iCloud Drive or Google Drive for safety.</p>
+    <div class="backup-btn-row">
+      <button class="backup-action-btn primary" id="doBackupBtn">⬇ Back up all data</button>
+      <button class="backup-action-btn secondary" id="doRestoreBtn">⬆ Restore from backup</button>
+      <input type="file" id="restoreFileInput" accept=".json" style="display:none;">
+      <button class="backup-action-btn" style="background:var(--warm);color:var(--ink);" id="backupCancelBtn">Cancel</button>
     </div>
   </div>
 </div>
 
-<!-- Detail Sheet -->
-<div class="sheet-backdrop" id="detailBackdrop">
+<!-- Day Summary Sheet -->
+<div class="sheet-backdrop" id="daySummarySheet">
   <div class="sheet">
     <div class="sheet-handle"></div>
-    <h2><span id="detailTitle">Item</span><span class="close-x" id="detailClose">&times;</span></h2>
-    <div id="detailBody"></div>
+    <h2><span id="daySummaryTitle">What I practised</span><span class="close-x" id="daySummaryClose">&times;</span></h2>
+    <div id="daySummaryBody"></div>
     <div class="sheet-actions">
-      <button class="btn btn-ghost" id="detailEditBtn">Edit</button>
-      <button class="btn btn-primary" id="detailSendBtn">Send to Studio Notebook</button>
-    </div>
-  </div>
-</div>
-
-<!-- Photo Scan Sheet -->
-<div class="sheet-backdrop" id="scanBackdrop">
-  <div class="sheet">
-    <div class="sheet-handle"></div>
-    <h2><span>Scan Shelf Photos</span><span class="close-x" id="scanClose">&times;</span></h2>
-
-    <div id="scanStepPick">
-      <div class="scan-dropzone" id="scanDropzone">
-        <div class="icon">&#128247;</div>
-        <p>Tap to choose photos of covers or spines.<br>You can select several at once.</p>
-      </div>
-      <input type="file" id="scanFileInput" accept="image/*" multiple style="display:none;">
-      <p class="scan-hint">Claude will read what it can from each photo — titles, composers, grade and type. You'll get a chance to check and edit everything before it's added, and nothing saves automatically.</p>
-      <p class="scan-hint"><b style="color:var(--steel);">Tip:</b> tightly packed shelf spines are hard to read — you'll get far more hits by fanning a few books out so covers show, or photographing small stacks face-up.</p>
-      <div class="thumb-grid" id="scanThumbGrid"></div>
-    </div>
-
-    <div id="scanStepProgress" style="display:none;">
-      <div class="scan-progress">
-        <div class="spin"></div>
-        <p id="scanProgressText">Reading photo 1 of 3…</p>
-      </div>
-    </div>
-
-    <div id="scanStepError" style="display:none;">
-      <div class="scan-error">
-        <b>Couldn't read that photo</b>
-        <span id="scanErrorMsg">Something went wrong contacting Claude.</span>
-      </div>
-    </div>
-
-    <div id="scanStepResults" style="display:none;">
-      <div id="scanYieldNotice"></div>
-      <div class="bulk-count" id="scanResultCount"></div>
-      <div id="scanResultPreview"></div>
-    </div>
-
-    <div class="sheet-actions" id="scanActionsPick">
-      <button class="btn btn-ghost" id="scanCancelBtn">Cancel</button>
-      <button class="btn btn-primary" id="scanStartBtn" disabled>Read photos</button>
-    </div>
-    <div class="sheet-actions" id="scanActionsError" style="display:none;">
-      <button class="btn btn-ghost" id="scanManualBtn">Add manually instead</button>
-      <button class="btn btn-primary" id="scanRetryBtn">Try again</button>
-    </div>
-    <div class="sheet-actions" id="scanActionsResults" style="display:none;">
-      <button class="btn btn-ghost" id="scanResultsBackBtn">Back</button>
-      <button class="btn btn-primary" id="scanResultsConfirmBtn">Add all</button>
+      <button class="btn btn-danger" id="daySummaryUnmark">Unmark this day</button>
+      <button class="btn btn-ghost" id="daySummaryDone">Close</button>
     </div>
   </div>
 </div>
@@ -491,864 +594,545 @@
 
 <script>
 (function(){
-  'use strict';
+'use strict';
 
-  var STORAGE_KEY = 'musicLibraryItems_v1';
-  var items = [];
-  var editingId = null;
-  var currentType = 'book';
-  var currentFs = 'physical';
-  var currentTags = [];
-  var currentPieces = [];
-  var activeFilters = { type:null, fs:null };
-  var searchTerm = '';
-  var detailItemId = null;
+var STORAGE_KEY = 'practiceJournal_v1';
+var state = {
+  items: [],        // {id, category, title, note, carryover}
+  practiced: {},    // {YYYY-MM-DD: true}
+  ticked: {},       // {YYYY-MM-DD: {itemId: true}}
+  tickHistory: {},  // {YYYY-MM-DD: {category: count}}
+  dailyNotes: {}    // {YYYY-MM-DD: {wins, realisations}}
+};
 
-  // ---------- Storage ----------
-  function loadItems(){
-    try{
-      var raw = localStorage.getItem(STORAGE_KEY);
-      items = raw ? JSON.parse(raw) : [];
-    }catch(e){ items = []; }
-  }
-  function saveItems(){
-    try{
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-    }catch(e){
-      showToast('Storage error — item may not have saved');
-    }
-  }
-  function uid(){
-    return 'm' + Date.now().toString(36) + Math.random().toString(36).slice(2,7);
-  }
+var CATEGORIES = [
+  { key: 'warmup',     label: 'Warm-up',              color: '#D6EAF8' },
+  { key: 'scales',     label: 'Scales & studies',     color: '#D6EEE3' },
+  { key: 'mypieces',   label: 'My pieces',            color: '#DDE8F5' },
+  { key: 'orchestra',  label: 'Orchestra',            color: '#CBE5F5' },
+  { key: 'pupilpieces',label: 'Pupil pieces to know', color: '#D4ECD8' },
+  { key: 'nyso',       label: 'NYSO coaching',        color: '#C9DFF0' }
+];
 
-  // ---------- Toast ----------
-  var toastTimer = null;
-  function showToast(msg){
-    var t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 2200);
-  }
+var calViewDate = new Date();
+var editingItemId = null;
+var editingCategory = null;
 
-  // ---------- Rendering: stats ----------
-  function renderStats(){
-    var strip = document.getElementById('statsStrip');
-    var total = items.length;
-    var books = items.filter(function(i){ return i.type==='book'; }).length;
-    var anth = items.filter(function(i){ return i.type==='anthology'; }).length;
-    var single = items.filter(function(i){ return i.type==='single'; }).length;
-    var inForscore = items.filter(function(i){ return i.forscore==='forscore' || i.forscore==='both'; }).length;
-    strip.innerHTML =
-      '<div class="stat-pill"><b>'+total+'</b> total</div>' +
-      '<div class="stat-pill"><b>'+books+'</b> books</div>' +
-      '<div class="stat-pill"><b>'+anth+'</b> anthologies</div>' +
-      '<div class="stat-pill"><b>'+single+'</b> single pieces</div>' +
-      '<div class="stat-pill"><b>'+inForscore+'</b> in forScore</div>';
-  }
+// ── Storage ──
+function load(){
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if(raw) state = JSON.parse(raw);
+    if(!state.items) state.items = [];
+    if(!state.practiced) state.practiced = {};
+    if(!state.ticked) state.ticked = {};
+    if(!state.tickHistory) state.tickHistory = {};
+  if(!state.dailyNotes) state.dailyNotes = {};
+  } catch(e){ state = {items:[],practiced:{},ticked:{},tickHistory:{},dailyNotes:{}}; }
+}
+function save(){
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+  catch(e){ showToast('Could not save — storage may be full'); }
+}
 
-  // ---------- Rendering: filter chips ----------
-  function renderFilterChips(){
-    var wrap = document.getElementById('filterChips');
-    var chips = [
-      {key:'type', val:'book', label:'Books'},
-      {key:'type', val:'anthology', label:'Anthologies'},
-      {key:'type', val:'single', label:'Single pieces'},
-      {key:'fs', val:'forscore', label:'In forScore'},
-      {key:'fs', val:'physical', label:'Physical only'},
-      {key:'fs', val:'both', label:'Both'}
-    ];
-    wrap.innerHTML = chips.map(function(c){
-      var on = activeFilters[c.key] === c.val;
-      return '<button class="chip'+(on?' on':'')+'" data-key="'+c.key+'" data-val="'+c.val+'">'+c.label+'</button>';
-    }).join('');
-    Array.prototype.forEach.call(wrap.querySelectorAll('.chip'), function(btn){
-      btn.addEventListener('click', function(){
-        var key = btn.getAttribute('data-key');
-        var val = btn.getAttribute('data-val');
-        activeFilters[key] = (activeFilters[key] === val) ? null : val;
-        renderFilterChips();
-        renderList();
-      });
-    });
-  }
+// ── Date helpers ──
+function todayKey(){
+  var d = new Date();
+  // Day resets at 1am, not midnight — late-night practice counts as the same day
+  if(d.getHours() < 1) d.setDate(d.getDate()-1);
+  return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+}
+function pad(n){ return n<10?'0'+n:String(n); }
+function dateKey(y,m,d){ return y+'-'+pad(m)+'-'+pad(d); }
+function friendlyDate(d){
+  var days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  var months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  return days[d.getDay()]+' '+d.getDate()+' '+months[d.getMonth()];
+}
+function monthLabel(d){
+  var months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  return months[d.getMonth()]+' '+d.getFullYear();
+}
 
-  // ---------- Filtering / sorting ----------
-  function getFilteredItems(){
-    var term = searchTerm.trim().toLowerCase();
-    return items.filter(function(i){
-      if(activeFilters.type && i.type !== activeFilters.type) return false;
-      if(activeFilters.fs && i.forscore !== activeFilters.fs) return false;
-      if(term){
-        var hay = [
-          i.title||'', i.composer||'', i.grade||'', i.location||'', i.notes||'',
-          (i.tags||[]).join(' '),
-          (i.pieces||[]).join(' ')
-        ].join(' ').toLowerCase();
-        if(hay.indexOf(term) === -1) return false;
-      }
-      return true;
-    });
-  }
+// ── Toast ──
+var toastTimer;
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(function(){ t.classList.remove('show'); },2200);
+}
 
-  function typeIcon(type){
-    if(type==='book') return '&#128214;';
-    if(type==='anthology') return '&#128218;';
-    return '&#127925;';
-  }
-  function typeLabel(type){
-    if(type==='book') return 'Book';
-    if(type==='anthology') return 'Anthology';
-    return 'Single piece';
-  }
-  function fsLabel(fs){
-    if(fs==='forscore') return 'In forScore';
-    if(fs==='both') return 'Physical + forScore';
-    return 'Physical only';
-  }
+// ── UID ──
+function uid(){ return 'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
 
-  // ---------- Rendering: list ----------
-  function renderList(){
-    var main = document.getElementById('mainList');
-    var list = getFilteredItems();
-
-    if(items.length === 0){
-      main.innerHTML =
-        '<div class="empty-state">' +
-        '<div class="big">&#127925;</div>' +
-        '<p>Your shelves are empty so far. Add your first book, or use Bulk Add to get a whole shelf in at once.</p>' +
-        '</div>';
-      return;
-    }
-    if(list.length === 0){
-      main.innerHTML =
-        '<div class="empty-state">' +
-        '<div class="big">&#128270;</div>' +
-        '<p>Nothing matches that search or filter.</p>' +
-        '</div>';
-      return;
-    }
-
-    // group by composer, sorted alphabetically; blanks under "Unsorted"
-    var sorted = list.slice().sort(function(a,b){
-      var ca = (a.composer||'~Unsorted').toLowerCase();
-      var cb = (b.composer||'~Unsorted').toLowerCase();
-      if(ca < cb) return -1;
-      if(ca > cb) return 1;
-      return (a.title||'').toLowerCase().localeCompare((b.title||'').toLowerCase());
-    });
-
-    var html = '';
-    var lastGroup = null;
-    sorted.forEach(function(item){
-      var groupKey = item.composer ? item.composer : 'Unsorted';
-      if(groupKey !== lastGroup){
-        html += '<div class="group-label">'+escapeHtml(groupKey)+'</div>';
-        lastGroup = groupKey;
-      }
-      var metaBits = '';
-      if(item.grade) metaBits += '<span class="meta-tag">'+escapeHtml(item.grade)+'</span>';
-      if(item.location) metaBits += '<span class="meta-tag loc">'+escapeHtml(item.location)+'</span>';
-      var fsClass = (item.forscore==='physical') ? 'fs-no' : 'fs-yes';
-      metaBits += '<span class="meta-tag '+fsClass+'">'+fsLabel(item.forscore)+'</span>';
-      (item.tags||[]).forEach(function(t){
-        metaBits += '<span class="meta-tag">#'+escapeHtml(t)+'</span>';
-      });
-
-      html +=
-        '<div class="item-card" data-id="'+item.id+'">' +
-          '<div class="type-tag '+item.type+'">'+typeIcon(item.type)+'</div>' +
-          '<div class="item-body">' +
-            '<p class="item-title">'+escapeHtml(item.title||'Untitled')+'</p>' +
-            (item.composer ? '<p class="item-composer">'+escapeHtml(item.composer)+'</p>' : '') +
-            '<div class="item-meta">'+metaBits+'</div>' +
-          '</div>' +
-        '</div>';
-    });
-    main.innerHTML = html;
-
-    Array.prototype.forEach.call(main.querySelectorAll('.item-card'), function(card){
-      card.addEventListener('click', function(){
-        openDetail(card.getAttribute('data-id'));
-      });
-    });
-  }
-
-  function escapeHtml(s){
-    return String(s).replace(/[&<>"']/g, function(c){
-      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
-    });
-  }
-
-  // ---------- Search ----------
-  document.getElementById('searchInput').addEventListener('input', function(e){
-    searchTerm = e.target.value;
-    renderList();
+// ── Tab switching ──
+Array.prototype.forEach.call(document.querySelectorAll('.tab-btn'), function(btn){
+  btn.addEventListener('click', function(){
+    Array.prototype.forEach.call(document.querySelectorAll('.tab-btn'), function(b){ b.classList.remove('active'); });
+    Array.prototype.forEach.call(document.querySelectorAll('.view'), function(v){ v.classList.remove('active'); });
+    btn.classList.add('active');
+    document.getElementById('view-'+btn.getAttribute('data-tab')).classList.add('active');
+    if(btn.getAttribute('data-tab')==='history') renderHistory();
   });
+});
 
-  document.getElementById('filterToggle').addEventListener('click', function(){
-    var row = document.getElementById('filterChips');
-    row.style.display = (row.style.display === 'none') ? 'flex' : 'none';
-    this.classList.toggle('active');
-  });
+// ── Calendar ──
+function renderCalendar(){
+  var y = calViewDate.getFullYear();
+  var m = calViewDate.getMonth();
+  document.getElementById('calMonthLabel').textContent = monthLabel(calViewDate);
 
-  // ---------- Edit Sheet: open/close ----------
-  var editBackdrop = document.getElementById('editBackdrop');
-  var detailBackdrop = document.getElementById('detailBackdrop');
-  var bulkBackdrop = document.getElementById('bulkBackdrop');
+  var firstDay = new Date(y, m, 1).getDay(); // 0=Sun
+  var daysInMonth = new Date(y, m+1, 0).getDate();
+  var today = new Date();
+  var todayStr = todayKey();
 
-  function openEditSheet(item){
-    editingId = item ? item.id : null;
-    document.getElementById('editTitle').textContent = item ? 'Edit Item' : 'Add Item';
-    document.getElementById('deleteBtn').style.display = item ? 'block' : 'none';
+  var grid = document.getElementById('calGrid');
+  var html = '';
+  var dayLabels = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+  dayLabels.forEach(function(l){ html += '<div class="cal-day-label">'+l+'</div>'; });
 
-    currentType = item ? item.type : 'book';
-    currentFs = item ? item.forscore : 'physical';
-    currentTags = item ? (item.tags||[]).slice() : [];
-    currentPieces = item ? (item.pieces||[]).slice() : [];
-
-    document.getElementById('fTitle').value = item ? (item.title||'') : '';
-    document.getElementById('fComposer').value = item ? (item.composer||'') : '';
-    document.getElementById('fGrade').value = item ? (item.grade||'') : '';
-    document.getElementById('fLocation').value = item ? (item.location||'') : '';
-    document.getElementById('fNotes').value = item ? (item.notes||'') : '';
-    document.getElementById('fTagInput').value = '';
-
-    setSegValue('typeSeg', currentType);
-    setSegValue('fsSeg', currentFs);
-    renderTags();
-    renderPieces();
-    updatePiecesVisibility();
-
-    editBackdrop.classList.add('show');
+  for(var i=0;i<firstDay;i++) html += '<div class="cal-day empty"></div>';
+  for(var d=1;d<=daysInMonth;d++){
+    var key = dateKey(y,m+1,d);
+    var cls = 'cal-day';
+    var cellDate = new Date(y,m,d);
+    var isToday = key===todayStr;
+    var isFuture = cellDate > today && !isToday;
+    if(isToday) cls+=' today';
+    else if(isFuture) cls+=' future';
+    else if(state.practiced[key]) cls+=' practiced';
+    html += '<div class="'+cls+'" data-key="'+key+'" data-future="'+(isFuture?'1':'0')+'">'+d+'</div>';
   }
-  function closeEditSheet(){
-    editBackdrop.classList.remove('show');
-    editingId = null;
-  }
+  grid.innerHTML = html;
 
-  function setSegValue(segId, val){
-    var seg = document.getElementById(segId);
-    Array.prototype.forEach.call(seg.querySelectorAll('button'), function(btn){
-      btn.classList.toggle('on', btn.getAttribute('data-val') === val);
-    });
-  }
-
-  document.getElementById('typeSeg').addEventListener('click', function(e){
-    var btn = e.target.closest('button');
-    if(!btn) return;
-    currentType = btn.getAttribute('data-val');
-    setSegValue('typeSeg', currentType);
-    updatePiecesVisibility();
-  });
-  document.getElementById('fsSeg').addEventListener('click', function(e){
-    var btn = e.target.closest('button');
-    if(!btn) return;
-    currentFs = btn.getAttribute('data-val');
-    setSegValue('fsSeg', currentFs);
-  });
-
-  function updatePiecesVisibility(){
-    var field = document.getElementById('piecesField');
-    field.style.display = (currentType === 'single') ? 'none' : 'block';
-  }
-
-  // ---------- Tags ----------
-  function renderTags(){
-    var row = document.getElementById('tagInputRow');
-    var input = document.getElementById('fTagInput');
-    Array.prototype.forEach.call(row.querySelectorAll('.tag-chip'), function(c){ c.remove(); });
-    currentTags.forEach(function(tag, idx){
-      var chip = document.createElement('span');
-      chip.className = 'tag-chip';
-      chip.innerHTML = escapeHtml(tag) + ' <span class="x" data-idx="'+idx+'">&times;</span>';
-      row.insertBefore(chip, input);
-    });
-    Array.prototype.forEach.call(row.querySelectorAll('.tag-chip .x'), function(x){
-      x.addEventListener('click', function(){
-        var idx = parseInt(this.getAttribute('data-idx'), 10);
-        currentTags.splice(idx, 1);
-        renderTags();
-      });
-    });
-  }
-  document.getElementById('fTagInput').addEventListener('keydown', function(e){
-    if(e.key === 'Enter' || e.key === ','){
-      e.preventDefault();
-      var val = this.value.trim().replace(/,$/,'');
-      if(val && currentTags.indexOf(val) === -1){
-        currentTags.push(val);
-        renderTags();
-      }
-      this.value = '';
-    }else if(e.key === 'Backspace' && this.value === '' && currentTags.length){
-      currentTags.pop();
-      renderTags();
-    }
-  });
-
-  // ---------- Pieces ----------
-  function renderPieces(){
-    var list = document.getElementById('piecesList');
-    list.innerHTML = '';
-    currentPieces.forEach(function(p, idx){
-      var row = document.createElement('div');
-      row.className = 'piece-row';
-      row.innerHTML =
-        '<input type="text" value="'+escapeHtml(p)+'" data-idx="'+idx+'">' +
-        '<button class="rm" data-idx="'+idx+'">&times;</button>';
-      list.appendChild(row);
-    });
-    Array.prototype.forEach.call(list.querySelectorAll('input'), function(inp){
-      inp.addEventListener('input', function(){
-        var idx = parseInt(this.getAttribute('data-idx'), 10);
-        currentPieces[idx] = this.value;
-      });
-    });
-    Array.prototype.forEach.call(list.querySelectorAll('.rm'), function(btn){
-      btn.addEventListener('click', function(){
-        var idx = parseInt(this.getAttribute('data-idx'), 10);
-        currentPieces.splice(idx, 1);
-        renderPieces();
-      });
-    });
-  }
-  document.getElementById('addPieceBtn').addEventListener('click', function(){
-    currentPieces.push('');
-    renderPieces();
-    var inputs = document.querySelectorAll('#piecesList input');
-    if(inputs.length) inputs[inputs.length-1].focus();
-  });
-
-  // ---------- Save / Delete ----------
-  document.getElementById('saveBtn').addEventListener('click', function(){
-    var title = document.getElementById('fTitle').value.trim();
-    if(!title){
-      showToast('Please add a title');
-      document.getElementById('fTitle').focus();
-      return;
-    }
-    var cleanPieces = currentPieces.map(function(p){ return p.trim(); }).filter(Boolean);
-
-    var data = {
-      id: editingId || uid(),
-      type: currentType,
-      title: title,
-      composer: document.getElementById('fComposer').value.trim(),
-      grade: document.getElementById('fGrade').value.trim(),
-      location: document.getElementById('fLocation').value.trim(),
-      forscore: currentFs,
-      tags: currentTags.slice(),
-      pieces: cleanPieces,
-      notes: document.getElementById('fNotes').value.trim(),
-      createdAt: editingId ? (findItem(editingId)||{}).createdAt || Date.now() : Date.now()
-    };
-
-    if(editingId){
-      var idx = items.findIndex(function(i){ return i.id === editingId; });
-      if(idx > -1) items[idx] = data;
-      showToast('Saved changes');
-    }else{
-      items.push(data);
-      showToast('Added to library');
-    }
-    saveItems();
-    closeEditSheet();
-    renderStats();
-    renderList();
-  });
-
-  document.getElementById('deleteBtn').addEventListener('click', function(){
-    if(!editingId) return;
-    if(!confirm('Delete this item from your library? This can\'t be undone.')) return;
-    items = items.filter(function(i){ return i.id !== editingId; });
-    saveItems();
-    closeEditSheet();
-    renderStats();
-    renderList();
-    showToast('Deleted');
-  });
-
-  document.getElementById('cancelBtn').addEventListener('click', closeEditSheet);
-  document.getElementById('editClose').addEventListener('click', closeEditSheet);
-  editBackdrop.addEventListener('click', function(e){
-    if(e.target === editBackdrop) closeEditSheet();
-  });
-
-  document.getElementById('addFab').addEventListener('click', function(){
-    openEditSheet(null);
-  });
-
-  function findItem(id){
-    return items.find(function(i){ return i.id === id; });
-  }
-
-  // ---------- Detail Sheet ----------
-  function openDetail(id){
-    var item = findItem(id);
-    if(!item) return;
-    detailItemId = id;
-    document.getElementById('detailTitle').textContent = item.title || 'Untitled';
-
-    var body = '';
-    body += '<div class="field"><label>Type</label><div style="font-size:0.9rem;">'+typeLabel(item.type)+'</div></div>';
-    if(item.composer) body += '<div class="field"><label>Composer / Arranger</label><div style="font-size:0.9rem;">'+escapeHtml(item.composer)+'</div></div>';
-    if(item.grade) body += '<div class="field"><label>Grade / Level</label><div style="font-size:0.9rem;">'+escapeHtml(item.grade)+'</div></div>';
-    if(item.location) body += '<div class="field"><label>Location</label><div style="font-size:0.9rem;">'+escapeHtml(item.location)+'</div></div>';
-    body += '<div class="field"><label>forScore status</label><div style="font-size:0.9rem;">'+fsLabel(item.forscore)+'</div></div>';
-    if(item.tags && item.tags.length){
-      body += '<div class="field"><label>Tags</label><div class="item-meta">' +
-        item.tags.map(function(t){ return '<span class="meta-tag">#'+escapeHtml(t)+'</span>'; }).join('') +
-        '</div></div>';
-    }
-    if(item.pieces && item.pieces.length){
-      body += '<div class="field"><label>Pieces inside</label><div style="font-size:0.88rem; line-height:1.7;">' +
-        item.pieces.map(function(p){ return '&bull; '+escapeHtml(p); }).join('<br>') +
-        '</div></div>';
-    }
-    if(item.notes){
-      body += '<div class="field"><label>Notes</label><div style="font-size:0.88rem; line-height:1.5; white-space:pre-wrap;">'+escapeHtml(item.notes)+'</div></div>';
-    }
-
-    document.getElementById('detailBody').innerHTML = body;
-    detailBackdrop.classList.add('show');
-  }
-  function closeDetail(){
-    detailBackdrop.classList.remove('show');
-    detailItemId = null;
-  }
-  document.getElementById('detailClose').addEventListener('click', closeDetail);
-  detailBackdrop.addEventListener('click', function(e){
-    if(e.target === detailBackdrop) closeDetail();
-  });
-  document.getElementById('detailEditBtn').addEventListener('click', function(){
-    var item = findItem(detailItemId);
-    closeDetail();
-    openEditSheet(item);
-  });
-
-  // ---------- Send to Studio Notebook (clipboard handoff) ----------
-  document.getElementById('detailSendBtn').addEventListener('click', function(){
-    var item = findItem(detailItemId);
-    if(!item) return;
-    var text;
-    if(item.pieces && item.pieces.length){
-      text = item.pieces.map(function(p){
-        return item.composer ? (p + ' — ' + item.composer) : p;
-      }).join('\n');
-    }else{
-      text = item.composer ? (item.title + ' — ' + item.composer) : item.title;
-    }
-    copyToClipboard(text, function(ok){
-      if(ok){
-        showToast('Copied — paste into Studio Notebook');
-      }else{
-        showToast('Could not copy — select and copy manually');
-        window.prompt('Copy this text:', text);
+  Array.prototype.forEach.call(grid.querySelectorAll('.cal-day:not(.empty):not(.future)'), function(cell){
+    cell.addEventListener('click', function(){
+      var key = this.getAttribute('data-key');
+      var isToday = key === todayKey();
+      if(isToday){
+        if(state.practiced[key]){ delete state.practiced[key]; }
+        else { state.practiced[key] = true; }
+        save(); renderCalendar(); renderStreak();
+      } else if(state.practiced[key]){
+        openDaySummary(key);
+      } else {
+        state.practiced[key] = true;
+        save(); renderCalendar(); renderStreak();
       }
     });
   });
+}
 
-  function copyToClipboard(text, cb){
-    if(navigator.clipboard && navigator.clipboard.writeText){
-      navigator.clipboard.writeText(text).then(function(){ cb(true); }).catch(function(){
-        fallbackCopy(text, cb);
+document.getElementById('calPrev').addEventListener('click', function(){
+  calViewDate.setMonth(calViewDate.getMonth()-1);
+  renderCalendar();
+});
+document.getElementById('calNext').addEventListener('click', function(){
+  calViewDate.setMonth(calViewDate.getMonth()+1);
+  renderCalendar();
+});
+
+// ── Streak ──
+function calcStreak(){
+  var streak=0;
+  var d=new Date();
+  // if not practiced today, start checking from yesterday
+  var todayStr=todayKey();
+  if(!state.practiced[todayStr]){
+    d.setDate(d.getDate()-1);
+  }
+  while(true){
+    var k=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+    if(state.practiced[k]){ streak++; d.setDate(d.getDate()-1); }
+    else break;
+  }
+  return streak;
+}
+
+function renderStreak(){
+  var streak=calcStreak();
+  var todayStr=todayKey();
+  var practicedToday=!!state.practiced[todayStr];
+
+  document.getElementById('todayHeading').textContent = friendlyDate(new Date());
+  var sub='';
+  if(practicedToday){
+    sub = streak>1 ? '🎉 '+streak+' days in a row — keep it going!' : '✓ Practised today';
+  } else {
+    sub = streak>0 ? '🎵 '+streak+' day streak — play something today!' : 'No pressure — just pick up the viola when you\'re ready.';
+  }
+  document.getElementById('todayStreak').textContent = sub;
+  document.getElementById('streakNumber').textContent = streak;
+}
+
+// ── Categories / Post-its ──
+function getTodayTicked(){
+  var key=todayKey();
+  return state.ticked[key] || {};
+}
+function setTicked(itemId, val){
+  var key=todayKey();
+  if(!state.ticked[key]) state.ticked[key]={};
+  if(val) state.ticked[key][itemId]=true;
+  else delete state.ticked[key][itemId];
+  save();
+}
+
+function renderCategories(){
+  var wrap = document.getElementById('categoriesWrap');
+  var ticked = getTodayTicked();
+  var html = '';
+
+  CATEGORIES.forEach(function(cat){
+    var items = state.items.filter(function(it){ return it.category===cat.key; });
+    html += '<div class="category-section">';
+    html += '<div class="category-header">';
+    html += '<span class="category-label">'+escHtml(cat.label)+'</span>';
+    html += '<button class="add-item-btn" data-cat="'+cat.key+'">+ Add</button>';
+    html += '</div>';
+    html += '<div class="postit-grid" id="grid-'+cat.key+'">';
+    if(items.length===0){
+      html += '<div class="category-empty">Nothing here yet — tap + Add to get started.</div>';
+    } else {
+      items.forEach(function(item){
+        var isTicked = !!ticked[item.id];
+        var bg = cat.color;
+        html += '<div class="postit-card" style="background:'+bg+';" data-id="'+item.id+'">';
+        html += '<div class="postit-tick'+(isTicked?' ticked':'')+ '" data-tick="'+item.id+'">'+(isTicked?'✓':'')+'</div>';
+        html += '<div class="postit-body">';
+        html += '<div class="postit-title'+(isTicked?' done':'')+'">'+escHtml(item.title);
+        if(item.carryover) html += '<span class="carryover-badge">carried over</span>';
+        html += '</div>';
+        if(item.note) html += '<div class="postit-note">'+escHtml(item.note)+'</div>';
+        html += '<div class="postit-actions">';
+        html += '<button class="postit-action-btn" data-edit="'+item.id+'">Edit</button>';
+        html += '</div>';
+        html += '</div></div>';
       });
-    }else{
-      fallbackCopy(text, cb);
     }
-  }
-  function fallbackCopy(text, cb){
-    try{
-      var ta = document.createElement('textarea');
-      ta.value = text;
-      ta.style.position = 'fixed';
-      ta.style.left = '-9999px';
-      document.body.appendChild(ta);
-      ta.focus();
-      ta.select();
-      var ok = document.execCommand('copy');
-      document.body.removeChild(ta);
-      cb(ok);
-    }catch(e){
-      cb(false);
-    }
-  }
-
-  // ---------- Bulk Add ----------
-  var parsedBulkItems = [];
-
-  document.getElementById('bulkFab').addEventListener('click', function(){
-    document.getElementById('bulkTextarea').value = '';
-    document.getElementById('bulkPreviewWrap').style.display = 'none';
-    document.getElementById('bulkPreviewBtn').style.display = 'block';
-    document.getElementById('bulkConfirmRow').style.display = 'none';
-    document.querySelector('#bulkBackdrop .sheet-actions').style.display = 'flex';
-    bulkBackdrop.classList.add('show');
-  });
-  function closeBulk(){ bulkBackdrop.classList.remove('show'); }
-  document.getElementById('bulkClose').addEventListener('click', closeBulk);
-  document.getElementById('bulkCancelBtn').addEventListener('click', closeBulk);
-  bulkBackdrop.addEventListener('click', function(e){
-    if(e.target === bulkBackdrop) closeBulk();
+    html += '</div></div>';
   });
 
-  function parseBulkLine(line){
-    var parts = line.split(',').map(function(p){ return p.trim(); });
-    return {
-      id: uid(),
-      type: 'book',
-      title: parts[0] || '',
-      composer: parts[1] || '',
-      grade: parts[2] || '',
-      location: parts[3] || '',
-      forscore: 'physical',
-      tags: [],
-      pieces: [],
-      notes: '',
-      createdAt: Date.now()
-    };
-  }
+  wrap.innerHTML = html;
 
-  document.getElementById('bulkPreviewBtn').addEventListener('click', function(){
-    var raw = document.getElementById('bulkTextarea').value;
-    var lines = raw.split('\n').map(function(l){ return l.trim(); }).filter(Boolean);
-    if(lines.length === 0){
-      showToast('Add at least one line first');
-      return;
-    }
-    parsedBulkItems = lines.map(parseBulkLine);
-
-    var countEl = document.getElementById('bulkCount');
-    countEl.textContent = parsedBulkItems.length + ' item' + (parsedBulkItems.length===1?'':'s') + ' ready to add:';
-
-    var preview = document.getElementById('bulkPreview');
-    preview.innerHTML = parsedBulkItems.map(function(it){
-      return '<div class="bulk-preview-row"><span class="bp-title">'+escapeHtml(it.title)+'</span>' +
-        (it.composer ? '<span class="bp-composer">'+escapeHtml(it.composer)+'</span>' : '') +
-        '</div>';
-    }).join('');
-
-    document.getElementById('bulkPreviewWrap').style.display = 'block';
-    document.querySelector('#bulkBackdrop .sheet-actions').style.display = 'none';
-    document.getElementById('bulkConfirmRow').style.display = 'flex';
+  // Add buttons
+  Array.prototype.forEach.call(wrap.querySelectorAll('.add-item-btn'), function(btn){
+    btn.addEventListener('click', function(){
+      openItemSheet(null, btn.getAttribute('data-cat'));
+    });
   });
 
-  document.getElementById('bulkBackBtn').addEventListener('click', function(){
-    document.getElementById('bulkPreviewWrap').style.display = 'none';
-    document.querySelector('#bulkBackdrop .sheet-actions').style.display = 'flex';
-    document.getElementById('bulkConfirmRow').style.display = 'none';
-  });
-
-  document.getElementById('bulkConfirmBtn').addEventListener('click', function(){
-    items = items.concat(parsedBulkItems);
-    saveItems();
-    showToast(parsedBulkItems.length + ' items added');
-    parsedBulkItems = [];
-    closeBulk();
-    renderStats();
-    renderList();
-  });
-
-  // ---------- Photo Scan ----------
-  var scanBackdrop = document.getElementById('scanBackdrop');
-  var scanFiles = []; // {file, dataUrl, base64, mediaType}
-  var scanResults = []; // parsed items pending confirmation
-  var scanYieldFound = 0;
-  var scanYieldVisible = 0;
-
-  function resetScanSheet(){
-    scanFiles = [];
-    scanResults = [];
-    scanYieldFound = 0;
-    scanYieldVisible = 0;
-    document.getElementById('scanFileInput').value = '';
-    document.getElementById('scanThumbGrid').innerHTML = '';
-    document.getElementById('scanYieldNotice').innerHTML = '';
-    showScanStep('pick');
-    document.getElementById('scanStartBtn').disabled = true;
-  }
-
-  function showScanStep(step){
-    document.getElementById('scanStepPick').style.display = (step==='pick') ? 'block' : 'none';
-    document.getElementById('scanStepProgress').style.display = (step==='progress') ? 'block' : 'none';
-    document.getElementById('scanStepError').style.display = (step==='error') ? 'block' : 'none';
-    document.getElementById('scanStepResults').style.display = (step==='results') ? 'block' : 'none';
-
-    document.getElementById('scanActionsPick').style.display = (step==='pick' || step==='progress') ? 'flex' : 'none';
-    document.getElementById('scanActionsError').style.display = (step==='error') ? 'flex' : 'none';
-    document.getElementById('scanActionsResults').style.display = (step==='results') ? 'flex' : 'none';
-
-    if(step === 'progress'){
-      document.getElementById('scanStartBtn').style.display = 'none';
-    }else{
-      document.getElementById('scanStartBtn').style.display = 'block';
-    }
-  }
-
-  document.getElementById('scanFab').addEventListener('click', function(){
-    resetScanSheet();
-    scanBackdrop.classList.add('show');
-  });
-  function closeScan(){ scanBackdrop.classList.remove('show'); }
-  document.getElementById('scanClose').addEventListener('click', closeScan);
-  document.getElementById('scanCancelBtn').addEventListener('click', closeScan);
-  scanBackdrop.addEventListener('click', function(e){
-    if(e.target === scanBackdrop) closeScan();
-  });
-
-  document.getElementById('scanDropzone').addEventListener('click', function(){
-    document.getElementById('scanFileInput').click();
-  });
-
-  document.getElementById('scanFileInput').addEventListener('change', function(e){
-    var files = Array.prototype.slice.call(e.target.files || []);
-    if(files.length === 0) return;
-
-    var remaining = files.length;
-    files.forEach(function(file){
-      var reader = new FileReader();
-      reader.onload = function(ev){
-        var dataUrl = ev.target.result;
-        var base64 = dataUrl.split(',')[1];
-        var mediaType = file.type || 'image/jpeg';
-        scanFiles.push({ file: file, dataUrl: dataUrl, base64: base64, mediaType: mediaType });
-        remaining--;
-        renderScanThumbs();
-        if(remaining === 0){
-          document.getElementById('scanStartBtn').disabled = (scanFiles.length === 0);
+  // Tick buttons
+  Array.prototype.forEach.call(wrap.querySelectorAll('[data-tick]'), function(btn){
+    btn.addEventListener('click', function(){
+      var id = btn.getAttribute('data-tick');
+      var isTicked = btn.classList.contains('ticked');
+      setTicked(id, !isTicked);
+      // record in tick history for stats
+      var todayStr = todayKey();
+      if(!state.tickHistory[todayStr]) state.tickHistory[todayStr]={};
+      var item = null;
+      for(var _fi=0;_fi<state.items.length;_fi++){ if(state.items[_fi].id===id){ item=state.items[_fi]; break; } }
+      if(item){
+        if(!isTicked){
+          state.tickHistory[todayStr][item.category] = (state.tickHistory[todayStr][item.category]||0)+1;
+        } else {
+          state.tickHistory[todayStr][item.category] = Math.max(0,(state.tickHistory[todayStr][item.category]||1)-1);
         }
-      };
-      reader.onerror = function(){
-        remaining--;
-        showToast('Could not read one of the photos');
-      };
-      reader.readAsDataURL(file);
-    });
-  });
-
-  function renderScanThumbs(){
-    var grid = document.getElementById('scanThumbGrid');
-    grid.innerHTML = scanFiles.map(function(sf, idx){
-      return '<div class="thumb-wrap" data-idx="'+idx+'">' +
-        '<img src="'+sf.dataUrl+'" alt="">' +
-        '<button class="thumb-rm" data-idx="'+idx+'">&times;</button>' +
-        '</div>';
-    }).join('');
-    Array.prototype.forEach.call(grid.querySelectorAll('.thumb-rm'), function(btn){
-      btn.addEventListener('click', function(e){
-        e.stopPropagation();
-        var idx = parseInt(this.getAttribute('data-idx'), 10);
-        scanFiles.splice(idx, 1);
-        renderScanThumbs();
-        document.getElementById('scanStartBtn').disabled = (scanFiles.length === 0);
-      });
-    });
-  }
-
-  document.getElementById('scanManualBtn').addEventListener('click', function(){
-    closeScan();
-    openEditSheet(null);
-  });
-  document.getElementById('scanRetryBtn').addEventListener('click', function(){
-    showScanStep('pick');
-    document.getElementById('scanStartBtn').disabled = (scanFiles.length === 0);
-  });
-
-  document.getElementById('scanStartBtn').addEventListener('click', function(){
-    if(scanFiles.length === 0) return;
-    runScan();
-  });
-
-  function runScan(){
-    showScanStep('progress');
-    scanResults = [];
-    scanYieldFound = 0;
-    scanYieldVisible = 0;
-    scanPhotosSequentially(0);
-  }
-
-  function scanPhotosSequentially(idx){
-    if(idx >= scanFiles.length){
-      // done
-      if(scanResults.length === 0){
-        document.getElementById('scanErrorMsg').textContent =
-          "Claude couldn't identify any items in those photos. This often happens with tightly packed shelf spines — try fanning a few books out so covers are visible, or add items manually.";
-        showScanStep('error');
-        return;
       }
-      renderScanResults();
-      showScanStep('results');
-      return;
+      save();
+      renderCategories();
+      renderStreak();
+    });
+  });
+
+  // Edit buttons
+  Array.prototype.forEach.call(wrap.querySelectorAll('[data-edit]'), function(btn){
+    btn.addEventListener('click', function(){
+      var id = btn.getAttribute('data-edit');
+      var item = null;
+      for(var _fi2=0;_fi2<state.items.length;_fi2++){ if(state.items[_fi2].id===id){ item=state.items[_fi2]; break; } }
+      if(item) openItemSheet(item, null);
+    });
+  });
+}
+
+// ── Item Sheet ──
+function openItemSheet(item, defaultCat){
+  editingItemId = item ? item.id : null;
+  editingCategory = defaultCat || (item ? item.category : 'warmup');
+  document.getElementById('itemSheetTitle').textContent = item ? 'Edit item' : 'Add item';
+  document.getElementById('fCategory').value = editingCategory;
+  document.getElementById('fTitle').value = item ? (item.title||'') : '';
+  document.getElementById('fNote').value = item ? (item.note||'') : '';
+  document.getElementById('itemDeleteBtn').style.display = item ? 'block' : 'none';
+  document.getElementById('itemSheet').classList.add('show');
+}
+function closeItemSheet(){
+  document.getElementById('itemSheet').classList.remove('show');
+  editingItemId = null;
+}
+document.getElementById('itemSheetClose').addEventListener('click', closeItemSheet);
+document.getElementById('itemCancelBtn').addEventListener('click', closeItemSheet);
+document.getElementById('itemSheet').addEventListener('click', function(e){
+  if(e.target===this) closeItemSheet();
+});
+
+document.getElementById('itemSaveBtn').addEventListener('click', function(){
+  var title = document.getElementById('fTitle').value.trim();
+  if(!title){ showToast('Please add a title'); return; }
+  var cat = document.getElementById('fCategory').value;
+  var note = document.getElementById('fNote').value.trim();
+  if(editingItemId){
+    var idx = -1;
+    for(var _fii=0;_fii<state.items.length;_fii++){ if(state.items[_fii].id===editingItemId){ idx=_fii; break; } }
+    if(idx>-1){
+      state.items[idx].category = cat;
+      state.items[idx].title = title;
+      state.items[idx].note = note;
     }
-    document.getElementById('scanProgressText').textContent =
-      'Reading photo ' + (idx+1) + ' of ' + scanFiles.length + '…';
-
-    var sf = scanFiles[idx];
-    callClaudeForPhoto(sf, function(success, parsedItems, errMsg, totalVisible){
-      if(success){
-        parsedItems.forEach(function(it){ scanResults.push(it); });
-        scanYieldFound += parsedItems.length;
-        scanYieldVisible += (totalVisible || parsedItems.length);
-        scanPhotosSequentially(idx + 1);
-      }else{
-        // graceful failure: stop, show error, offer manual fallback or retry
-        document.getElementById('scanErrorMsg').textContent =
-          errMsg || "Something went wrong contacting Claude. This can happen if you've reached your usage limit for now.";
-        showScanStep('error');
-      }
-    });
+    showToast('Saved');
+  } else {
+    state.items.push({ id:uid(), category:cat, title:title, note:note, carryover:false });
+    showToast('Added');
   }
+  save();
+  closeItemSheet();
+  renderCategories();
+});
 
-  function callClaudeForPhoto(sf, cb){
-    var prompt = 'You are looking at a photo of sheet music books, covers, or spines, possibly on a shelf. ' +
-      'Identify each distinct piece of sheet music you can read. For each one, extract: ' +
-      'title, composer (if visible), grade or level (if visible, e.g. "Grade 5"), and type ' +
-      '(one of: "book", "anthology", "single" — use "book" for method/study books, "anthology" for collections of multiple pieces/composers, "single" for a single piece of sheet music). ' +
-      'Only include items you can actually read with reasonable confidence — skip anything too blurry, too small, or unclear rather than guessing. ' +
-      'Also estimate the total number of distinct books/items visible in the photo overall, including ones you could not read (e.g. blank spines, sideways tiny text, books spine-on with no visible title) — this helps flag when a photo angle is not well suited to reading (like a tightly packed shelf of spines vs. fanned-out covers). ' +
-      'Respond ONLY with a JSON object, no preamble, no markdown formatting, no code fences. Format: ' +
-      '{"items":[{"title":"...","composer":"...","grade":"...","type":"book"}],"totalVisible":12}. ' +
-      'If you cannot read anything useful in the photo, respond with {"items":[],"totalVisible":N} using your best estimate for N.';
-
-    fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 1500,
-        messages: [{
-          role: 'user',
-          content: [
-            { type: 'image', source: { type: 'base64', media_type: sf.mediaType, data: sf.base64 } },
-            { type: 'text', text: prompt }
-          ]
-        }]
-      })
-    }).then(function(response){
-      if(!response.ok){
-        return response.text().then(function(t){
-          throw new Error('API returned status ' + response.status);
-        });
-      }
-      return response.json();
-    }).then(function(data){
-      var textParts = (data.content || []).filter(function(b){ return b.type === 'text'; }).map(function(b){ return b.text; });
-      var raw = textParts.join('\n').trim();
-      raw = raw.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/```\s*$/i, '').trim();
-
-      var parsed;
-      try{
-        parsed = JSON.parse(raw);
-      }catch(e){
-        cb(false, null, "Claude's reply couldn't be understood. Try again, or add this one manually.");
-        return;
-      }
-      var rawItems = Array.isArray(parsed) ? parsed : (parsed && Array.isArray(parsed.items) ? parsed.items : null);
-      if(!rawItems){
-        cb(false, null, "Claude's reply wasn't in the expected format. Try again, or add this one manually.");
-        return;
-      }
-      var totalVisible = (parsed && typeof parsed.totalVisible === 'number') ? parsed.totalVisible : rawItems.length;
-
-      var clean = rawItems.filter(function(it){ return it && it.title; }).map(function(it){
-        return {
-          id: uid(),
-          type: ['book','anthology','single'].indexOf(it.type) > -1 ? it.type : 'book',
-          title: String(it.title || '').trim(),
-          composer: String(it.composer || '').trim(),
-          grade: String(it.grade || '').trim(),
-          location: '',
-          forscore: 'physical',
-          tags: [],
-          pieces: [],
-          notes: '',
-          createdAt: Date.now()
-        };
-      });
-      cb(true, clean, null, totalVisible);
-    }).catch(function(err){
-      var msg = "Something went wrong contacting Claude.";
-      if(err && /429|rate|limit/i.test(err.message || '')){
-        msg = "This looks like a usage limit — you may have reached your Claude usage allowance for now. Add manually below, and try scanning again later.";
-      }else if(err && /network|fetch/i.test(err.message || '')){
-        msg = "Couldn't reach Claude — check your connection and try again.";
-      }
-      cb(false, null, msg, 0);
-    });
-  }
-
-  function renderScanResults(){
-    var noticeEl = document.getElementById('scanYieldNotice');
-    var isLowYield = scanYieldVisible > 0 && (scanYieldFound / scanYieldVisible) < 0.5 && scanYieldVisible >= 6;
-    if(isLowYield){
-      noticeEl.innerHTML =
-        '<div class="yield-notice"><b>Looks like a packed shelf shot</b>' +
-        'Claude could only read ' + scanYieldFound + ' of roughly ' + scanYieldVisible + ' books visible — ' +
-        'tightly packed spines are hard to read accurately. For better results next time, try fanning ' +
-        'a few books out so their covers show, or photograph them in smaller stacks.</div>';
-    }else{
-      noticeEl.innerHTML = '';
-    }
-
-    document.getElementById('scanResultCount').textContent =
-      scanResults.length + ' item' + (scanResults.length===1?'':'s') + ' found — check and edit before adding:';
-    var wrap = document.getElementById('scanResultPreview');
-    wrap.innerHTML = scanResults.map(function(it, idx){
-      return '<div class="bulk-preview-row editable" data-idx="'+idx+'">' +
-        '<div class="bp-edit-row">' +
-          '<input type="text" class="sr-title" data-idx="'+idx+'" data-field="title" value="'+escapeHtml(it.title)+'" placeholder="Title">' +
-          '<button class="bp-discard" data-idx="'+idx+'" title="Remove">&times;</button>' +
-        '</div>' +
-        '<div class="bp-edit-row">' +
-          '<input type="text" class="sr-composer" data-idx="'+idx+'" data-field="composer" value="'+escapeHtml(it.composer)+'" placeholder="Composer">' +
-          '<input type="text" class="sr-grade" data-idx="'+idx+'" data-field="grade" value="'+escapeHtml(it.grade)+'" placeholder="Grade" style="max-width:90px;">' +
-        '</div>' +
-      '</div>';
-    }).join('');
-
-    Array.prototype.forEach.call(wrap.querySelectorAll('input'), function(inp){
-      inp.addEventListener('input', function(){
-        var idx = parseInt(this.getAttribute('data-idx'), 10);
-        var field = this.getAttribute('data-field');
-        scanResults[idx][field] = this.value;
-      });
-    });
-    Array.prototype.forEach.call(wrap.querySelectorAll('.bp-discard'), function(btn){
-      btn.addEventListener('click', function(){
-        var idx = parseInt(this.getAttribute('data-idx'), 10);
-        scanResults.splice(idx, 1);
-        renderScanResults();
-      });
-    });
-  }
-
-  document.getElementById('scanResultsBackBtn').addEventListener('click', function(){
-    showScanStep('pick');
-    document.getElementById('scanStartBtn').disabled = (scanFiles.length === 0);
+document.getElementById('itemDeleteBtn').addEventListener('click', function(){
+  if(!editingItemId) return;
+  // confirmed by user tapping Delete button
+  state.items = state.items.filter(function(it){ return it.id!==editingItemId; });
+  // clean up ticks
+  Object.keys(state.ticked).forEach(function(day){
+    delete state.ticked[day][editingItemId];
   });
+  save();
+  closeItemSheet();
+  renderCategories();
+  showToast('Removed');
+});
 
-  document.getElementById('scanResultsConfirmBtn').addEventListener('click', function(){
-    var toAdd = scanResults.filter(function(it){ return it.title && it.title.trim(); });
-    if(toAdd.length === 0){
-      showToast('Nothing to add — all items were removed');
-      return;
+
+// ── Day Summary Sheet ──
+var daySummaryKey = null;
+function openDaySummary(key){
+  daySummaryKey = key;
+  var parts = key.split('-');
+  var d = new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]));
+  document.getElementById('daySummaryTitle').textContent = friendlyDate(d);
+  var tickedOnDay = state.ticked[key] || {};
+  var tickedIds = Object.keys(tickedOnDay).filter(function(id){ return tickedOnDay[id]; });
+  var body = '';
+  if(tickedIds.length === 0){
+    body = '<p style="color:var(--muted);font-size:0.85rem;padding:8px 0;">No items were ticked on this day — just the practice mark.</p>';
+  } else {
+    CATEGORIES.forEach(function(cat){
+      var catItems = tickedIds.map(function(id){
+        var _found = null;
+        for(var _fi3=0;_fi3<state.items.length;_fi3++){ if(state.items[_fi3].id===id && state.items[_fi3].category===cat.key){ _found=state.items[_fi3]; break; } }
+        return _found;
+      }).filter(Boolean);
+      if(catItems.length===0) return;
+      body += '<div style="margin-bottom:12px;">';
+      body += '<div style="font-size:0.68rem;font-weight:700;color:var(--muted);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:6px;">'+escHtml(cat.label)+'</div>';
+      catItems.forEach(function(item){
+        body += '<div style="background:'+cat.color+';border-radius:8px;padding:8px 12px;margin-bottom:5px;font-size:0.88rem;color:var(--navy);">✓ '+escHtml(item.title)+'</div>';
+      });
+      body += '</div>';
+    });
+  }
+  // Append wins & realisations if any
+  var notes = state.dailyNotes[key] || {};
+  if(notes.wins || notes.realisations){
+    body += '<div style="margin-top:14px;border-top:1px solid var(--warm);padding-top:12px;">';
+    if(notes.wins){
+      body += '<div style="margin-bottom:10px;">';
+      body += '<div style="font-size:0.68rem;font-weight:700;color:var(--muted);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:5px;">🌟 Wins</div>';
+      body += '<div style="font-size:0.85rem;line-height:1.5;color:var(--navy);white-space:pre-wrap;">'+escHtml(notes.wins)+'</div>';
+      body += '</div>';
     }
-    items = items.concat(toAdd);
-    saveItems();
-    showToast(toAdd.length + ' items added from photos');
-    closeScan();
-    renderStats();
-    renderList();
-  });
+    if(notes.realisations){
+      body += '<div>';
+      body += '<div style="font-size:0.68rem;font-weight:700;color:var(--muted);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:5px;">💡 Realisations</div>';
+      body += '<div style="font-size:0.85rem;line-height:1.5;color:var(--navy);white-space:pre-wrap;">'+escHtml(notes.realisations)+'</div>';
+      body += '</div>';
+    }
+    body += '</div>';
+  }
 
-  // ---------- Init ----------
-  loadItems();
-  renderFilterChips();
-  document.getElementById('filterChips').style.display = 'none';
-  renderStats();
-  renderList();
+  document.getElementById('daySummaryBody').innerHTML = body;
+  document.getElementById('daySummarySheet').classList.add('show');
+}
+function closeDaySummary(){
+  var el = document.getElementById('daySummarySheet');
+  if(el) el.classList.remove('show');
+  daySummaryKey=null;
+}
+var _dsc = document.getElementById('daySummaryClose');
+var _dsd = document.getElementById('daySummaryDone');
+var _dss = document.getElementById('daySummarySheet');
+var _dsu = document.getElementById('daySummaryUnmark');
+if(_dsc) _dsc.addEventListener('click', closeDaySummary);
+if(_dsd) _dsd.addEventListener('click', closeDaySummary);
+if(_dss) _dss.addEventListener('click', function(e){ if(e.target===this) closeDaySummary(); });
+if(_dsu) _dsu.addEventListener('click', function(){
+  if(!daySummaryKey) return;
+  delete state.practiced[daySummaryKey];
+  save(); renderCalendar(); renderStreak();
+  closeDaySummary();
+  showToast('Day unmarked');
+});
+
+// ── History view ──
+function renderHistory(){
+  // Total days & streak
+  var totalDays = Object.keys(state.practiced).filter(function(k){ return state.practiced[k]; }).length;
+  document.getElementById('totalDaysNumber').textContent = totalDays;
+  document.getElementById('streakNumber').textContent = calcStreak();
+
+  // Weekly bar chart — last 8 weeks
+  var bars='';
+  var weekTotals=[];
+  var d=new Date();
+  for(var w=7;w>=0;w--){
+    var weekStart=new Date(d);
+    weekStart.setDate(d.getDate()-w*7-6);
+    var count=0;
+    for(var i=0;i<7;i++){
+      var dd=new Date(weekStart);
+      dd.setDate(weekStart.getDate()+i);
+      var k=dd.getFullYear()+'-'+pad(dd.getMonth()+1)+'-'+pad(dd.getDate());
+      if(state.practiced[k]) count++;
+    }
+    weekTotals.push(count);
+  }
+  var maxW=Math.max.apply(null,weekTotals)||1;
+  weekTotals.forEach(function(c,i){
+    var h=Math.round((c/maxW)*70);
+    bars+='<div class="bar-wrap"><div class="bar" style="height:'+h+'px;"></div><div class="bar-label">w'+(i+1)+'</div></div>';
+  });
+  document.getElementById('weeklyChart').innerHTML=bars;
+
+  // Category breakdown — count ticks per category across all history
+  var catCounts={};
+  CATEGORIES.forEach(function(c){ catCounts[c.key]=0; });
+  Object.keys(state.tickHistory).forEach(function(day){
+    Object.keys(state.tickHistory[day]).forEach(function(cat){
+      if(catCounts[cat]!==undefined) catCounts[cat]+=(state.tickHistory[day][cat]||0);
+    });
+  });
+  var maxC=Math.max.apply(null,Object.keys(catCounts).map(function(k){ return catCounts[k]; }))||1;
+  var breakdown='';
+  CATEGORIES.forEach(function(cat){
+    var c=catCounts[cat.key]||0;
+    var pct=Math.round((c/maxC)*100);
+    breakdown+='<div class="breakdown-row">';
+    breakdown+='<div class="breakdown-label">'+escHtml(cat.label)+'</div>';
+    breakdown+='<div class="breakdown-bar-wrap"><div class="breakdown-bar" style="width:'+pct+'%;background:'+cat.color+';filter:saturate(1.6) brightness(0.85);"></div></div>';
+    breakdown+='<div class="breakdown-count">'+c+'</div>';
+    breakdown+='</div>';
+  });
+  document.getElementById('breakdownChart').innerHTML=breakdown;
+}
+
+// ── Backup & Restore ──
+document.getElementById('backupBtn').addEventListener('click', function(){
+  document.getElementById('backupSheet').classList.add('show');
+});
+function closeBackup(){ document.getElementById('backupSheet').classList.remove('show'); }
+document.getElementById('backupClose').addEventListener('click', closeBackup);
+document.getElementById('backupCancelBtn').addEventListener('click', closeBackup);
+document.getElementById('backupSheet').addEventListener('click', function(e){
+  if(e.target===this) closeBackup();
+});
+
+document.getElementById('doBackupBtn').addEventListener('click', function(){
+  var data = JSON.stringify(state, null, 2);
+  var blob = new Blob([data], {type:'application/json'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  var d = new Date();
+  a.download = 'practice-journal-backup-'+d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'.json';
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('Backup saved');
+  closeBackup();
+});
+
+document.getElementById('doRestoreBtn').addEventListener('click', function(){
+  document.getElementById('restoreFileInput').click();
+});
+document.getElementById('restoreFileInput').addEventListener('change', function(e){
+  var file = e.target.files[0];
+  if(!file) return;
+  var reader = new FileReader();
+  reader.onload = function(ev){
+    try{
+      var parsed = JSON.parse(ev.target.result);
+      if(!parsed.items) throw new Error('Invalid backup');
+      // user chose to restore
+      state = parsed;
+      if(!state.ticked) state.ticked={};
+      if(!state.tickHistory) state.tickHistory={};
+      save();
+      renderAll();
+      showToast('Restored from backup');
+      closeBackup();
+    }catch(err){
+      showToast('Could not read that backup file');
+    }
+  };
+  reader.readAsText(file);
+  e.target.value='';
+});
+
+// ── Escape HTML ──
+function escHtml(s){
+  return String(s||'').replace(/[&<>"']/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+
+// ── Daily Notes ──
+function loadDailyNotes(){
+  var key = todayKey();
+  var notes = state.dailyNotes[key] || {};
+  var winsEl = document.getElementById('todayWins');
+  var realEl = document.getElementById('todayRealisations');
+  if(winsEl) winsEl.value = notes.wins || '';
+  if(realEl) realEl.value = notes.realisations || '';
+}
+
+function saveDailyNote(field, value){
+  var key = todayKey();
+  if(!state.dailyNotes[key]) state.dailyNotes[key] = {};
+  state.dailyNotes[key][field] = value;
+  save();
+}
+
+// ── Init ──
+function renderAll(){
+  renderStreak();
+  renderCalendar();
+  renderCategories();
+}
+
+load();
+renderAll();
+loadDailyNotes();
+
+// Save wins/realisations on input
+var winsEl = document.getElementById('todayWins');
+var realEl = document.getElementById('todayRealisations');
+if(winsEl) winsEl.addEventListener('input', function(){ saveDailyNote('wins', this.value); });
+if(realEl) realEl.addEventListener('input', function(){ saveDailyNote('realisations', this.value); });
 
 })();
 </script>
