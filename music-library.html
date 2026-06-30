@@ -426,6 +426,62 @@ header {
   margin-top: 4px;
 }
 
+/* ── TOOLS: METRONOME & DRONE ── */
+.tool-block {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px 18px;
+  margin-bottom: 14px;
+}
+.tool-block-title {
+  font-size: 0.85rem; font-weight: 700;
+  color: var(--navy); margin-bottom: 12px;
+}
+.metronome-display { text-align: center; padding: 4px 0 10px; }
+.bpm-number {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.6rem; color: var(--forest); line-height: 1;
+}
+.bpm-label { font-size: 0.7rem; color: var(--muted); margin-top: 2px; }
+.bpm-slider-row {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 12px;
+}
+.bpm-slider-row input[type="range"] { flex: 1; accent-color: var(--forest); }
+.bpm-step-btn {
+  width: 34px; height: 34px; border-radius: 8px;
+  border: 1.5px solid #ccdaec; background: var(--paper);
+  font-size: 1.1rem; color: var(--navy); cursor: pointer;
+  flex-shrink: 0;
+}
+.tool-row { display: flex; gap: 8px; margin-bottom: 10px; }
+.tool-row select {
+  flex: 1; font-family: 'Special Elite', cursive; font-size: 0.88rem;
+  padding: 9px 10px; border: 1.5px solid #ccdaec; border-radius: 9px;
+  background: var(--card-bg); color: var(--ink);
+}
+.tool-toggle-btn {
+  flex: 1; padding: 11px; border-radius: 10px;
+  border: 1.5px solid #ccdaec; background: var(--paper);
+  font-family: 'Special Elite', cursive; font-size: 0.85rem;
+  color: var(--ink); cursor: pointer;
+}
+.tool-toggle-btn.primary { background: var(--forest); color: #fff; border-color: var(--forest); }
+.tool-toggle-btn.active { background: #a33; color: #fff; border-color: #a33; }
+.speed-burst-row {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 0.78rem; color: var(--muted);
+  cursor: pointer;
+}
+.speed-burst-row input { accent-color: var(--forest); }
+.metronome-flash {
+  position: fixed; inset: 0; background: var(--forest);
+  opacity: 0; pointer-events: none; z-index: 250;
+  transition: opacity 0.08s;
+}
+.metronome-flash.flash { opacity: 0.15; }
+
 /* ── TOAST ── */
 .toast {
   position: fixed; left: 50%; bottom: 80px;
@@ -460,6 +516,7 @@ header {
   <div class="hdr-top">
     <h1>🎵 Practice Journal</h1>
     <div class="hdr-right">
+      <button class="hdr-icon-btn" id="toolsBtn">🎼 Tools</button>
       <button class="hdr-icon-btn" id="backupBtn">⬆ Backup</button>
     </div>
   </div>
@@ -551,13 +608,79 @@ header {
       <input type="text" id="fTitle" placeholder="e.g. Bartók Viola Concerto, mvt 1">
     </div>
     <div class="field">
+      <label>Measure(s) — optional</label>
+      <input type="text" id="fMeasures" placeholder="e.g. m. 84–89, or bar 23">
+    </div>
+    <div class="field">
       <label>Reminder / focus note</label>
-      <textarea id="fNote" placeholder="e.g. Focus on bar 23 — shifting in tune"></textarea>
+      <textarea id="fNote" placeholder="e.g. Shifting in tune, left-hand extension"></textarea>
     </div>
     <div class="sheet-actions">
       <button class="btn btn-danger" id="itemDeleteBtn" style="display:none;">Delete</button>
       <button class="btn btn-ghost" id="itemCancelBtn">Cancel</button>
       <button class="btn btn-primary" id="itemSaveBtn">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Tools Sheet: Metronome & Drone -->
+<div class="sheet-backdrop" id="toolsSheet">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <h2><span>Practice Tools</span><span class="close-x" id="toolsClose">&times;</span></h2>
+
+    <div class="tool-block">
+      <div class="tool-block-title">🎯 Metronome</div>
+      <div class="metronome-display">
+        <div class="bpm-number" id="bpmDisplay">92</div>
+        <div class="bpm-label">BPM</div>
+      </div>
+      <div class="bpm-slider-row">
+        <button class="bpm-step-btn" id="bpmDown">−</button>
+        <input type="range" id="bpmSlider" min="30" max="240" value="92">
+        <button class="bpm-step-btn" id="bpmUp">+</button>
+      </div>
+      <div class="tool-row">
+        <button class="tool-toggle-btn primary" id="metroPlayBtn">▶ Start</button>
+        <button class="tool-toggle-btn" id="tapTempoBtn">Tap tempo</button>
+      </div>
+      <label class="speed-burst-row">
+        <input type="checkbox" id="speedBurstCheck">
+        <span>Speed Burst — +2 BPM every 4 beats (caps at 184)</span>
+      </label>
+    </div>
+
+    <div class="tool-block">
+      <div class="tool-block-title">🎻 Tuning drone</div>
+      <div class="tool-row">
+        <select id="droneNote">
+          <option value="C">C</option>
+          <option value="C#">C♯ / D♭</option>
+          <option value="D">D</option>
+          <option value="D#">D♯ / E♭</option>
+          <option value="E">E</option>
+          <option value="F">F</option>
+          <option value="F#">F♯ / G♭</option>
+          <option value="G" selected>G</option>
+          <option value="G#">G♯ / A♭</option>
+          <option value="A">A</option>
+          <option value="A#">A♯ / B♭</option>
+          <option value="B">B</option>
+        </select>
+        <select id="droneOctave">
+          <option value="2">Octave 2</option>
+          <option value="3" selected>Octave 3</option>
+          <option value="4">Octave 4</option>
+          <option value="5">Octave 5</option>
+        </select>
+      </div>
+      <div class="tool-row">
+        <button class="tool-toggle-btn primary" id="dronePlayBtn">▶ Play drone</button>
+      </div>
+    </div>
+
+    <div class="sheet-actions">
+      <button class="btn btn-ghost" id="toolsDoneBtn">Close</button>
     </div>
   </div>
 </div>
@@ -590,6 +713,7 @@ header {
   </div>
 </div>
 
+<div class="metronome-flash" id="metronomeFlash"></div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -803,6 +927,7 @@ function renderCategories(){
         html += '<div class="postit-tick'+(isTicked?' ticked':'')+ '" data-tick="'+item.id+'">'+(isTicked?'✓':'')+'</div>';
         html += '<div class="postit-body">';
         html += '<div class="postit-title'+(isTicked?' done':'')+'">'+escHtml(item.title);
+        if(item.measures) html += '<span class="carryover-badge" style="background:rgba(26,58,107,0.12);">'+escHtml(item.measures)+'</span>';
         if(item.carryover) html += '<span class="carryover-badge">carried over</span>';
         html += '</div>';
         if(item.note) html += '<div class="postit-note">'+escHtml(item.note)+'</div>';
@@ -866,6 +991,7 @@ function openItemSheet(item, defaultCat){
   document.getElementById('itemSheetTitle').textContent = item ? 'Edit item' : 'Add item';
   document.getElementById('fCategory').value = editingCategory;
   document.getElementById('fTitle').value = item ? (item.title||'') : '';
+  document.getElementById('fMeasures').value = item ? (item.measures||'') : '';
   document.getElementById('fNote').value = item ? (item.note||'') : '';
   document.getElementById('itemDeleteBtn').style.display = item ? 'block' : 'none';
   document.getElementById('itemSheet').classList.add('show');
@@ -884,6 +1010,7 @@ document.getElementById('itemSaveBtn').addEventListener('click', function(){
   var title = document.getElementById('fTitle').value.trim();
   if(!title){ showToast('Please add a title'); return; }
   var cat = document.getElementById('fCategory').value;
+  var measures = document.getElementById('fMeasures').value.trim();
   var note = document.getElementById('fNote').value.trim();
   if(editingItemId){
     var idx = -1;
@@ -891,11 +1018,12 @@ document.getElementById('itemSaveBtn').addEventListener('click', function(){
     if(idx>-1){
       state.items[idx].category = cat;
       state.items[idx].title = title;
+      state.items[idx].measures = measures;
       state.items[idx].note = note;
     }
     showToast('Saved');
   } else {
-    state.items.push({ id:uid(), category:cat, title:title, note:note, carryover:false });
+    state.items.push({ id:uid(), category:cat, title:title, measures:measures, note:note, carryover:false });
     showToast('Added');
   }
   save();
@@ -1039,6 +1167,196 @@ function renderHistory(){
   });
   document.getElementById('breakdownChart').innerHTML=breakdown;
 }
+
+// ── Tools: Metronome & Drone ──
+var audioCtx = null;
+function getAudioCtx(){
+  if(!audioCtx){
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if(AC) audioCtx = new AC();
+  }
+  if(audioCtx && audioCtx.state === 'suspended'){
+    audioCtx.resume();
+  }
+  return audioCtx;
+}
+
+document.getElementById('toolsBtn').addEventListener('click', function(){
+  document.getElementById('toolsSheet').classList.add('show');
+  // Resume audio context directly inside this tap — required by Safari/iPad
+  var ctx = getAudioCtx();
+  if(ctx && ctx.state === 'suspended') ctx.resume();
+});
+function closeTools(){
+  document.getElementById('toolsSheet').classList.remove('show');
+  stopMetronome();
+  stopDrone();
+}
+document.getElementById('toolsClose').addEventListener('click', closeTools);
+document.getElementById('toolsDoneBtn').addEventListener('click', closeTools);
+document.getElementById('toolsSheet').addEventListener('click', function(e){
+  if(e.target===this) closeTools();
+});
+
+// ── Metronome ──
+var bpm = 92;
+var metroTimer = null;
+var metroBeatCount = 0;
+var metroPlaying = false;
+var MIN_BPM = 30, MAX_BPM = 240, SPEED_BURST_CAP = 184;
+
+var bpmSlider = document.getElementById('bpmSlider');
+var bpmDisplay = document.getElementById('bpmDisplay');
+
+function setBpm(v){
+  v = Math.max(MIN_BPM, Math.min(MAX_BPM, Math.round(v)));
+  bpm = v;
+  bpmSlider.value = v;
+  bpmDisplay.textContent = v;
+  if(metroPlaying) restartMetronomeTiming();
+}
+
+bpmSlider.addEventListener('input', function(){ setBpm(parseInt(this.value,10)); });
+document.getElementById('bpmDown').addEventListener('click', function(){ setBpm(bpm-2); });
+document.getElementById('bpmUp').addEventListener('click', function(){ setBpm(bpm+2); });
+
+function clickSound(){
+  var ctx = getAudioCtx();
+  if(!ctx) return;
+  var osc = ctx.createOscillator();
+  var gain = ctx.createGain();
+  osc.type = 'square';
+  osc.frequency.value = 1000;
+  gain.gain.setValueAtTime(0.18, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+0.05);
+  osc.connect(gain); gain.connect(ctx.destination);
+  osc.start(ctx.currentTime);
+  osc.stop(ctx.currentTime+0.05);
+}
+
+function flashBeat(){
+  var f = document.getElementById('metronomeFlash');
+  if(!f) return;
+  f.classList.add('flash');
+  setTimeout(function(){ f.classList.remove('flash'); }, 80);
+}
+
+function metronomeTick(){
+  clickSound();
+  flashBeat();
+  metroBeatCount++;
+  var speedBurst = document.getElementById('speedBurstCheck').checked;
+  if(speedBurst && metroBeatCount % 4 === 0 && bpm < SPEED_BURST_CAP){
+    setBpm(bpm+2);
+  }
+}
+
+function restartMetronomeTiming(){
+  if(metroTimer){ clearInterval(metroTimer); }
+  var intervalMs = 60000/bpm;
+  metroTimer = setInterval(metronomeTick, intervalMs);
+}
+
+function startMetronome(){
+  if(metroPlaying) return;
+  metroPlaying = true;
+  metroBeatCount = 0;
+  getAudioCtx();
+  metronomeTick();
+  restartMetronomeTiming();
+  var btn = document.getElementById('metroPlayBtn');
+  btn.textContent = '■ Stop';
+  btn.classList.add('active');
+}
+function stopMetronome(){
+  metroPlaying = false;
+  if(metroTimer){ clearInterval(metroTimer); metroTimer=null; }
+  var btn = document.getElementById('metroPlayBtn');
+  if(btn){ btn.textContent = '▶ Start'; btn.classList.remove('active'); }
+}
+document.getElementById('metroPlayBtn').addEventListener('click', function(){
+  var ctx = getAudioCtx();
+  if(ctx && ctx.state === 'suspended'){ ctx.resume(); }
+  if(metroPlaying) stopMetronome(); else startMetronome();
+});
+
+// Tap tempo
+var tapTimes = [];
+document.getElementById('tapTempoBtn').addEventListener('click', function(){
+  var now = Date.now();
+  tapTimes.push(now);
+  if(tapTimes.length>5) tapTimes.shift();
+  if(tapTimes.length>=2){
+    var intervals=[];
+    for(var i=1;i<tapTimes.length;i++) intervals.push(tapTimes[i]-tapTimes[i-1]);
+    var avg=0;
+    for(var j=0;j<intervals.length;j++) avg+=intervals[j];
+    avg = avg/intervals.length;
+    var tappedBpm = Math.round(60000/avg);
+    setBpm(tappedBpm);
+  }
+  // reset tap sequence if too slow between taps
+  setTimeout(function(){
+    if(tapTimes.length && Date.now()-tapTimes[tapTimes.length-1] > 2000) tapTimes=[];
+  }, 2100);
+});
+
+// ── Tuning Drone ──
+var droneOsc = null;
+var droneGain = null;
+var dronePlaying = false;
+var NOTE_FREQS = {
+  'C2':65.41, 'C#2':69.30, 'D2':73.42, 'D#2':77.78, 'E2':82.41, 'F2':87.31,
+  'F#2':92.50, 'G2':98.00, 'G#2':103.83, 'A2':110.00, 'A#2':116.54, 'B2':123.47,
+  'C3':130.81, 'C#3':138.59, 'D3':146.83, 'D#3':155.56, 'E3':164.81, 'F3':174.61,
+  'F#3':185.00, 'G3':196.00, 'G#3':207.65, 'A3':220.00, 'A#3':233.08, 'B3':246.94,
+  'C4':261.63, 'C#4':277.18, 'D4':293.66, 'D#4':311.13, 'E4':329.63, 'F4':349.23,
+  'F#4':369.99, 'G4':392.00, 'G#4':415.30, 'A4':440.00, 'A#4':466.16, 'B4':493.88,
+  'C5':523.25, 'C#5':554.37, 'D5':587.33, 'D#5':622.25, 'E5':659.25, 'F5':698.46,
+  'F#5':739.99, 'G5':783.99, 'G#5':830.61, 'A5':880.00, 'A#5':932.33, 'B5':987.77
+};
+
+function startDrone(){
+  var ctx = getAudioCtx();
+  if(!ctx) return;
+  stopDrone();
+  var note = document.getElementById('droneNote').value;
+  var oct = document.getElementById('droneOctave').value;
+  var freq = NOTE_FREQS[note+oct] || 220;
+  droneOsc = ctx.createOscillator();
+  droneGain = ctx.createGain();
+  droneOsc.type = 'triangle';
+  droneOsc.frequency.value = freq;
+  droneGain.gain.setValueAtTime(0, ctx.currentTime);
+  droneGain.gain.linearRampToValueAtTime(0.12, ctx.currentTime+0.15);
+  droneOsc.connect(droneGain); droneGain.connect(ctx.destination);
+  droneOsc.start();
+  dronePlaying = true;
+  var btn = document.getElementById('dronePlayBtn');
+  btn.textContent = '■ Stop drone';
+  btn.classList.add('active');
+}
+function stopDrone(){
+  if(droneOsc){
+    try{
+      var ctx = getAudioCtx();
+      if(droneGain && ctx) droneGain.gain.linearRampToValueAtTime(0, ctx.currentTime+0.1);
+      var oscToStop = droneOsc;
+      setTimeout(function(){ try{ oscToStop.stop(); }catch(e){} }, 150);
+    }catch(e){}
+    droneOsc = null; droneGain = null;
+  }
+  dronePlaying = false;
+  var btn = document.getElementById('dronePlayBtn');
+  if(btn){ btn.textContent = '▶ Play drone'; btn.classList.remove('active'); }
+}
+document.getElementById('dronePlayBtn').addEventListener('click', function(){
+  var ctx = getAudioCtx();
+  if(ctx && ctx.state === 'suspended'){ ctx.resume(); }
+  if(dronePlaying) stopDrone(); else startDrone();
+});
+document.getElementById('droneNote').addEventListener('change', function(){ if(dronePlaying) startDrone(); });
+document.getElementById('droneOctave').addEventListener('change', function(){ if(dronePlaying) startDrone(); });
 
 // ── Backup & Restore ──
 document.getElementById('backupBtn').addEventListener('click', function(){
