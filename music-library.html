@@ -101,62 +101,55 @@ header {
 .date-sub { font-size: 0.8rem; color: var(--muted); margin-bottom: 18px; }
 
 /* ── CALENDAR ── */
+/* ── CALENDAR STRIP ── */
 .calendar-section {
   background: var(--card-bg);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
-  padding: 16px 18px;
-  margin-bottom: 20px;
+  padding: 10px 14px;
+  margin-bottom: 14px;
 }
-.cal-header {
+.cal-strip-header {
   display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 .cal-title {
-  font-family: 'DM Serif Display', serif;
-  font-size: 1rem; color: var(--navy);
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em;
+  text-transform: uppercase; color: var(--muted);
 }
-.cal-nav {
-  background: none; border: 1.5px solid var(--warm);
-  border-radius: 8px; padding: 4px 10px;
-  font-family: 'Special Elite', cursive; font-size: 0.8rem;
-  color: var(--muted); cursor: pointer;
+.cal-strip {
+  display: flex; gap: 5px;
+  overflow-x: auto; padding-bottom: 4px;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
 }
-.cal-nav:hover { border-color: var(--mid-blue); color: var(--navy); }
-.cal-grid {
-  display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;
-}
-.cal-day-label {
-  text-align: center; font-size: 0.62rem;
-  color: var(--muted); padding-bottom: 4px;
-  font-weight: 700; letter-spacing: 0.04em;
-}
+.cal-strip::-webkit-scrollbar { display: none; }
 .cal-day {
-  aspect-ratio: 1;
-  display: flex; align-items: center; justify-content: center;
-  border-radius: 8px; font-size: 0.78rem;
+  flex: 0 0 auto;
+  width: 34px; height: 40px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  border-radius: 8px; font-size: 0.72rem;
   cursor: pointer; border: 1.5px solid transparent;
   transition: all 0.12s; color: var(--ink);
   background: var(--paper);
+  scroll-snap-align: start;
+  gap: 2px;
 }
+.cal-day-label {
+  font-size: 0.55rem; color: var(--muted);
+  font-weight: 700; letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.cal-day-num { font-size: 0.78rem; font-weight: 700; }
 .cal-day:hover { border-color: var(--mid-blue); }
-.cal-day.empty { cursor: default; background: transparent; }
-.cal-day.today { border-color: var(--mid-blue); font-weight: 700; color: var(--navy); }
+.cal-day.today { border-color: var(--mid-blue); color: var(--navy); }
 .cal-day.practiced {
-  background: var(--forest);
-  color: #fff; border-color: var(--forest);
-  font-weight: 700;
+  background: var(--forest); color: #fff;
+  border-color: var(--forest);
 }
-.cal-day.future { color: var(--muted); cursor: default; }
-
-.cal-legend {
-  display: flex; align-items: center; gap: 14px;
-  margin-top: 10px; font-size: 0.72rem; color: var(--muted);
-}
-.cal-legend-dot {
-  width: 10px; height: 10px; border-radius: 3px;
-  display: inline-block; margin-right: 4px;
-}
+.cal-day.practiced .cal-day-label { color: rgba(255,255,255,0.7); }
+.cal-day.future { color: var(--muted); cursor: default; opacity: 0.4; }
 
 /* ── CATEGORY SECTIONS ── */
 .category-section { margin-bottom: 18px; }
@@ -373,6 +366,22 @@ header {
 .btn-ghost { background: transparent; color: var(--ink); border: 1.5px solid #ccdaec; }
 .btn-danger { background: transparent; color: #a33; border: 1.5px solid rgba(170,51,51,0.3); }
 
+.postit-focus {
+  width: 100%;
+  font-family: 'Special Elite', cursive;
+  font-size: 0.78rem;
+  border: 1px dashed rgba(26,58,107,0.2);
+  border-radius: 6px;
+  padding: 5px 8px;
+  background: rgba(255,255,255,0.45);
+  color: var(--navy);
+  resize: none;
+  line-height: 1.5;
+  margin-top: 5px;
+}
+.postit-focus:focus { outline: none; border-color: var(--mid-blue); background: rgba(255,255,255,0.7); }
+.postit-focus::placeholder { opacity: 0.5; font-style: italic; }
+
 /* ── WINS / REALISATIONS ── */
 .daily-notes-section { margin-top: 20px; }
 .daily-note-card {
@@ -532,20 +541,12 @@ header {
   <div class="date-heading" id="todayHeading"></div>
   <div class="date-sub" id="todayStreak"></div>
 
-  <!-- Calendar -->
+  <!-- Calendar strip -->
   <div class="calendar-section">
-    <div class="cal-header">
+    <div class="cal-strip-header">
       <div class="cal-title" id="calMonthLabel"></div>
-      <div style="display:flex;gap:6px;">
-        <button class="cal-nav" id="calPrev">‹</button>
-        <button class="cal-nav" id="calNext">›</button>
-      </div>
     </div>
-    <div class="cal-grid" id="calGrid"></div>
-    <div class="cal-legend">
-      <span><span class="cal-legend-dot" style="background:var(--forest);"></span>Practised</span>
-      <span><span class="cal-legend-dot" style="background:var(--paper);border:1.5px solid var(--mid-blue);"></span>Today</span>
-    </div>
+    <div class="cal-strip" id="calGrid"></div>
   </div>
 
   <!-- Categories -->
@@ -726,7 +727,8 @@ var state = {
   practiced: {},    // {YYYY-MM-DD: true}
   ticked: {},       // {YYYY-MM-DD: {itemId: true}}
   tickHistory: {},  // {YYYY-MM-DD: {category: count}}
-  dailyNotes: {}    // {YYYY-MM-DD: {wins, realisations}}
+  dailyNotes: {},   // {YYYY-MM-DD: {wins, realisations}}
+  dailyFocus: {}    // {YYYY-MM-DD: {itemId: focusNote}}
 };
 
 var CATEGORIES = [
@@ -738,7 +740,6 @@ var CATEGORIES = [
   { key: 'nyso',       label: 'NYSO coaching',        color: '#C9DFF0' }
 ];
 
-var calViewDate = new Date();
 var editingItemId = null;
 var editingCategory = null;
 
@@ -752,6 +753,7 @@ function load(){
     if(!state.ticked) state.ticked = {};
     if(!state.tickHistory) state.tickHistory = {};
   if(!state.dailyNotes) state.dailyNotes = {};
+  if(!state.dailyFocus) state.dailyFocus = {};
   } catch(e){ state = {items:[],practiced:{},ticked:{},tickHistory:{},dailyNotes:{}}; }
 }
 function save(){
@@ -801,37 +803,52 @@ Array.prototype.forEach.call(document.querySelectorAll('.tab-btn'), function(btn
   });
 });
 
-// ── Calendar ──
-function renderCalendar(){
-  var y = calViewDate.getFullYear();
-  var m = calViewDate.getMonth();
-  document.getElementById('calMonthLabel').textContent = monthLabel(calViewDate);
+// ── Calendar Strip ──
+var DAY_LABELS = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+var MONTHS_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-  var firstDay = new Date(y, m, 1).getDay(); // 0=Sun
-  var daysInMonth = new Date(y, m+1, 0).getDate();
+function renderCalendar(){
   var today = new Date();
   var todayStr = todayKey();
-
   var grid = document.getElementById('calGrid');
   var html = '';
-  var dayLabels = ['Su','Mo','Tu','We','Th','Fr','Sa'];
-  dayLabels.forEach(function(l){ html += '<div class="cal-day-label">'+l+'</div>'; });
 
-  for(var i=0;i<firstDay;i++) html += '<div class="cal-day empty"></div>';
-  for(var d=1;d<=daysInMonth;d++){
-    var key = dateKey(y,m+1,d);
-    var cls = 'cal-day';
-    var cellDate = new Date(y,m,d);
-    var isToday = key===todayStr;
-    var isFuture = cellDate > today && !isToday;
-    if(isToday) cls+=' today';
-    else if(isFuture) cls+=' future';
-    else if(state.practiced[key]) cls+=' practiced';
-    html += '<div class="'+cls+'" data-key="'+key+'" data-future="'+(isFuture?'1':'0')+'">'+d+'</div>';
+  // Show last 90 days up to today, oldest first
+  var days = [];
+  for(var i=89; i>=0; i--){
+    var d = new Date(today);
+    d.setDate(today.getDate()-i);
+    days.push(d);
   }
+
+  var lastMonth = null;
+  days.forEach(function(d){
+    var key = d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+    var isToday = key===todayStr;
+    var cls = 'cal-day';
+    if(isToday) cls+=' today';
+    else if(state.practiced[key]) cls+=' practiced';
+    var dayLabel = DAY_LABELS[d.getDay()];
+    // Show month label on first day of each month
+    var monthStr = (d.getDate()===1) ? MONTHS_SHORT[d.getMonth()] : dayLabel;
+    html += '<div class="'+cls+'" data-key="'+key+'">';
+    html += '<div class="cal-day-label">'+(d.getDate()===1 ? MONTHS_SHORT[d.getMonth()] : dayLabel)+'</div>';
+    html += '<div class="cal-day-num">'+d.getDate()+'</div>';
+    html += '</div>';
+  });
+
   grid.innerHTML = html;
 
-  Array.prototype.forEach.call(grid.querySelectorAll('.cal-day:not(.empty):not(.future)'), function(cell){
+  // Update month label to show current month visible
+  document.getElementById('calMonthLabel').textContent = MONTHS_SHORT[today.getMonth()]+' '+today.getFullYear();
+
+  // Scroll to today
+  setTimeout(function(){
+    var todayEl = grid.querySelector('.cal-day.today');
+    if(todayEl) todayEl.scrollIntoView({behavior:'smooth', block:'nearest', inline:'center'});
+  }, 50);
+
+  Array.prototype.forEach.call(grid.querySelectorAll('.cal-day'), function(cell){
     cell.addEventListener('click', function(){
       var key = this.getAttribute('data-key');
       var isToday = key === todayKey();
@@ -848,15 +865,6 @@ function renderCalendar(){
     });
   });
 }
-
-document.getElementById('calPrev').addEventListener('click', function(){
-  calViewDate.setMonth(calViewDate.getMonth()-1);
-  renderCalendar();
-});
-document.getElementById('calNext').addEventListener('click', function(){
-  calViewDate.setMonth(calViewDate.getMonth()+1);
-  renderCalendar();
-});
 
 // ── Streak ──
 function calcStreak(){
@@ -923,6 +931,7 @@ function renderCategories(){
       items.forEach(function(item){
         var isTicked = !!ticked[item.id];
         var bg = cat.color;
+        var todayFocus = (state.dailyFocus[todayKey()] || {})[item.id] || '';
         html += '<div class="postit-card" style="background:'+bg+';" data-id="'+item.id+'">';
         html += '<div class="postit-tick'+(isTicked?' ticked':'')+ '" data-tick="'+item.id+'">'+(isTicked?'✓':'')+'</div>';
         html += '<div class="postit-body">';
@@ -930,7 +939,7 @@ function renderCategories(){
         if(item.measures) html += '<span class="carryover-badge" style="background:rgba(26,58,107,0.12);">'+escHtml(item.measures)+'</span>';
         if(item.carryover) html += '<span class="carryover-badge">carried over</span>';
         html += '</div>';
-        if(item.note) html += '<div class="postit-note">'+escHtml(item.note)+'</div>';
+        html += '<textarea class="postit-focus" data-focus-id="'+item.id+'" placeholder="Today focus..." rows="2">'+escHtml(todayFocus)+'</textarea>';
         html += '<div class="postit-actions">';
         html += '<button class="postit-action-btn" data-edit="'+item.id+'">Edit</button>';
         html += '</div>';
@@ -941,6 +950,17 @@ function renderCategories(){
   });
 
   wrap.innerHTML = html;
+
+  // Daily focus note save
+  Array.prototype.forEach.call(wrap.querySelectorAll('.postit-focus'), function(ta){
+    ta.addEventListener('input', function(){
+      var id = this.getAttribute('data-focus-id');
+      var key = todayKey();
+      if(!state.dailyFocus[key]) state.dailyFocus[key] = {};
+      state.dailyFocus[key][id] = this.value;
+      save();
+    });
+  });
 
   // Add buttons
   Array.prototype.forEach.call(wrap.querySelectorAll('.add-item-btn'), function(btn){
@@ -1069,7 +1089,10 @@ function openDaySummary(key){
       body += '<div style="margin-bottom:12px;">';
       body += '<div style="font-size:0.68rem;font-weight:700;color:var(--muted);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:6px;">'+escHtml(cat.label)+'</div>';
       catItems.forEach(function(item){
-        body += '<div style="background:'+cat.color+';border-radius:8px;padding:8px 12px;margin-bottom:5px;font-size:0.88rem;color:var(--navy);">✓ '+escHtml(item.title)+'</div>';
+        var focusOnDay = ((state.dailyFocus[key] || {})[item.id]) || '';
+        body += '<div style="background:'+cat.color+';border-radius:8px;padding:8px 12px;margin-bottom:5px;font-size:0.88rem;color:var(--navy);">✓ '+escHtml(item.title);
+        if(focusOnDay) body += '<div style="font-size:0.75rem;opacity:0.7;margin-top:3px;">'+escHtml(focusOnDay)+'</div>';
+        body += '</div>';
       });
       body += '</div>';
     });
@@ -1227,7 +1250,7 @@ function clickSound(){
   var gain = ctx.createGain();
   osc.type = 'square';
   osc.frequency.value = 1000;
-  gain.gain.setValueAtTime(0.18, ctx.currentTime);
+  gain.gain.setValueAtTime(0.4, ctx.currentTime);
   gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+0.05);
   osc.connect(gain); gain.connect(ctx.destination);
   osc.start(ctx.currentTime);
@@ -1305,15 +1328,11 @@ document.getElementById('tapTempoBtn').addEventListener('click', function(){
 var droneOsc = null;
 var droneGain = null;
 var dronePlaying = false;
-var NOTE_FREQS = {
-  'C2':65.41, 'C#2':69.30, 'D2':73.42, 'D#2':77.78, 'E2':82.41, 'F2':87.31,
-  'F#2':92.50, 'G2':98.00, 'G#2':103.83, 'A2':110.00, 'A#2':116.54, 'B2':123.47,
-  'C3':130.81, 'C#3':138.59, 'D3':146.83, 'D#3':155.56, 'E3':164.81, 'F3':174.61,
-  'F#3':185.00, 'G3':196.00, 'G#3':207.65, 'A3':220.00, 'A#3':233.08, 'B3':246.94,
-  'C4':261.63, 'C#4':277.18, 'D4':293.66, 'D#4':311.13, 'E4':329.63, 'F4':349.23,
-  'F#4':369.99, 'G4':392.00, 'G#4':415.30, 'A4':440.00, 'A#4':466.16, 'B4':493.88,
-  'C5':523.25, 'C#5':554.37, 'D5':587.33, 'D#5':622.25, 'E5':659.25, 'F5':698.46,
-  'F#5':739.99, 'G5':783.99, 'G#5':830.61, 'A5':880.00, 'A#5':932.33, 'B5':987.77
+var NOTE_FREQS = { // A4 = 441 Hz
+  'C2':65.56, 'C#2':69.45, 'D2':73.58, 'D#2':77.96, 'E2':82.59, 'F2':87.51, 'F#2':92.71, 'G2':98.22, 'G#2':104.06, 'A2':110.25, 'A#2':116.81, 'B2':123.75,
+  'C3':131.11, 'C#3':138.91, 'D3':147.17, 'D#3':155.92, 'E3':165.19, 'F3':175.01, 'F#3':185.42, 'G3':196.44, 'G#3':208.12, 'A3':220.50, 'A#3':233.61, 'B3':247.50,
+  'C4':262.22, 'C#4':277.81, 'D4':294.33, 'D#4':311.83, 'E4':330.38, 'F4':350.02, 'F#4':370.84, 'G4':392.89, 'G#4':416.25, 'A4':441.00, 'A#4':467.22, 'B4':495.01,
+  'C5':524.44, 'C#5':555.63, 'D5':588.66, 'D#5':623.67, 'E5':660.75, 'F5':700.04, 'F#5':741.67, 'G5':785.77, 'G#5':832.50, 'A5':882.00, 'A#5':934.45, 'B5':990.01
 };
 
 function startDrone(){
@@ -1328,7 +1347,7 @@ function startDrone(){
   droneOsc.type = 'triangle';
   droneOsc.frequency.value = freq;
   droneGain.gain.setValueAtTime(0, ctx.currentTime);
-  droneGain.gain.linearRampToValueAtTime(0.12, ctx.currentTime+0.15);
+  droneGain.gain.linearRampToValueAtTime(0.35, ctx.currentTime+0.15);
   droneOsc.connect(droneGain); droneGain.connect(ctx.destination);
   droneOsc.start();
   dronePlaying = true;
@@ -1399,6 +1418,7 @@ document.getElementById('restoreFileInput').addEventListener('change', function(
       state = parsed;
       if(!state.ticked) state.ticked={};
       if(!state.tickHistory) state.tickHistory={};
+      if(!state.dailyFocus) state.dailyFocus={};
       save();
       renderAll();
       showToast('Restored from backup');
