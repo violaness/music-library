@@ -716,10 +716,6 @@ header {
       <label>Measure(s) — optional</label>
       <input type="text" id="fMeasures" placeholder="e.g. m. 84–89, or bar 23">
     </div>
-    <div class="field">
-      <label>Reminder / focus note</label>
-      <textarea id="fNote" placeholder="e.g. Shifting in tune, left-hand extension"></textarea>
-    </div>
     <div class="sheet-actions">
       <button class="btn btn-danger" id="itemDeleteBtn" style="display:none;">Delete</button>
       <button class="btn btn-ghost" id="itemCancelBtn">Cancel</button>
@@ -1239,7 +1235,6 @@ function openItemSheet(item, defaultCat){
   document.getElementById('fCategory').value = editingCategory;
   document.getElementById('fTitle').value = item ? (item.title||'') : '';
   document.getElementById('fMeasures').value = item ? (item.measures||'') : '';
-  document.getElementById('fNote').value = item ? (item.note||'') : '';
   document.getElementById('itemDeleteBtn').style.display = item ? 'block' : 'none';
   document.getElementById('itemSheet').classList.add('show');
 }
@@ -1258,7 +1253,6 @@ document.getElementById('itemSaveBtn').addEventListener('click', function(){
   if(!title){ showToast('Please add a title'); return; }
   var cat = document.getElementById('fCategory').value;
   var measures = document.getElementById('fMeasures').value.trim();
-  var note = document.getElementById('fNote').value.trim();
   if(editingItemId){
     var idx = -1;
     for(var _fii=0;_fii<state.items.length;_fii++){ if(state.items[_fii].id===editingItemId){ idx=_fii; break; } }
@@ -1266,11 +1260,10 @@ document.getElementById('itemSaveBtn').addEventListener('click', function(){
       state.items[idx].category = cat;
       state.items[idx].title = title;
       state.items[idx].measures = measures;
-      state.items[idx].note = note;
     }
     showToast('Saved');
   } else {
-    state.items.push({ id:uid(), category:cat, title:title, measures:measures, note:note, carryover:false });
+    state.items.push({ id:uid(), category:cat, title:title, measures:measures, carryover:false });
     showToast('Added');
   }
   save();
