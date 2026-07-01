@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#1A3A6B">
-<title>Practice Journal</title>
+<title>Practice Journal — Violaness</title>
 <link rel="apple-touch-icon" href="Violaness_logo_blue.png">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Special+Elite&display=swap');
@@ -435,6 +435,24 @@ header {
   margin-top: 4px;
 }
 
+/* ── REPORT ── */
+.report-quick-row {
+  display: flex; gap: 6px; margin-bottom: 4px;
+}
+.report-quick-btn {
+  flex: 1; padding: 8px 4px; border-radius: 9px;
+  border: 1.5px solid #ccdaec; background: var(--paper);
+  font-family: 'Special Elite', cursive; font-size: 0.72rem;
+  color: var(--navy); cursor: pointer;
+}
+.report-quick-btn:hover { background: var(--light-blue); }
+.field input[type="date"] {
+  width: 100%; font-family: 'Special Elite', cursive; font-size: 0.92rem;
+  padding: 10px 12px; border: 1.5px solid #ccdaec;
+  border-radius: 10px; background: var(--card-bg); color: var(--ink);
+}
+.field input[type="date"]:focus { outline: none; border-color: var(--mid-blue); }
+
 /* ── TOOLS: METRONOME & DRONE ── */
 .tool-block {
   background: var(--card-bg);
@@ -523,9 +541,10 @@ header {
 
 <header>
   <div class="hdr-top">
-    <h1>🎵 Practice Journal</h1>
+    <h1>🎻 Practice Journal — Violaness</h1>
     <div class="hdr-right">
       <button class="hdr-icon-btn" id="toolsBtn">🎼 Tools</button>
+      <button class="hdr-icon-btn" id="reportBtn">📋 Report</button>
       <button class="hdr-icon-btn" id="backupBtn">⬆ Backup</button>
     </div>
   </div>
@@ -620,6 +639,31 @@ header {
       <button class="btn btn-danger" id="itemDeleteBtn" style="display:none;">Delete</button>
       <button class="btn btn-ghost" id="itemCancelBtn">Cancel</button>
       <button class="btn btn-primary" id="itemSaveBtn">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Report Sheet -->
+<div class="sheet-backdrop" id="reportSheet">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <h2><span>Practice Report</span><span class="close-x" id="reportClose">&times;</span></h2>
+    <div class="field">
+      <label>From</label>
+      <input type="date" id="reportFrom">
+    </div>
+    <div class="field">
+      <label>To</label>
+      <input type="date" id="reportTo">
+    </div>
+    <div class="report-quick-row">
+      <button class="report-quick-btn" data-days="7">Last 7 days</button>
+      <button class="report-quick-btn" data-days="14">Last 14 days</button>
+      <button class="report-quick-btn" data-days="30">Last 30 days</button>
+    </div>
+    <div class="sheet-actions">
+      <button class="btn btn-ghost" id="reportCancelBtn">Cancel</button>
+      <button class="btn btn-primary" id="reportGenerateBtn">Generate report</button>
     </div>
   </div>
 </div>
@@ -1376,6 +1420,148 @@ document.getElementById('dronePlayBtn').addEventListener('click', function(){
 });
 document.getElementById('droneNote').addEventListener('change', function(){ if(dronePlaying) startDrone(); });
 document.getElementById('droneOctave').addEventListener('change', function(){ if(dronePlaying) startDrone(); });
+
+// ── Report ──
+document.getElementById('reportBtn').addEventListener('click', function(){
+  var today = new Date();
+  var weekAgo = new Date(today);
+  weekAgo.setDate(today.getDate()-6);
+  document.getElementById('reportFrom').value = weekAgo.getFullYear()+'-'+pad(weekAgo.getMonth()+1)+'-'+pad(weekAgo.getDate());
+  document.getElementById('reportTo').value = today.getFullYear()+'-'+pad(today.getMonth()+1)+'-'+pad(today.getDate());
+  document.getElementById('reportSheet').classList.add('show');
+});
+function closeReport(){ document.getElementById('reportSheet').classList.remove('show'); }
+document.getElementById('reportClose').addEventListener('click', closeReport);
+document.getElementById('reportCancelBtn').addEventListener('click', closeReport);
+document.getElementById('reportSheet').addEventListener('click', function(e){ if(e.target===this) closeReport(); });
+
+Array.prototype.forEach.call(document.querySelectorAll('.report-quick-btn'), function(btn){
+  btn.addEventListener('click', function(){
+    var days = parseInt(this.getAttribute('data-days'),10);
+    var today = new Date();
+    var from = new Date(today);
+    from.setDate(today.getDate()-(days-1));
+    document.getElementById('reportFrom').value = from.getFullYear()+'-'+pad(from.getMonth()+1)+'-'+pad(from.getDate());
+    document.getElementById('reportTo').value = today.getFullYear()+'-'+pad(today.getMonth()+1)+'-'+pad(today.getDate());
+  });
+});
+
+document.getElementById('reportGenerateBtn').addEventListener('click', function(){
+  var fromVal = document.getElementById('reportFrom').value;
+  var toVal = document.getElementById('reportTo').value;
+  if(!fromVal || !toVal){ showToast('Please set a date range'); return; }
+
+  var fromDate = new Date(fromVal+'T00:00:00');
+  var toDate = new Date(toVal+'T23:59:59');
+  if(fromDate > toDate){ showToast('From date must be before To date'); return; }
+
+  // Collect all days in range that were practised or have any data
+  var days = [];
+  var cur = new Date(fromDate);
+  while(cur <= toDate){
+    var key = cur.getFullYear()+'-'+pad(cur.getMonth()+1)+'-'+pad(cur.getDate());
+    var practiced = !!state.practiced[key];
+    var ticked = state.ticked[key] || {};
+    var tickedIds = Object.keys(ticked).filter(function(id){ return ticked[id]; });
+    var focus = state.dailyFocus[key] || {};
+    var notes = state.dailyNotes[key] || {};
+    if(practiced || tickedIds.length || notes.wins || notes.realisations){
+      days.push({ key:key, date:new Date(cur), practiced:practiced, tickedIds:tickedIds, focus:focus, notes:notes });
+    }
+    cur.setDate(cur.getDate()+1);
+  }
+
+  // Build report HTML
+  var MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var DAY_NAMES = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+  var reportHtml = '<!DOCTYPE html><html lang="en-GB"><head><meta charset="UTF-8">';
+  reportHtml += '<title>Practice Report</title>';
+  reportHtml += '<style>';
+  reportHtml += 'body{font-family:Georgia,serif;color:#1A3A6B;background:#fff;max-width:680px;margin:0 auto;padding:32px 24px;}';
+  reportHtml += 'h1{font-size:1.6rem;margin:0 0 4px;color:#1A3A6B;}';
+  reportHtml += '.subtitle{font-size:0.85rem;color:#6B85A0;margin-bottom:28px;}';
+  reportHtml += '.day-block{border-left:3px solid #7BB8E8;padding:0 0 20px 16px;margin-bottom:4px;}';
+  reportHtml += '.day-date{font-size:1.05rem;font-weight:700;color:#1A3A6B;margin-bottom:8px;}';
+  reportHtml += '.day-practiced{display:inline-block;background:#2E7D32;color:#fff;font-size:0.7rem;padding:2px 8px;border-radius:10px;margin-left:8px;vertical-align:middle;}';
+  reportHtml += '.category-name{font-size:0.65rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#6B85A0;margin:10px 0 4px;}';
+  reportHtml += '.item-row{background:#EEF4FB;border-radius:6px;padding:6px 10px;margin-bottom:4px;font-size:0.88rem;}';
+  reportHtml += '.item-focus{font-size:0.78rem;color:#6B85A0;margin-top:2px;}';
+  reportHtml += '.wins-block{background:#D6EEE3;border-radius:6px;padding:8px 12px;margin-top:10px;}';
+  reportHtml += '.real-block{background:#D6EAF8;border-radius:6px;padding:8px 12px;margin-top:6px;}';
+  reportHtml += '.block-label{font-size:0.65rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#6B85A0;margin-bottom:3px;}';
+  reportHtml += '.block-text{font-size:0.88rem;line-height:1.5;}';
+  reportHtml += '.no-practice{font-size:0.85rem;color:#6B85A0;font-style:italic;}';
+  reportHtml += '.summary{background:#EEF4FB;border-radius:8px;padding:12px 16px;margin-bottom:24px;font-size:0.85rem;}';
+  reportHtml += '.summary b{color:#2E7D32;}';
+  reportHtml += '@media print{body{padding:16px;}button{display:none;}}';
+  reportHtml += '</style></head><body>';
+
+  reportHtml += '<h1>🎵 Practice Report</h1>';
+  reportHtml += '<div class="subtitle">'+fromDate.getDate()+' '+MONTH_NAMES[fromDate.getMonth()]+' — '+toDate.getDate()+' '+MONTH_NAMES[toDate.getMonth()]+' '+toDate.getFullYear()+'</div>';
+
+  // Summary
+  var practicedCount = days.filter(function(d){ return d.practiced; }).length;
+  var totalDays = Math.round((toDate-fromDate)/(1000*60*60*24))+1;
+  reportHtml += '<div class="summary">Practised <b>'+practicedCount+'</b> out of '+totalDays+' days in this period.</div>';
+
+  if(days.length === 0){
+    reportHtml += '<p style="color:#6B85A0;font-style:italic;">No practice recorded in this period.</p>';
+  } else {
+    days.forEach(function(day){
+      reportHtml += '<div class="day-block">';
+      reportHtml += '<div class="day-date">'+DAY_NAMES[day.date.getDay()]+' '+day.date.getDate()+' '+MONTH_NAMES[day.date.getMonth()];
+      if(day.practiced) reportHtml += '<span class="day-practiced">✓ Practised</span>';
+      reportHtml += '</div>';
+
+      // Ticked items by category
+      var CATS = [
+        {key:'warmup',label:'Warm-up'},
+        {key:'scales',label:'Scales & studies'},
+        {key:'mypieces',label:'My pieces'},
+        {key:'orchestra',label:'Orchestra'},
+        {key:'pupilpieces',label:'Pupil pieces to know'},
+        {key:'nyso',label:'NYSO coaching'}
+      ];
+      var anyItems = false;
+      CATS.forEach(function(cat){
+        var catItems = day.tickedIds.map(function(id){
+          var found = null;
+          for(var i=0;i<state.items.length;i++){ if(state.items[i].id===id && state.items[i].category===cat.key){ found=state.items[i]; break; } }
+          return found;
+        }).filter(Boolean);
+        if(catItems.length===0) return;
+        anyItems = true;
+        reportHtml += '<div class="category-name">'+cat.label+'</div>';
+        catItems.forEach(function(item){
+          var focusText = day.focus[item.id] || '';
+          reportHtml += '<div class="item-row">✓ '+item.title;
+          if(item.measures) reportHtml += ' <span style="font-size:0.75rem;opacity:0.7;">'+item.measures+'</span>';
+          if(focusText) reportHtml += '<div class="item-focus">Focus: '+focusText+'</div>';
+          reportHtml += '</div>';
+        });
+      });
+      if(!anyItems) reportHtml += '<div class="no-practice">No items ticked</div>';
+
+      if(day.notes.wins){
+        reportHtml += '<div class="wins-block"><div class="block-label">🌟 Wins</div><div class="block-text">'+day.notes.wins+'</div></div>';
+      }
+      if(day.notes.realisations){
+        reportHtml += '<div class="real-block"><div class="block-label">💡 Realisations</div><div class="block-text">'+day.notes.realisations+'</div></div>';
+      }
+      reportHtml += '</div>';
+    });
+  }
+
+  reportHtml += '<div style="margin-top:24px;text-align:right;font-size:0.75rem;color:#6B85A0;">violaness.co.uk — Practice Journal</div>';
+  reportHtml += '</body></html>';
+
+  var blob = new Blob([reportHtml], {type:'text/html'});
+  var url = URL.createObjectURL(blob);
+  window.open(url, '_blank');
+  closeReport();
+  showToast('Report opened — use Share to save as PDF');
+});
 
 // ── Backup & Restore ──
 document.getElementById('backupBtn').addEventListener('click', function(){
