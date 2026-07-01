@@ -101,6 +101,24 @@ header {
 .date-sub { font-size: 0.8rem; color: var(--muted); margin-bottom: 18px; }
 
 /* ── CALENDAR ── */
+/* ── QUOTE OF THE DAY ── */
+.quote-card {
+  background: var(--navy);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  margin-bottom: 14px;
+}
+.quote-text {
+  font-family: 'DM Serif Display', serif;
+  font-size: 0.95rem; color: var(--light-blue);
+  line-height: 1.5; margin-bottom: 8px;
+  font-style: italic;
+}
+.quote-attr {
+  font-size: 0.7rem; color: var(--mid-blue);
+  letter-spacing: 0.04em; text-align: right;
+}
+
 /* ── CALENDAR STRIP ── */
 .calendar-section {
   background: var(--card-bg);
@@ -560,6 +578,12 @@ header {
   <div class="date-heading" id="todayHeading"></div>
   <div class="date-sub" id="todayStreak"></div>
 
+  <!-- Quote of the day -->
+  <div class="quote-card" id="quoteCard">
+    <div class="quote-text" id="quoteText"></div>
+    <div class="quote-attr" id="quoteAttr"></div>
+  </div>
+
   <!-- Calendar strip -->
   <div class="calendar-section">
     <div class="cal-strip-header">
@@ -925,6 +949,88 @@ function calcStreak(){
     else break;
   }
   return streak;
+}
+
+// ── Quote of the Day ──
+var QUOTES = [
+  { text: "The cello is like a beautiful woman who has not grown older, but younger with time, more slender, more supple, more graceful.", attr: "Pablo Casals" },
+  { text: "The most perfect technique is that which is not noticed at all.", attr: "Pablo Casals" },
+  { text: "Each piece of music is a world unto itself, with its own laws and its own feeling.", attr: "Pablo Casals" },
+  { text: "The truly great pieces of music are never really mastered. They can only be approached.", attr: "Pablo Casals" },
+  { text: "Music is the shorthand of emotion.", attr: "Pablo Casals" },
+  { text: "I think music is about our inner life. It is connected in some way with the invisible world.", attr: "Yo-Yo Ma" },
+  { text: "Tone, tone, tone — everything comes from the sound.", attr: "Yo-Yo Ma" },
+  { text: "Practicing is not only playing your instrument, it is also thinking, analysing, listening.", attr: "Yo-Yo Ma" },
+  { text: "The most important thing I look for in a musician is whether they know how to listen.", attr: "Yo-Yo Ma" },
+  { text: "Music happens between the notes, not in them.", attr: "Yo-Yo Ma" },
+  { text: "When you play, never mind who listens to you. Always imagine that the greatest musician in the world is listening.", attr: "Itzhak Perlman" },
+  { text: "If I don't practise one day, I know it; two days, the critics know it; three days, the public knows it.", attr: "Itzhak Perlman" },
+  { text: "You should always strive to play better than you can.", attr: "Itzhak Perlman" },
+  { text: "The bow is the soul of the violin.", attr: "Itzhak Perlman" },
+  { text: "Every time you sit down to play, you have to reinvent the wheel.", attr: "Itzhak Perlman" },
+  { text: "Slow practice is the fastest way to learn.", attr: "Pinchas Zukerman" },
+  { text: "The instrument must sing. Always singing, never just playing notes.", attr: "Pinchas Zukerman" },
+  { text: "Intonation is not a matter of the ear alone — it is a matter of the whole body.", attr: "Pinchas Zukerman" },
+  { text: "A great performance is one where the technique becomes invisible and only the music remains.", attr: "Pinchas Zukerman" },
+  { text: "The viola is the most human of instruments — it has the colour of a human voice.", attr: "Tabea Zimmermann" },
+  { text: "You have to trust your instincts and believe that music can speak directly from one person to another.", attr: "Tabea Zimmermann" },
+  { text: "Practice is not about repeating what you already do. It is about discovering what you cannot yet do.", attr: "Tabea Zimmermann" },
+  { text: "The viola opens up a world of colour that no other instrument can quite reach.", attr: "Tabea Zimmermann" },
+  { text: "Music asks us to be present — completely present — in every single moment.", attr: "Kim Kashkashian" },
+  { text: "The viola's voice lives in the space between speech and song.", attr: "Kim Kashkashian" },
+  { text: "Every note is a decision. Every silence is a decision. Nothing should be accidental.", attr: "Kim Kashkashian" },
+  { text: "You must go to the music — the music will not come to you.", attr: "Kim Kashkashian" },
+  { text: "The student must learn to teach themselves. The teacher's job is to make themselves unnecessary.", attr: "Dorothy DeLay" },
+  { text: "I never tell a student what to do. I ask them questions until they find the answer themselves.", attr: "Dorothy DeLay" },
+  { text: "The most dangerous thing in music is to stop being curious.", attr: "Dorothy DeLay" },
+  { text: "Every child can learn music. The question is only whether we are patient enough to wait for them.", attr: "Dorothy DeLay" },
+  { text: "Technique is a means to an end, never an end in itself.", attr: "Dorothy DeLay" },
+  { text: "The only way to play in tune is to listen — really listen — to every note you play.", attr: "Jascha Heifetz" },
+  { text: "If I skip practice for one day, I notice. Two days, my colleagues notice. Three days, the audience notices.", attr: "Jascha Heifetz" },
+  { text: "No matter what side of an argument you are on, you always find people on your side that you wish were on the other.", attr: "Jascha Heifetz" },
+  { text: "God gave us music so that above all it can lead us upwards.", attr: "Nathan Milstein" },
+  { text: "The most important thing is naturalness. Everything else follows from that.", attr: "Nathan Milstein" },
+  { text: "The bow arm is the soul of violin playing.", attr: "Ivan Galamian" },
+  { text: "Good intonation and beautiful tone are inseparable.", attr: "Ivan Galamian" },
+  { text: "The mind must always lead the fingers, never the other way around.", attr: "Ivan Galamian" },
+  { text: "To play a wrong note is insignificant. To play without passion is inexcusable.", attr: "Ludwig van Beethoven" },
+  { text: "One must work with all one's heart.", attr: "Mstislav Rostropovich" },
+  { text: "The cello is the instrument closest to the human voice in its range and its capacity for expression.", attr: "Mstislav Rostropovich" },
+  { text: "You must love what you do, or you will never do it well.", attr: "Mstislav Rostropovich" },
+  { text: "A great musician must be a great human being first.", attr: "Mstislav Rostropovich" },
+  { text: "The viola is not a failed violin — it is a fully realised voice of its own.", attr: "William Primrose" },
+  { text: "Always play as if performing for a great audience, even when practising alone.", attr: "William Primrose" },
+  { text: "The viola speaks most eloquently when it speaks softly.", attr: "William Primrose" },
+  { text: "Vibrato is not decoration. It is the very breath of the tone.", attr: "William Primrose" },
+  { text: "When you listen to music, you are hearing someone's inner life made audible.", attr: "Maxim Vengerov" },
+  { text: "Every practice session should bring you somewhere new, even if only a small step forward.", attr: "Maxim Vengerov" },
+  { text: "Music is a language. You must speak it fluently before you can say something truly meaningful.", attr: "Maxim Vengerov" },
+  { text: "Practice focusing on one thing at a time. So many hours could be used more effectively.", attr: "Dimitri Murrath" },
+  { text: "Every student is a lock, and every lock is different. As a teacher, you have to find the key to unlock every different lock.", attr: "Dimitri Murrath" },
+  { text: "Regularity is important. Whether or not I am preparing for something, I like to play every day.", attr: "Dimitri Murrath" },
+  { text: "I try to play Bach every day — it is good for the soul.", attr: "Dimitri Murrath" },
+  { text: "Viola playing has to feel good. If it doesn't, something is wrong.", attr: "Karen Tuttle" },
+  { text: "To perform is to tell the news, and to tell it well requires aesthetic transparency, a generous spirit, and the courage to remain vulnerable.", attr: "Karen Tuttle" },
+  { text: "It's not a violin, babe.", attr: "Karen Tuttle" },
+  { text: "The viola is not a violin. It has its own voice, its own soul.", attr: "Lionel Tertis" },
+  { text: "The viola's tone is the most expressive in the string family — it has the quality of a baritone voice.", attr: "Lionel Tertis" },
+  { text: "We must never be satisfied — there is always something more to discover in music.", attr: "Lionel Tertis" },
+  { text: "A musician must make music with their whole being, not just their fingers.", attr: "Lionel Tertis" },
+  { text: "You improvise — you never play the same thing twice. That is the joy of music.", attr: "Stéphane Grappelli" },
+  { text: "The violin is a living thing. It breathes, it speaks, it sings — and sometimes it argues back.", attr: "Stéphane Grappelli" },
+  { text: "I never studied music formally. I listened, I imitated, I discovered — and I never stopped.", attr: "Stéphane Grappelli" },
+  { text: "Practice with your fingers and you need all day. Practice with your mind and you will do as much in an hour and a half.", attr: "Leopold Auer" },
+  { text: "The secret of great playing is simple: practise slowly.", attr: "Leopold Auer" },
+  { text: "Practice like it means everything in the world to you. Perform like you don't give a damn.", attr: "Jascha Heifetz" }
+];
+
+function renderQuote(){
+  // Use date to pick a consistent quote for the whole day
+  var d = new Date();
+  var dayIndex = Math.floor((d - new Date(d.getFullYear(),0,0)) / (1000*60*60*24));
+  var q = QUOTES[dayIndex % QUOTES.length];
+  document.getElementById('quoteText').textContent = '\u201c' + q.text + '\u201d';
+  document.getElementById('quoteAttr').textContent = '\u2014 ' + q.attr;
 }
 
 function renderStreak(){
@@ -1646,6 +1752,7 @@ function renderAll(){
   renderStreak();
   renderCalendar();
   renderCategories();
+  renderQuote();
 }
 
 load();
