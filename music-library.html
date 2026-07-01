@@ -453,6 +453,64 @@ header {
   margin-top: 4px;
 }
 
+/* ── COUNTDOWNS ── */
+.countdowns-wrap {
+  display: flex; flex-direction: column; gap: 8px;
+  margin-bottom: 14px;
+}
+.countdown-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 12px 16px;
+  display: flex; align-items: center; gap: 14px;
+  cursor: pointer;
+}
+.countdown-card:active { transform: scale(0.99); }
+.countdown-days {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2rem; color: var(--forest);
+  line-height: 1; min-width: 52px; text-align: center;
+}
+.countdown-days.soon { color: #a33; }
+.countdown-days.today { color: var(--forest); font-size: 1.4rem; }
+.countdown-info { flex: 1; }
+.countdown-name {
+  font-size: 0.9rem; color: var(--navy);
+  font-weight: 700; margin-bottom: 2px;
+}
+.countdown-label { font-size: 0.72rem; color: var(--muted); }
+.countdown-edit-hint {
+  font-size: 0.65rem; color: var(--muted);
+  text-align: center; margin-bottom: 10px;
+  opacity: 0.7;
+}
+.countdown-add-btn {
+  width: 100%; padding: 10px; border-radius: var(--radius);
+  border: 1.5px dashed #ccdaec; background: transparent;
+  font-family: 'Special Elite', cursive; font-size: 0.8rem;
+  color: var(--mid-blue); cursor: pointer; margin-bottom: 14px;
+}
+.countdown-add-btn:hover { background: var(--light-blue); }
+.countdown-field-block {
+  background: var(--warm); border-radius: 10px;
+  padding: 12px 14px; margin-bottom: 10px;
+}
+.countdown-field-block label {
+  display: block; font-size: 0.65rem; font-weight: 700;
+  letter-spacing: 0.05em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 4px;
+}
+.countdown-field-block input {
+  width: 100%; font-family: 'Special Elite', cursive;
+  font-size: 0.9rem; padding: 8px 10px;
+  border: 1.5px solid #ccdaec; border-radius: 8px;
+  background: var(--card-bg); color: var(--ink);
+  margin-bottom: 8px;
+}
+.countdown-field-block input:focus { outline: none; border-color: var(--mid-blue); }
+.countdown-field-block input:last-child { margin-bottom: 0; }
+
 /* ── REPORT ── */
 .report-quick-row {
   display: flex; gap: 6px; margin-bottom: 4px;
@@ -584,6 +642,9 @@ header {
     <div class="quote-attr" id="quoteAttr"></div>
   </div>
 
+  <!-- Countdowns -->
+  <div id="countdownsWrap"></div>
+
   <!-- Calendar strip -->
   <div class="calendar-section">
     <div class="cal-strip-header">
@@ -663,6 +724,20 @@ header {
       <button class="btn btn-danger" id="itemDeleteBtn" style="display:none;">Delete</button>
       <button class="btn btn-ghost" id="itemCancelBtn">Cancel</button>
       <button class="btn btn-primary" id="itemSaveBtn">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Countdown Edit Sheet -->
+<div class="sheet-backdrop" id="countdownSheet">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <h2><span>Edit countdowns</span><span class="close-x" id="countdownClose">&times;</span></h2>
+    <p style="font-size:0.78rem;color:var(--muted);margin-bottom:14px;">Add up to three events to count down to. Leave a name blank to hide that countdown.</p>
+    <div id="countdownFields"></div>
+    <div class="sheet-actions">
+      <button class="btn btn-ghost" id="countdownCancelBtn">Cancel</button>
+      <button class="btn btn-primary" id="countdownSaveBtn">Save</button>
     </div>
   </div>
 </div>
@@ -796,7 +871,8 @@ var state = {
   ticked: {},       // {YYYY-MM-DD: {itemId: true}}
   tickHistory: {},  // {YYYY-MM-DD: {category: count}}
   dailyNotes: {},   // {YYYY-MM-DD: {wins, realisations}}
-  dailyFocus: {}    // {YYYY-MM-DD: {itemId: focusNote}}
+  dailyFocus: {},   // {YYYY-MM-DD: {itemId: focusNote}}
+  countdowns: []    // [{name, date}]
 };
 
 var CATEGORIES = [
@@ -822,6 +898,7 @@ function load(){
     if(!state.tickHistory) state.tickHistory = {};
   if(!state.dailyNotes) state.dailyNotes = {};
   if(!state.dailyFocus) state.dailyFocus = {};
+  if(!state.countdowns) state.countdowns = [];
   } catch(e){ state = {items:[],practiced:{},ticked:{},tickHistory:{},dailyNotes:{}}; }
 }
 function save(){
@@ -1527,6 +1604,95 @@ document.getElementById('dronePlayBtn').addEventListener('click', function(){
 document.getElementById('droneNote').addEventListener('change', function(){ if(dronePlaying) startDrone(); });
 document.getElementById('droneOctave').addEventListener('change', function(){ if(dronePlaying) startDrone(); });
 
+// ── Countdowns ──
+function renderCountdowns(){
+  var wrap = document.getElementById('countdownsWrap');
+  var countdowns = state.countdowns || [];
+  var active = countdowns.filter(function(c){ return c.name && c.date; });
+
+  if(active.length === 0){
+    wrap.innerHTML = '<button class="countdown-add-btn" id="countdownAddBtn">+ Add a countdown (NYSO, concert, audition…)</button>';
+    var addBtn = document.getElementById('countdownAddBtn');
+    if(addBtn) addBtn.addEventListener('click', openCountdownSheet);
+    return;
+  }
+
+  var html = '<div class="countdowns-wrap">';
+  active.forEach(function(c){
+    var today = new Date();
+    today.setHours(0,0,0,0);
+    var target = new Date(c.date+'T00:00:00');
+    var diff = Math.round((target - today) / (1000*60*60*24));
+    var daysText, label, cls='countdown-days';
+    if(diff < 0){
+      daysText = Math.abs(diff);
+      label = 'days ago';
+      cls += ' soon';
+    } else if(diff === 0){
+      daysText = '🎉';
+      label = 'Today!';
+      cls += ' today';
+    } else if(diff === 1){
+      daysText = '1';
+      label = 'day to go';
+      cls += ' soon';
+    } else {
+      daysText = diff;
+      label = 'days to go';
+      if(diff <= 7) cls += ' soon';
+    }
+    html += '<div class="countdown-card" id="openCountdownSheet">';
+    html += '<div class="'+cls+'">'+daysText+'</div>';
+    html += '<div class="countdown-info">';
+    html += '<div class="countdown-name">'+escHtml(c.name)+'</div>';
+    html += '<div class="countdown-label">'+label+'</div>';
+    html += '</div></div>';
+  });
+  html += '</div>';
+  html += '<div class="countdown-edit-hint">Tap a countdown to edit</div>';
+  wrap.innerHTML = html;
+
+  Array.prototype.forEach.call(wrap.querySelectorAll('.countdown-card'), function(card){
+    card.addEventListener('click', openCountdownSheet);
+  });
+}
+
+function openCountdownSheet(){
+  var countdowns = state.countdowns || [{name:'',date:''},{name:'',date:''},{name:'',date:''}];
+  while(countdowns.length < 3) countdowns.push({name:'',date:''});
+  var fields = '';
+  for(var i=0;i<3;i++){
+    fields += '<div class="countdown-field-block">';
+    fields += '<label>Event '+(i+1)+'</label>';
+    fields += '<input type="text" class="cd-name" data-idx="'+i+'" placeholder="e.g. NYSO Course" value="'+escHtml(countdowns[i].name||'')+'">';
+    fields += '<input type="date" class="cd-date" data-idx="'+i+'" value="'+(countdowns[i].date||'')+'">';
+    fields += '</div>';
+  }
+  document.getElementById('countdownFields').innerHTML = fields;
+  document.getElementById('countdownSheet').classList.add('show');
+}
+function closeCountdownSheet(){ document.getElementById('countdownSheet').classList.remove('show'); }
+document.getElementById('countdownClose').addEventListener('click', closeCountdownSheet);
+document.getElementById('countdownCancelBtn').addEventListener('click', closeCountdownSheet);
+document.getElementById('countdownSheet').addEventListener('click', function(e){ if(e.target===this) closeCountdownSheet(); });
+
+document.getElementById('countdownSaveBtn').addEventListener('click', function(){
+  var names = document.querySelectorAll('.cd-name');
+  var dates = document.querySelectorAll('.cd-date');
+  var countdowns = [];
+  for(var i=0;i<3;i++){
+    countdowns.push({
+      name: names[i] ? names[i].value.trim() : '',
+      date: dates[i] ? dates[i].value : ''
+    });
+  }
+  state.countdowns = countdowns;
+  save();
+  closeCountdownSheet();
+  renderCountdowns();
+  showToast('Countdowns saved');
+});
+
 // ── Report ──
 document.getElementById('reportBtn').addEventListener('click', function(){
   var today = new Date();
@@ -1753,6 +1919,7 @@ function renderAll(){
   renderCalendar();
   renderCategories();
   renderQuote();
+  renderCountdowns();
 }
 
 load();
