@@ -62,6 +62,7 @@ header {
   font-family: 'DM Serif Display', serif;
   color: var(--light-blue);
   font-size: 1.25rem; margin: 0;
+  cursor: pointer; -webkit-tap-highlight-color: rgba(255,255,255,0.2);
 }
 .hdr-right { display: flex; align-items: center; gap: 10px; }
 
@@ -611,22 +612,159 @@ header {
   font-size: 0.75rem; color: var(--muted);
   line-height: 1.5; margin-bottom: 12px;
 }
+
+/* ===== Transferred tools (recorder, tuner, drone, dynamics) ===== */
+/* Quick-fire recorder */
+.catch-card {
+  background: linear-gradient(160deg, #22467F 0%, #15315C 100%);
+  border-radius: var(--radius); padding: 16px; margin-bottom: 14px; text-align: center;
+  box-shadow: var(--shadow);
+}
+.catch-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,0.10); border: 1.5px solid rgba(255,255,255,0.35);
+  color: #fff; border-radius: 40px; padding: 12px 24px; font-family: inherit;
+  font-size: 1rem; cursor: pointer; transition: background 0.15s, transform 0.1s;
+}
+.catch-btn:active { transform: scale(0.97); }
+.catch-btn.recording { background: #C0392B; border-color: #E8746A; animation: catchPulse 1s ease-in-out infinite; }
+.catch-btn.playing { background: rgba(232,184,102,0.25); border-color: var(--sand, #E8B866); }
+@keyframes catchPulse { 0%,100%{ box-shadow: 0 0 0 0 rgba(192,57,43,0.5);} 50%{ box-shadow: 0 0 0 10px rgba(192,57,43,0);} }
+.catch-icon { font-size: 1.2rem; }
+.catch-hint { color: rgba(255,255,255,0.7); font-size: 0.72rem; margin-top: 8px; }
+.catch-timer { color: #F6D79A; font-family: 'DM Serif Display', serif; font-size: 1.4rem; margin-top: 8px; }
+.a4-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow); padding: 12px 16px; margin-bottom: 14px; }
+.a4-label { font-size: 0.82rem; font-weight: 600; color: var(--ink); }
+.a4-row select { padding: 8px 10px; border-radius: 8px; border: 1.5px solid #cddaea; background: #fff; font-size: 0.9rem; color: var(--ink); }
+.drone-vol-row { display: flex; align-items: center; gap: 10px; margin: 4px 0 10px; }
+.drone-vol-icon { font-size: 1rem; }
+.drone-vol-row input[type="range"] { flex: 1; }
+/* Tuner */
+.tuner-display { text-align: center; padding: 6px 0 12px; }
+.tuner-note { font-family: 'DM Serif Display', serif; font-size: 2.6rem; color: var(--ink); line-height: 1; margin-bottom: 10px; min-height: 44px; }
+.tuner-cents-bar { position: relative; height: 26px; background: var(--warm); border-radius: 13px; margin: 0 auto 8px; max-width: 260px; overflow: hidden; }
+.tuner-center-line { position: absolute; left: 50%; top: 3px; bottom: 3px; width: 2px; background: var(--forest); transform: translateX(-50%); }
+.tuner-needle { position: absolute; top: 3px; bottom: 3px; width: 4px; border-radius: 2px; background: var(--mid-blue); left: 50%; transform: translateX(-50%); transition: left 0.08s linear, background 0.1s; }
+.tuner-cents { font-size: 0.8rem; color: var(--muted); }
+/* In-tune feedback */
+.tuner-display { border-radius: 14px; transition: background 0.2s, box-shadow 0.2s; padding: 10px 6px 14px; }
+.tuner-display.in-tune { background: rgba(46,125,50,0.10); box-shadow: 0 0 0 2px rgba(46,125,50,0.35) inset; }
+.tuner-display.in-tune .tuner-note { color: var(--forest); }
+.tuner-display.in-tune .tuner-cents { color: var(--forest); font-weight: 700; }
+/* Precision slider */
+.tuner-precision { margin: 4px 0 12px; }
+.tuner-prec-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+.tuner-prec-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+.tuner-prec-val { font-size: 0.78rem; color: var(--ink); font-weight: 600; }
+.tuner-precision input[type="range"] { width: 100%; }
+.tuner-prec-ends { display: flex; justify-content: space-between; font-size: 0.6rem; color: var(--muted); margin-top: 2px; }
+/* Dynamics meter */
+.db-meter-wrap { padding: 4px 0 4px; }
+.db-bar-track { height: 22px; background: var(--warm); border-radius: 11px; overflow: hidden; margin-bottom: 8px; }
+.db-bar-fill { height: 100%; width: 0%; border-radius: 11px; background: linear-gradient(90deg,#7BB8E8,#2E7D32,#E8A87B,#C0392B); transition: width 0.08s linear; }
+.db-readout { text-align: center; font-family: 'Special Elite','Courier New',monospace; font-size: 1.1rem; color: var(--ink); }
+
+
+/* ===== Dashboard (copied from Practice Journal) ===== */
+.dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+.dash-tile {
+  background: var(--card-bg); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 16px; text-align: center;
+}
+.dash-tile.wide { grid-column: 1 / -1; text-align: left; }
+.dash-num { font-family: 'DM Serif Display', serif; font-size: 2.2rem; color: var(--ink); line-height: 1; }
+.dash-label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 6px; }
+/* Weather-station readouts */
+.dash-station { background: linear-gradient(160deg, #22467F, #12294D); border-radius: var(--radius); padding: 14px; margin-bottom: 14px; box-shadow: var(--shadow); }
+.dash-station-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-family: 'Special Elite','Courier New',monospace; }
+.dash-station-live { color: #F6D79A; font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.1em; }
+.dash-station-live::before { content: "●"; color: #7BE0A0; margin-right: 6px; animation: dashBlink 1.4s infinite; }
+@keyframes dashBlink { 50% { opacity: 0.3; } }
+.dash-station-ref { color: rgba(255,255,255,0.4); font-size: 0.58rem; letter-spacing: 0.08em; }
+.dash-readouts { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+.dash-readout { background: rgba(0,0,0,0.18); border: 1px solid rgba(246,215,154,0.25); border-radius: 10px; padding: 10px 12px; }
+.dash-rlabel { font-size: 0.58rem; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(246,215,154,0.75); font-family: 'Special Elite','Courier New',monospace; }
+.dash-rval { font-family: 'DM Serif Display', serif; font-size: 2rem; color: #fff; line-height: 1; margin: 5px 0 3px; }
+.dash-rnote { font-size: 0.62rem; color: rgba(255,255,255,0.55); }
+/* Scrolling ticker ribbon */
+.dash-ticker { margin-top: 4px; overflow: hidden; border-top: 1px solid var(--warm); border-bottom: 1px solid var(--warm); padding: 8px 0; -webkit-mask-image: linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent); mask-image: linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent); }
+.dash-ticker-track { display: inline-block; white-space: nowrap; animation: dashScroll 34s linear infinite; font-size: 0.74rem; color: var(--muted); letter-spacing: 0.04em; }
+.dash-ticker-track span { margin: 0 1.6rem; }
+.dash-ticker-track b { color: var(--navy); font-weight: 700; }
+@keyframes dashScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+/* Boot-up reveal */
+#view-scales.booting .dash-station,
+#view-scales.booting .dash-tile,
+#view-scales.booting .dash-ticker { }
+.boot-line { opacity: 0; animation: bootIn 0.35s forwards; }
+.dash-boot { background: linear-gradient(160deg, #12294D, #0B1B36); border-radius: var(--radius); padding: 16px 18px; margin-bottom: 14px; font-family: 'Special Elite','Courier New',monospace; font-size: 0.78rem; color: #7BE0A0; min-height: 120px; box-shadow: var(--shadow); }
+.dash-boot .bl { opacity: 0; animation: bootIn 0.2s forwards; }
+.dash-boot .bl-dim { color: rgba(123,224,160,0.6); }
+.dash-boot .bl-gold { color: #F6D79A; }
+.dash-boot .cursor::after { content: "▋"; animation: dashBlink 1s steps(1) infinite; color: #7BE0A0; }
+@keyframes bootIn { to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .dash-ticker-track { animation: none; }
+  .boot-line { animation: none; opacity: 1; }
+}
+.dash-tile-title { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 700; margin-bottom: 12px; }
+.dash-bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
+.dash-bar-label { font-size: 0.78rem; color: var(--ink); min-width: 72px; }
+.dash-bar-track { flex: 1; height: 9px; background: #EEF4FB; border-radius: 999px; overflow: hidden; }
+.dash-bar-fill { height: 100%; border-radius: 999px; }
+.dash-bar-count { font-size: 0.72rem; color: var(--muted); min-width: 20px; text-align: right; }
+.dash-progress-ring { display: flex; align-items: center; justify-content: center; gap: 14px; }
+.dash-today-frac { font-family: 'DM Serif Display', serif; font-size: 1.8rem; color: var(--ink); }
+/* Hero progress ring */
+.dash-ring-wrap { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.dash-ring { flex-shrink: 0; }
+.dash-ring-sections { flex: 1; min-width: 150px; }
+/* Section gauges */
+.dash-ring-sections { display: flex; flex-wrap: wrap; gap: 4px 10px; justify-content: space-around; }
+.dash-gauge { text-align: center; flex: 0 0 auto; }
+.dash-gauge-label { font-size: 0.62rem; color: var(--muted); margin-top: -4px; }
+/* Console-style countdown readout */
+.dash-console { display: flex; flex-direction: column; gap: 8px; }
+.dash-console-row {
+  display: flex; justify-content: space-between; align-items: center;
+  background: linear-gradient(150deg, #22467F, #15315C);
+  border: 1px solid rgba(246,215,154,0.35); border-radius: 10px; padding: 10px 14px;
+  box-shadow: 0 0 12px rgba(246,215,154,0.08);
+}
+.dash-console-left { display: flex; flex-direction: column; gap: 2px; }
+.dash-console-dot { width: 7px; height: 7px; border-radius: 50%; background: #F6D79A; box-shadow: 0 0 6px #F6D79A; display: inline-block; }
+.dash-console-name { color: #fff; font-weight: 700; font-size: 0.9rem; }
+.dash-console-live { color: rgba(246,215,154,0.8); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.08em; font-family: 'Special Elite','Courier New',monospace; }
+.dash-console-num { color: #F6D79A; font-family: 'DM Serif Display', serif; font-size: 1.9rem; line-height: 1; display: flex; flex-direction: column; align-items: flex-end; }
+.dash-console-unit { font-family: 'Special Elite','Courier New',monospace; font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.06em; color: rgba(255,255,255,0.6); margin-top: 2px; }
+/* Practice heatmap ("garden") */
+.hm-wrap { display: flex; gap: 5px; }
+.hm-daycol { display: flex; flex-direction: column; gap: 3px; padding-top: 0; }
+.hm-daylabel { height: 13px; font-size: 0.55rem; color: var(--muted); display: flex; align-items: center; }
+.hm-grid { display: flex; gap: 3px; flex: 1; overflow-x: auto; }
+.hm-week { display: flex; flex-direction: column; gap: 3px; }
+.hm-cell { width: 13px; height: 13px; border-radius: 3px; background: var(--warm); }
+.hm-cell.hm-done { background: linear-gradient(135deg, #F6D79A, #C68A3C); }
+.hm-cell.hm-future { background: transparent; }
+/* Gold gradient chart bars */
+.dash-chart-bar { width: 70%; background: linear-gradient(180deg, #F6D79A, #C68A3C); border-radius: 4px 4px 0 0; }
+
 </style>
 </head>
 <body>
 
 <header>
   <div class="hdr-top">
-    <h1>🎻 Practice Journal — Violaness</h1>
+    <h1 id="appTitle" title="Tap to change name">🎻 Practice Journal</h1>
     <div class="hdr-right">
-      <button class="hdr-icon-btn" id="toolsBtn">🎼 Tools</button>
       <button class="hdr-icon-btn" id="reportBtn">📋 Report</button>
       <button class="hdr-icon-btn" id="backupBtn">⬆ Backup</button>
     </div>
   </div>
   <div class="tab-strip">
     <button class="tab-btn tab-today active" data-tab="today">Today</button>
-    <button class="tab-btn tab-history" data-tab="history">History</button>
+    <button class="tab-btn tab-history" data-tab="history">Dashboard</button>
+    <button class="tab-btn tab-tools" data-tab="tools">Tools</button>
   </div>
 </header>
 
@@ -653,6 +791,16 @@ header {
     <div class="cal-strip" id="calGrid"></div>
   </div>
 
+  <!-- Quick-fire recorder (ephemeral, RAM-only) -->
+  <div id="catchCard" class="catch-card">
+    <button id="catchBtn" class="catch-btn" aria-label="Record a quick take">
+      <span class="catch-icon">🎙️</span>
+      <span class="catch-label" id="catchLabel">Tap to catch a take</span>
+    </button>
+    <div class="catch-hint" id="catchHint">Records up to 20s · plays back once · then it's gone forever</div>
+    <div class="catch-timer" id="catchTimer" style="display:none">0.0s</div>
+  </div>
+
   <!-- Categories -->
   <div id="categoriesWrap"></div>
 
@@ -672,24 +820,10 @@ header {
 
 <!-- HISTORY VIEW -->
 <div class="view" id="view-history">
-  <div class="history-section">
-    <div class="history-title">Total days practised</div>
-    <div class="total-display">
-      <div class="total-number" id="totalDaysNumber">0</div>
-      <div class="total-label">days practised in total</div>
-    </div>
-    <div class="streak-small">Current streak: <b><span id="streakNumber">0</span> days in a row</b></div>
-  </div>
-
-  <div class="history-section">
-    <div class="history-title">Last 8 weeks</div>
-    <div class="bar-chart" id="weeklyChart"></div>
-  </div>
-
-  <div class="history-section">
-    <div class="history-title">What you've been working on</div>
-    <div id="breakdownChart"></div>
-  </div>
+  <div class="date-heading">Dashboard</div>
+  <div class="date-sub">Your practice at a glance.</div>
+  <div id="dashBoot" class="dash-boot" style="display:none"></div>
+  <div id="dashboardWrap"></div>
 </div>
 
 <!-- Add/Edit Item Sheet -->
@@ -763,67 +897,117 @@ header {
   </div>
 </div>
 
-<!-- Tools Sheet: Metronome & Drone -->
-<div class="sheet-backdrop" id="toolsSheet">
-  <div class="sheet">
-    <div class="sheet-handle"></div>
-    <h2><span>Practice Tools</span><span class="close-x" id="toolsClose">&times;</span></h2>
+<!-- TOOLS VIEW -->
+<div class="view" id="view-tools">
+  <div class="date-heading">Practice Tools</div>
+  <div class="date-sub">Everything you need while you practise.</div>
 
-    <div class="tool-block">
-      <div class="tool-block-title">🎯 Metronome</div>
-      <div class="metronome-display">
-        <div class="bpm-number" id="bpmDisplay">92</div>
-        <div class="bpm-label">BPM</div>
-      </div>
-      <div class="bpm-slider-row">
-        <button class="bpm-step-btn" id="bpmDown">−</button>
-        <input type="range" id="bpmSlider" min="30" max="240" value="92">
-        <button class="bpm-step-btn" id="bpmUp">+</button>
-      </div>
-      <div class="tool-row">
-        <button class="tool-toggle-btn primary" id="metroPlayBtn">▶ Start</button>
-        <button class="tool-toggle-btn" id="tapTempoBtn">Tap tempo</button>
-      </div>
-      <label class="speed-burst-row">
-        <input type="checkbox" id="speedBurstCheck">
-        <span>Speed Burst — +2 BPM every 4 beats (caps at 184)</span>
-      </label>
+  <div class="a4-row">
+    <span class="a4-label">Tuning reference (A4)</span>
+    <select id="a4Select">
+      <option value="439">439 Hz</option>
+      <option value="440">440 Hz</option>
+      <option value="441">441 Hz</option>
+      <option value="442">442 Hz</option>
+      <option value="443">443 Hz</option>
+    </select>
+  </div>
+
+
+  <!-- Tuner -->
+  <div class="tool-block">
+    <div class="tool-block-title">🎯 Tuner</div>
+    <div id="tunerDisplay" class="tuner-display">
+      <div class="tuner-note" id="tunerNote">—</div>
+      <div class="tuner-cents-bar"><div class="tuner-needle" id="tunerNeedle"></div><div class="tuner-center-line"></div></div>
+      <div class="tuner-cents" id="tunerCents">Tap Start and play a note</div>
     </div>
-
-    <div class="tool-block">
-      <div class="tool-block-title">🎻 Tuning drone</div>
-      <div class="tool-row">
-        <select id="droneNote">
-          <option value="C">C</option>
-          <option value="C#">C♯ / D♭</option>
-          <option value="D">D</option>
-          <option value="D#">D♯ / E♭</option>
-          <option value="E">E</option>
-          <option value="F">F</option>
-          <option value="F#">F♯ / G♭</option>
-          <option value="G" selected>G</option>
-          <option value="G#">G♯ / A♭</option>
-          <option value="A">A</option>
-          <option value="A#">A♯ / B♭</option>
-          <option value="B">B</option>
-        </select>
-        <select id="droneOctave">
-          <option value="2">Octave 2</option>
-          <option value="3" selected>Octave 3</option>
-          <option value="4">Octave 4</option>
-          <option value="5">Octave 5</option>
-        </select>
+    <div class="tuner-precision">
+      <div class="tuner-prec-head">
+        <span class="tuner-prec-label">In-Tune Range</span>
       </div>
-      <div class="tool-row">
-        <button class="tool-toggle-btn primary" id="dronePlayBtn">▶ Play drone</button>
-      </div>
+      <input type="range" id="tunerPrec" min="2" max="10" step="1" value="5">
+      <div class="tuner-prec-ends"><span>Fine</span><span>Medium</span><span>Wide</span></div>
     </div>
-
-    <div class="sheet-actions">
-      <button class="btn btn-ghost" id="toolsDoneBtn">Close</button>
+    <div class="tool-row">
+      <button class="tool-toggle-btn primary" id="tunerBtn">▶ Start tuner</button>
     </div>
   </div>
+
+
+  <!-- Metronome -->
+  <div class="tool-block">
+    <div class="tool-block-title">🎯 Metronome</div>
+    <div class="metronome-display">
+      <div class="bpm-number" id="bpmDisplay">92</div>
+      <div class="bpm-label">BPM</div>
+    </div>
+    <div class="bpm-slider-row">
+      <button class="bpm-step-btn" id="bpmDown">−</button>
+      <input type="range" id="bpmSlider" min="30" max="240" value="92">
+      <button class="bpm-step-btn" id="bpmUp">+</button>
+    </div>
+    <div class="tool-row">
+      <button class="tool-toggle-btn primary" id="metroPlayBtn">▶ Start</button>
+      <button class="tool-toggle-btn" id="tapTempoBtn">Tap tempo</button>
+    </div>
+    <label class="speed-burst-row">
+      <input type="checkbox" id="speedBurstCheck">
+      <span>Speed Burst — +2 BPM every 4 beats (caps at 184)</span>
+    </label>
+  </div>
+
+  <!-- Drone -->
+  <div class="tool-block">
+    <div class="tool-block-title">🎻 Tuning drone</div>
+    <div class="tool-row">
+      <select id="droneNote">
+        <option value="C">C</option>
+        <option value="C#">C♯ / D♭</option>
+        <option value="D">D</option>
+        <option value="D#">D♯ / E♭</option>
+        <option value="E">E</option>
+        <option value="F">F</option>
+        <option value="F#">F♯ / G♭</option>
+        <option value="G" selected>G</option>
+        <option value="G#">G♯ / A♭</option>
+        <option value="A">A</option>
+        <option value="A#">A♯ / B♭</option>
+        <option value="B">B</option>
+      </select>
+      <select id="droneOctave">
+        <option value="2">Octave 2</option>
+        <option value="3" selected>Octave 3</option>
+        <option value="4">Octave 4</option>
+        <option value="5">Octave 5</option>
+      </select>
+    </div>
+    <div class="drone-vol-row">
+      <span class="drone-vol-icon">🔊</span>
+      <input type="range" id="droneVolume" min="0" max="100" value="90">
+    </div>
+    <div class="tool-row">
+      <button class="tool-toggle-btn primary" id="dronePlayBtn">▶ Play drone</button>
+    </div>
+  </div>
+
+
+  <!-- Dynamics / decibel meter -->
+  <div class="tool-block">
+    <div class="tool-block-title">📢 Dynamics meter</div>
+    <div class="db-meter-wrap">
+      <div class="db-bar-track"><div class="db-bar-fill" id="dbBarFill"></div></div>
+      <div class="db-readout" id="dbReadout">—</div>
+    </div>
+    <div class="tool-row">
+      <button class="tool-toggle-btn primary" id="dbBtn">▶ Start meter</button>
+    </div>
+    <div style="font-size:0.68rem;color:var(--muted);margin-top:6px">Relative loudness (pp → ff), not a calibrated dB level.</div>
+  </div>
+
+
 </div>
+
 
 <!-- Backup Sheet -->
 <div class="sheet-backdrop" id="backupSheet">
@@ -836,6 +1020,20 @@ header {
       <button class="backup-action-btn secondary" id="doRestoreBtn">⬆ Restore from backup</button>
       <input type="file" id="restoreFileInput" accept=".json" style="display:none;">
       <button class="backup-action-btn" style="background:var(--warm);color:var(--ink);" id="backupCancelBtn">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Name Sheet -->
+<div class="sheet-backdrop" id="nameSheet">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <h2><span>Whose journal is this?</span><span class="close-x" id="nameClose">&times;</span></h2>
+    <p class="backup-hint">This name shows at the top and on the Dashboard.</p>
+    <input type="text" id="nameInput" placeholder="Enter a name" style="width:100%;box-sizing:border-box;padding:12px 14px;border:1.5px solid var(--warm);border-radius:12px;font-family:inherit;font-size:1rem;margin-bottom:14px;">
+    <div class="backup-btn-row">
+      <button class="backup-action-btn primary" id="nameSaveBtn">Save name</button>
+      <button class="backup-action-btn" style="background:var(--warm);color:var(--ink);" id="nameCancelBtn">Cancel</button>
     </div>
   </div>
 </div>
@@ -895,6 +1093,7 @@ function load(){
   if(!state.dailyNotes) state.dailyNotes = {};
   if(!state.dailyFocus) state.dailyFocus = {};
   if(!state.countdowns) state.countdowns = [];
+  if(!state.profile) state.profile = {};
   } catch(e){ state = {items:[],practiced:{},ticked:{},tickHistory:{},dailyNotes:{}}; }
 }
 function save(){
@@ -936,11 +1135,26 @@ function uid(){ return 'p'+Date.now().toString(36)+Math.random().toString(36).sl
 // ── Tab switching ──
 Array.prototype.forEach.call(document.querySelectorAll('.tab-btn'), function(btn){
   btn.addEventListener('click', function(){
+    var prev = document.querySelector('.tab-btn.active');
+    if(prev && prev.getAttribute('data-tab')==='tools' && btn.getAttribute('data-tab')!=='tools'){
+      // leaving Tools — stop any running audio tools
+      if(typeof stopDrone==='function') stopDrone();
+      if(typeof stopMetronome==='function') stopMetronome();
+      if(typeof stopTuner==='function') stopTuner();
+      if(typeof stopDbMeter==='function') stopDbMeter();
+    }
     Array.prototype.forEach.call(document.querySelectorAll('.tab-btn'), function(b){ b.classList.remove('active'); });
     Array.prototype.forEach.call(document.querySelectorAll('.view'), function(v){ v.classList.remove('active'); });
     btn.classList.add('active');
     document.getElementById('view-'+btn.getAttribute('data-tab')).classList.add('active');
-    if(btn.getAttribute('data-tab')==='history') renderHistory();
+    if(btn.getAttribute('data-tab')==='history'){
+      renderDashboard();
+      if(!dashBooted){ dashBooted = true; runDashboardBoot(); }
+    }
+    if(btn.getAttribute('data-tab')==='tools'){
+      var ctx = getAudioCtx();
+      if(ctx && ctx.state==='suspended') ctx.resume();
+    }
   });
 });
 
@@ -1119,7 +1333,7 @@ function renderStreak(){
     sub = streak>0 ? '🎵 '+streak+' day streak — play something today!' : 'No pressure — just pick up the viola when you\'re ready.';
   }
   document.getElementById('todayStreak').textContent = sub;
-  document.getElementById('streakNumber').textContent = streak;
+  var _sn = document.getElementById('streakNumber'); if(_sn) _sn.textContent = streak;
 }
 
 // ── Categories / Post-its ──
@@ -1361,6 +1575,7 @@ if(_dsu) _dsu.addEventListener('click', function(){
 
 // ── History view ──
 function renderHistory(){
+  if(!document.getElementById('totalDaysNumber')) return; // History view replaced by Dashboard
   // Total days & streak
   var totalDays = Object.keys(state.practiced).filter(function(k){ return state.practiced[k]; }).length;
   document.getElementById('totalDaysNumber').textContent = totalDays;
@@ -1411,6 +1626,228 @@ function renderHistory(){
   document.getElementById('breakdownChart').innerHTML=breakdown;
 }
 
+// ===== Dashboard (copied from Practice Journal) =====
+var dashBooted = false;
+function runDashboardBoot(){
+  var boot = document.getElementById('dashBoot');
+  var dash = document.getElementById('dashboardWrap');
+  if(!boot || !dash) return;
+  var streak = calcStreak();
+  var totalDays = Object.keys(state.practiced||{}).filter(function(k){ return state.practiced[k]; }).length;
+  var name = (state.profile && state.profile.name) ? state.profile.name : 'pupil';
+  var lines = [
+    '<span class="bl-dim">&gt; initialising practice log…</span>',
+    '<span class="bl-dim">&gt; loading profile: </span><span class="bl-gold">'+escHtml(name)+'</span>',
+    '<span class="bl-dim">&gt; days on record: </span><span class="bl-gold">'+totalDays+'</span>',
+    '<span class="bl-dim">&gt; current streak: </span><span class="bl-gold">'+streak+' day'+(streak===1?'':'s')+'</span>',
+    '<span class="bl-gold">&gt; ready.</span><span class="cursor"></span>'
+  ];
+  // show boot, hide dashboard
+  boot.style.display = 'block';
+  boot.innerHTML = '';
+  dash.style.display = 'none';
+  var i = 0;
+  function nextLine(){
+    if(i >= lines.length){
+      // hold briefly, then reveal dashboard
+      setTimeout(function(){
+        boot.style.display = 'none';
+        dash.style.display = '';
+      }, 550);
+      return;
+    }
+    var div = document.createElement('div');
+    div.className = 'bl';
+    div.innerHTML = lines[i];
+    boot.appendChild(div);
+    i++;
+    setTimeout(nextLine, 260);
+  }
+  nextLine();
+}
+
+function renderDashboard(){
+  var wrap = document.getElementById('dashboardWrap');
+  if(!wrap) return;
+
+  var todayStr = todayKey();
+  var streak = calcStreak();
+  var totalDays = Object.keys(state.practiced || {}).length;
+
+  // Days practised in the last 7 days
+  var weekCount = 0;
+  var d = new Date();
+  for(var i=0;i<7;i++){
+    var k = d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+    if(state.practiced[k]) weekCount++;
+    d.setDate(d.getDate()-1);
+  }
+
+  // Days practised this calendar month
+  var now = new Date();
+  var monthCount = 0;
+  Object.keys(state.practiced || {}).forEach(function(key){
+    var parts = key.split('-');
+    if(parseInt(parts[0],10)===now.getFullYear() && parseInt(parts[1],10)===(now.getMonth()+1)) monthCount++;
+  });
+
+  // Today: how many of the assigned items are ticked
+  var todayTicked = state.ticked[todayStr] || {};
+  var totalItems = (state.items || []).length;
+  var doneToday = 0;
+  (state.items || []).forEach(function(it){ if(todayTicked[it.id]) doneToday++; });
+
+  // Per-section: items assigned + how many done today
+  var sectionRows = CATEGORIES.map(function(cat){
+    var items = (state.items || []).filter(function(it){ return it.category===cat.key; });
+    var assigned = items.length;
+    var done = items.filter(function(it){ return todayTicked[it.id]; }).length;
+    var pct = assigned ? Math.round((done/assigned)*100) : 0;
+    // Semicircular gauge: arc length ~ half circumference of r=20 = π*20 ≈ 62.8
+    var arc = Math.PI*20;
+    var fillArc = (arc * pct/100).toFixed(1);
+    return '<div class="dash-gauge">'
+      + '<svg viewBox="0 0 50 30" width="66" height="40">'
+      + '<defs><linearGradient id="gauge'+cat.key+'" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#F6D79A"/><stop offset="100%" stop-color="#C68A3C"/></linearGradient></defs>'
+      + '<path d="M5 27 A20 20 0 0 1 45 27" fill="none" stroke="var(--warm)" stroke-width="5" stroke-linecap="round"/>'
+      + '<path d="M5 27 A20 20 0 0 1 45 27" fill="none" stroke="url(#gauge'+cat.key+')" stroke-width="5" stroke-linecap="round"'
+      + ' stroke-dasharray="'+arc.toFixed(1)+'" stroke-dashoffset="'+(arc-fillArc).toFixed(1)+'"/>'
+      + '<text x="25" y="25" text-anchor="middle" font-size="9" font-weight="700" fill="var(--ink)">'+done+'/'+assigned+'</text>'
+      + '</svg>'
+      + '<div class="dash-gauge-label">'+escHtml(cat.label)+'</div>'
+      + '</div>';
+  }).join('');
+
+  var pctToday = totalItems ? Math.round((doneToday/totalItems)*100) : 0;
+
+  var html = '';
+
+  // Weather-station readout panel
+  html += '<div class="dash-station">'
+    + '<div class="dash-station-head"><span class="dash-station-live">Practice log · live</span><span class="dash-station-ref">REF: '+todayKey()+'</span></div>'
+    + '<div class="dash-readouts">'
+    + '<div class="dash-readout"><div class="dash-rlabel">Day streak</div><div class="dash-rval">'+streak+'</div><div class="dash-rnote">'+(streak>0?'keep it going':'start today')+'</div></div>'
+    + '<div class="dash-readout"><div class="dash-rlabel">Total days</div><div class="dash-rval">'+totalDays+'</div><div class="dash-rnote">practised in all</div></div>'
+    + '<div class="dash-readout"><div class="dash-rlabel">This week</div><div class="dash-rval">'+weekCount+'</div><div class="dash-rnote">of 7 days</div></div>'
+    + '<div class="dash-readout"><div class="dash-rlabel">This month</div><div class="dash-rval">'+monthCount+'</div><div class="dash-rnote">days logged</div></div>'
+    + '</div></div>';
+
+  // Today's progress (wide) — hero ring
+  html += '<div class="dash-tile wide">'
+    + '<div class="dash-tile-title">Today&rsquo;s practice</div>';
+  if(totalItems===0){
+    html += '<p style="font-size:0.85rem;color:var(--muted);margin:0">No items assigned yet. Add your practice for the week on the Today tab.</p>';
+  } else {
+    var circ = 2*Math.PI*42;
+    var dash = (circ * pctToday/100).toFixed(1);
+    html += '<div class="dash-ring-wrap">'
+      + '<svg class="dash-ring" viewBox="0 0 100 100" width="120" height="120">'
+      + '<circle cx="50" cy="50" r="42" fill="none" stroke="var(--warm)" stroke-width="9"/>'
+      + '<circle cx="50" cy="50" r="42" fill="none" stroke="url(#dashRingGrad)" stroke-width="9" stroke-linecap="round"'
+      + ' stroke-dasharray="'+circ.toFixed(1)+'" stroke-dashoffset="'+(circ-dash).toFixed(1)+'" transform="rotate(-90 50 50)"/>'
+      + '<defs><linearGradient id="dashRingGrad" x1="0" y1="0" x2="1" y2="1">'
+      + '<stop offset="0%" stop-color="#F6D79A"/><stop offset="100%" stop-color="#C68A3C"/></linearGradient></defs>'
+      + '<text x="50" y="47" text-anchor="middle" font-size="22" font-family="DM Serif Display, serif" fill="var(--ink)">'+pctToday+'%</text>'
+      + '<text x="50" y="62" text-anchor="middle" font-size="9" fill="var(--muted)">'+doneToday+' / '+totalItems+'</text>'
+      + '</svg>'
+      + '<div class="dash-ring-sections">'+sectionRows+'</div>'
+      + '</div>';
+  }
+  html += '</div>';
+
+  // Countdowns reminder (wide) — if any upcoming
+  var upcoming = (state.countdowns || []).filter(function(c){ return c.date; }).map(function(c){
+    var target = new Date(c.date+'T00:00:00');
+    var days = Math.ceil((target - new Date(new Date().toDateString()))/(1000*60*60*24));
+    return { name: c.name, days: days };
+  }).filter(function(c){ return c.days>=0; }).sort(function(a,b){ return a.days-b.days; });
+
+  // Practice heatmap — last 12 weeks (a "practice garden")
+  var HM_WEEKS = 12;
+  var today0 = new Date(new Date().toDateString());
+  var dow = today0.getDay(); // 0=Sun
+  // end on the current week's Saturday
+  var gridEnd = new Date(today0); gridEnd.setDate(today0.getDate() + (6-dow));
+  var cells = '';
+  var dayLabels = ['','M','','W','','F',''];
+  var hmHtml = '<div class="dash-tile wide"><div class="dash-tile-title">Every day counts 🎻</div>'
+    + '<div class="hm-wrap"><div class="hm-daycol">';
+  for(var dl=0;dl<7;dl++){ hmHtml += '<div class="hm-daylabel">'+dayLabels[dl]+'</div>'; }
+  hmHtml += '</div><div class="hm-grid">';
+  for(var wcol=HM_WEEKS-1; wcol>=0; wcol--){
+    hmHtml += '<div class="hm-week">';
+    for(var drow=0; drow<7; drow++){
+      var cd = new Date(gridEnd);
+      cd.setDate(gridEnd.getDate() - wcol*7 - (6-drow));
+      var ck = cd.getFullYear()+'-'+pad(cd.getMonth()+1)+'-'+pad(cd.getDate());
+      var future = cd > today0;
+      var done = !!state.practiced[ck];
+      var cls = 'hm-cell' + (future?' hm-future':(done?' hm-done':''));
+      var title = cd.toDateString() + (done?' — practised':'');
+      hmHtml += '<div class="'+cls+'" title="'+title+'"></div>';
+    }
+    hmHtml += '</div>';
+  }
+  hmHtml += '</div></div></div>';
+  html += hmHtml;
+
+  // Last 8 weeks chart
+  var weekTotals=[];
+  var wd=new Date();
+  for(var w=7;w>=0;w--){
+    var weekStart=new Date(wd);
+    weekStart.setDate(wd.getDate()-w*7-6);
+    var wc=0;
+    for(var wi=0;wi<7;wi++){
+      var dd=new Date(weekStart);
+      dd.setDate(weekStart.getDate()+wi);
+      var wk=dd.getFullYear()+'-'+pad(dd.getMonth()+1)+'-'+pad(dd.getDate());
+      if(state.practiced[wk]) wc++;
+    }
+    weekTotals.push(wc);
+  }
+  var maxW=Math.max.apply(null,weekTotals)||1;
+  var bars='';
+  weekTotals.forEach(function(c,i){
+    var h=Math.round((c/maxW)*64)+2;
+    bars+='<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">'
+      + '<div class="dash-chart-bar" style="height:'+h+'px"></div>'
+      + '<div style="font-size:0.6rem;color:var(--muted)">'+(i===7?'now':'')+'</div></div>';
+  });
+  html += '<div class="dash-tile wide"><div class="dash-tile-title">Last 8 weeks (days practised)</div>'
+    + '<div style="display:flex;align-items:flex-end;gap:5px;height:80px">'+bars+'</div></div>';
+
+  if(upcoming.length){
+    html += '<div class="dash-tile wide"><div class="dash-tile-title">Coming up</div>';
+    html += '<div class="dash-console">';
+    upcoming.slice(0,3).forEach(function(c){
+      var big = c.days===0 ? 'TODAY' : c.days;
+      var unit = c.days===0 ? '' : (c.days===1?'day to go':'days to go');
+      var live = c.days===0 ? 'happening now' : 'counting down · live';
+      html += '<div class="dash-console-row">'
+        + '<div class="dash-console-left"><span class="dash-console-dot"></span>'
+        + '<span class="dash-console-name">'+escHtml(c.name||'Event')+'</span>'
+        + '<span class="dash-console-live">'+live+'</span></div>'
+        + '<div class="dash-console-num">'+big+'<span class="dash-console-unit">'+unit+'</span></div>'
+        + '</div>';
+    });
+    html += '</div></div>';
+  }
+
+  // Scrolling ticker ribbon
+  var tickerBits = [];
+  tickerBits.push('🎻 '+totalDays+' day'+(totalDays===1?'':'s')+' practised in all');
+  tickerBits.push('🔥 Current streak: <b>'+streak+'</b>');
+  tickerBits.push('📅 '+weekCount+' day'+(weekCount===1?'':'s')+' this week');
+  tickerBits.push('🌱 '+monthCount+' day'+(monthCount===1?'':'s')+' this month');
+  if(upcoming.length){ tickerBits.push('⏳ '+upcoming[0].days+' day'+(upcoming[0].days===1?'':'s')+' until '+escHtml(upcoming[0].name||'your event')); }
+  tickerBits.push('✨ Little and often wins every time');
+  var oneLoop = tickerBits.map(function(b){ return '<span>'+b+'</span>'; }).join('');
+  html += '<div class="dash-ticker"><div class="dash-ticker-track">'+oneLoop+oneLoop+'</div></div>';
+
+  wrap.innerHTML = html;
+}
+
 // ── Tools: Metronome & Drone ──
 var audioCtx = null;
 function getAudioCtx(){
@@ -1423,23 +1860,6 @@ function getAudioCtx(){
   }
   return audioCtx;
 }
-
-document.getElementById('toolsBtn').addEventListener('click', function(){
-  document.getElementById('toolsSheet').classList.add('show');
-  // Resume audio context directly inside this tap — required by Safari/iPad
-  var ctx = getAudioCtx();
-  if(ctx && ctx.state === 'suspended') ctx.resume();
-});
-function closeTools(){
-  document.getElementById('toolsSheet').classList.remove('show');
-  stopMetronome();
-  stopDrone();
-}
-document.getElementById('toolsClose').addEventListener('click', closeTools);
-document.getElementById('toolsDoneBtn').addEventListener('click', closeTools);
-document.getElementById('toolsSheet').addEventListener('click', function(e){
-  if(e.target===this) closeTools();
-});
 
 // ── Metronome ──
 var bpm = 92;
@@ -1544,11 +1964,31 @@ document.getElementById('tapTempoBtn').addEventListener('click', function(){
   }, 2100);
 });
 
-// ── Tuning Drone ──
+
+// ===== Transferred audio tools (A4, drone, tuner, dynamics, recorder) =====
 var droneOsc = null;
 var droneGain = null;
 var dronePlaying = false;
-var NOTE_FREQS = { // A4 = 441 Hz
+var droneVolume = 0.9;  // 0..1, defaults near max
+// ── A4 reference pitch (shared by drone + tuner) ──
+function getA4(){
+  var v = (state.settings && state.settings.a4) ? state.settings.a4 : 441;
+  return v;
+}
+function setA4(hz){
+  if(!state.settings) state.settings = {};
+  state.settings.a4 = hz;
+  save();
+}
+// Semitone distance of a note from A4, then frequency = a4 * 2^(semis/12)
+var SEMI_FROM_A = { 'C':-9,'C#':-8,'D':-7,'D#':-6,'E':-5,'F':-4,'F#':-3,'G':-2,'G#':-1,'A':0,'A#':1,'B':2 };
+function noteFreq(note, oct, a4){
+  a4 = a4 || 441;
+  var semisFromA4 = SEMI_FROM_A[note] + (oct - 4) * 12; // A4 is octave 4
+  return a4 * Math.pow(2, semisFromA4/12);
+}
+
+var NOTE_FREQS = { // legacy table (A4=441), no longer used directly
   'C2':65.56, 'C#2':69.45, 'D2':73.58, 'D#2':77.96, 'E2':82.59, 'F2':87.51, 'F#2':92.71, 'G2':98.22, 'G#2':104.06, 'A2':110.25, 'A#2':116.81, 'B2':123.75,
   'C3':131.11, 'C#3':138.91, 'D3':147.17, 'D#3':155.92, 'E3':165.19, 'F3':175.01, 'F#3':185.42, 'G3':196.44, 'G#3':208.12, 'A3':220.50, 'A#3':233.61, 'B3':247.50,
   'C4':262.22, 'C#4':277.81, 'D4':294.33, 'D#4':311.83, 'E4':330.38, 'F4':350.02, 'F#4':370.84, 'G4':392.89, 'G#4':416.25, 'A4':441.00, 'A#4':467.22, 'B4':495.01,
@@ -1561,13 +2001,13 @@ function startDrone(){
   stopDrone();
   var note = document.getElementById('droneNote').value;
   var oct = document.getElementById('droneOctave').value;
-  var freq = NOTE_FREQS[note+oct] || 220;
+  var freq = noteFreq(note, parseInt(oct,10), getA4());
   droneOsc = ctx.createOscillator();
   droneGain = ctx.createGain();
   droneOsc.type = 'triangle';
   droneOsc.frequency.value = freq;
   droneGain.gain.setValueAtTime(0, ctx.currentTime);
-  droneGain.gain.linearRampToValueAtTime(0.35, ctx.currentTime+0.15);
+  droneGain.gain.linearRampToValueAtTime(droneVolume, ctx.currentTime+0.15);
   droneOsc.connect(droneGain); droneGain.connect(ctx.destination);
   droneOsc.start();
   dronePlaying = true;
@@ -1596,6 +2036,343 @@ document.getElementById('dronePlayBtn').addEventListener('click', function(){
 });
 document.getElementById('droneNote').addEventListener('change', function(){ if(dronePlaying) startDrone(); });
 document.getElementById('droneOctave').addEventListener('change', function(){ if(dronePlaying) startDrone(); });
+document.getElementById('droneVolume').addEventListener('input', function(){
+  droneVolume = parseInt(this.value,10)/100;
+  if(dronePlaying && droneGain){
+    var ctx = getAudioCtx();
+    if(ctx) droneGain.gain.linearRampToValueAtTime(droneVolume, ctx.currentTime+0.05);
+  }
+});
+// A4 reference pitch selector (shared by drone + tuner)
+(function(){
+  var sel = document.getElementById('a4Select');
+  if(!sel) return;
+  sel.value = String(getA4());
+  sel.addEventListener('change', function(){
+    setA4(parseInt(this.value,10));
+    if(dronePlaying) startDrone(); // re-tune drone live
+  });
+})();
+
+var micStream = null, micSource = null, micAnalyser = null, micBuf = null;
+function getMic(){
+  // returns a promise resolving to true if mic is ready
+  if(micAnalyser) return Promise.resolve(true);
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+    return Promise.reject(new Error('no-mic-api'));
+  }
+  return navigator.mediaDevices.getUserMedia({ audio:true }).then(function(stream){
+    var ctx = getAudioCtx();
+    micStream = stream;
+    micSource = ctx.createMediaStreamSource(stream);
+    micAnalyser = ctx.createAnalyser();
+    micAnalyser.fftSize = 4096; // larger buffer → resolves low strings (viola/cello C)
+    micBuf = new Float32Array(micAnalyser.fftSize);
+    micSource.connect(micAnalyser);
+    return true;
+  });
+}
+function releaseMicIfIdle(){
+  if(!tunerRunning && !dbRunning && micStream){
+    micStream.getTracks().forEach(function(t){ t.stop(); });
+    micStream = null; micSource = null; micAnalyser = null; micBuf = null;
+  }
+}
+
+// ── Tuner (autocorrelation pitch detection) ──
+var tunerRunning = false, tunerRAF = null;
+var tunerFreqHistory = [];     // recent detected freqs for smoothing
+var tunerHoldCount = 0;        // frames the current note has been stable
+function getTunerPrecision(){
+  var p = (state.settings && state.settings.tunerPrec) ? state.settings.tunerPrec : 5;
+  return Math.max(2, Math.min(10, p));
+}
+function renderTunerPrecision(){
+  var p = getTunerPrecision();
+  var slider = document.getElementById('tunerPrec');
+  if(slider) slider.value = p;
+}
+function setTunerPrecision(p){
+  if(!state.settings) state.settings = {};
+  state.settings.tunerPrec = Math.max(2, Math.min(10, p));
+  save();
+  renderTunerPrecision();
+}
+var NOTE_NAMES = ['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'];
+function freqToNote(freq){
+  var noteNum = 12 * (Math.log(freq/getA4())/Math.log(2)) + 69; // A4 = chosen reference
+  var rounded = Math.round(noteNum);
+  var cents = Math.floor((noteNum - rounded) * 100);
+  var name = NOTE_NAMES[(rounded % 12 + 12) % 12];
+  return { name:name, cents:cents };
+}
+function autoCorrelate(buf, sampleRate){
+  var SIZE = buf.length, rms = 0;
+  for(var i=0;i<SIZE;i++){ rms += buf[i]*buf[i]; }
+  rms = Math.sqrt(rms/SIZE);
+  if(rms < 0.008) return { freq:-1, clarity:0 }; // too quiet
+  var r1=0, r2=SIZE-1, thres=0.2;
+  for(var i2=0;i2<SIZE/2;i2++){ if(Math.abs(buf[i2])<thres){ r1=i2; break; } }
+  for(var j=1;j<SIZE/2;j++){ if(Math.abs(buf[SIZE-j])<thres){ r2=SIZE-j; break; } }
+  buf = buf.slice(r1, r2); SIZE = buf.length;
+  if(SIZE < 8) return { freq:-1, clarity:0 };
+  var c = new Array(SIZE).fill(0);
+  for(var i3=0;i3<SIZE;i3++){ for(var j2=0;j2<SIZE-i3;j2++){ c[i3] += buf[j2]*buf[j2+i3]; } }
+  var d=0; while(d<SIZE-1 && c[d]>c[d+1]) d++;
+  var maxval=-1, maxpos=-1;
+  for(var i4=d;i4<SIZE;i4++){ if(c[i4]>maxval){ maxval=c[i4]; maxpos=i4; } }
+  var T0 = maxpos;
+  if(T0<=0) return { freq:-1, clarity:0 };
+  // Parabolic interpolation around the peak for sub-sample accuracy (helps low notes)
+  var x1=c[T0-1]||0, x2=c[T0], x3=c[T0+1]||0;
+  var a=(x1+x3-2*x2)/2, b=(x3-x1)/2;
+  if(a){ T0 = T0 - b/(2*a); }
+  // clarity = peak height relative to zero-lag energy (0..1)
+  var clarity = c[0] ? (maxval / c[0]) : 0;
+  return { freq: sampleRate / T0, clarity: clarity };
+}
+function tunerTick(){
+  if(!tunerRunning) return;
+  var ctx = getAudioCtx();
+  micAnalyser.getFloatTimeDomainData(micBuf);
+  var res = autoCorrelate(micBuf, ctx.sampleRate);
+  var noteEl = document.getElementById('tunerNote');
+  var centsEl = document.getElementById('tunerCents');
+  var needle = document.getElementById('tunerNeedle');
+  var display = document.getElementById('tunerDisplay');
+
+  // Confidence gate: ignore unclear / noisy input
+  var clear = res.freq > 0 && res.clarity > 0.8 && res.freq >= 55 && res.freq <= 1400;
+  if(!clear){
+    tunerFreqHistory = [];
+    tunerHoldCount = 0;
+    noteEl.textContent = '—';
+    centsEl.textContent = 'Play a steady note…';
+    needle.style.left = '50%';
+    needle.style.background = 'var(--mid-blue)';
+    if(display) display.classList.remove('in-tune');
+    tunerRAF = requestAnimationFrame(tunerTick);
+    return;
+  }
+
+  // Smoothing: keep a short rolling history, use the median (robust to blips)
+  tunerFreqHistory.push(res.freq);
+  if(tunerFreqHistory.length > 6) tunerFreqHistory.shift();
+  var sorted = tunerFreqHistory.slice().sort(function(a,b){ return a-b; });
+  var smoothFreq = sorted[Math.floor(sorted.length/2)];
+
+  var n = freqToNote(smoothFreq);
+  noteEl.textContent = n.name;
+
+  // Needle position (-50..+50 cents → 5%..95%)
+  var clamped = Math.max(-50, Math.min(50, n.cents));
+  needle.style.left = (50 + clamped*0.9) + '%';
+
+  // Friendly wording + in-tune feedback (tolerance set by the precision slider)
+  var tol = getTunerPrecision();
+  var inTune = Math.abs(n.cents) <= tol;
+  if(inTune){
+    tunerHoldCount++;
+    needle.style.background = 'var(--forest)';
+    if(display) display.classList.add('in-tune');
+    centsEl.textContent = '✓ In tune';
+  } else {
+    tunerHoldCount = 0;
+    needle.style.background = 'var(--mid-blue)';
+    if(display) display.classList.remove('in-tune');
+    var dir = n.cents < 0 ? 'flat' : 'sharp';
+    var amt = Math.abs(n.cents);
+    var word = amt<=12 ? ('a little '+dir) : amt<=28 ? dir : ('very '+dir);
+    // Nudge which way to go
+    var arrow = n.cents < 0 ? '↑ tune up' : '↓ tune down';
+    centsEl.textContent = word + ' · ' + arrow;
+  }
+  tunerRAF = requestAnimationFrame(tunerTick);
+}
+function startTuner(){
+  var btn = document.getElementById('tunerBtn');
+  document.getElementById('tunerCents').textContent = 'Allow microphone access…';
+  getMic().then(function(){
+    tunerRunning = true;
+    btn.textContent = '■ Stop tuner'; btn.classList.add('active');
+    tunerTick();
+  }).catch(function(err){
+    document.getElementById('tunerCents').textContent = 'Microphone unavailable. Open in Safari and allow mic access.';
+  });
+}
+function stopTuner(){
+  tunerRunning = false;
+  if(tunerRAF) cancelAnimationFrame(tunerRAF);
+  tunerFreqHistory = [];
+  tunerHoldCount = 0;
+  var btn = document.getElementById('tunerBtn');
+  if(btn){ btn.textContent = '▶ Start tuner'; btn.classList.remove('active'); }
+  var noteEl = document.getElementById('tunerNote'); if(noteEl) noteEl.textContent='—';
+  var disp = document.getElementById('tunerDisplay'); if(disp) disp.classList.remove('in-tune');
+  releaseMicIfIdle();
+}
+document.getElementById('tunerBtn').addEventListener('click', function(){
+  var ctx = getAudioCtx(); if(ctx && ctx.state==='suspended') ctx.resume();
+  if(tunerRunning) stopTuner(); else startTuner();
+});
+// Precision slider
+(function(){
+  var slider = document.getElementById('tunerPrec');
+  if(!slider) return;
+  renderTunerPrecision();
+  slider.addEventListener('input', function(){ setTunerPrecision(parseInt(this.value,10)); });
+})();
+
+// ── Dynamics meter (RMS loudness) ──
+var dbRunning = false, dbRAF = null;
+function dbTick(){
+  if(!dbRunning) return;
+  micAnalyser.getFloatTimeDomainData(micBuf);
+  var rms=0; for(var i=0;i<micBuf.length;i++){ rms += micBuf[i]*micBuf[i]; }
+  rms = Math.sqrt(rms/micBuf.length);
+  // Map RMS (roughly 0..0.5) to 0..100% on a loose log scale
+  var level = rms<=0 ? 0 : Math.min(100, Math.max(0, (20*Math.log(rms)/Math.log(10) + 60) * 1.6));
+  document.getElementById('dbBarFill').style.width = level+'%';
+  var label = level<12?'pp':level<28?'p':level<45?'mp':level<62?'mf':level<80?'f':'ff';
+  document.getElementById('dbReadout').textContent = label;
+  dbRAF = requestAnimationFrame(dbTick);
+}
+function startDbMeter(){
+  var btn = document.getElementById('dbBtn');
+  document.getElementById('dbReadout').textContent = 'Allow mic…';
+  getMic().then(function(){
+    dbRunning = true;
+    btn.textContent = '■ Stop meter'; btn.classList.add('active');
+    dbTick();
+  }).catch(function(){
+    document.getElementById('dbReadout').textContent = 'Mic unavailable';
+  });
+}
+function stopDbMeter(){
+  dbRunning = false;
+  if(dbRAF) cancelAnimationFrame(dbRAF);
+  var btn = document.getElementById('dbBtn');
+  if(btn){ btn.textContent = '▶ Start meter'; btn.classList.remove('active'); }
+  var fill=document.getElementById('dbBarFill'); if(fill) fill.style.width='0%';
+  releaseMicIfIdle();
+}
+document.getElementById('dbBtn').addEventListener('click', function(){
+  var ctx = getAudioCtx(); if(ctx && ctx.state==='suspended') ctx.resume();
+  if(dbRunning) stopDbMeter(); else startDbMeter();
+});
+
+// ── Quick-fire recorder (ephemeral: RAM only, auto-purge) ──
+(function(){
+  var CATCH_MAX_MS = 20000;           // 20-second cap
+  var btn = document.getElementById('catchBtn');
+  if(!btn) return;
+  var label = document.getElementById('catchLabel');
+  var hint = document.getElementById('catchHint');
+  var timerEl = document.getElementById('catchTimer');
+
+  var mediaRec = null, chunks = [], catchStream = null;
+  var catchURL = null, catchAudio = null;
+  var mode = 'idle';                  // idle | recording | playing
+  var startTs = 0, rafId = null, stopTimer = null;
+
+  function resetLabel(){
+    label.textContent = 'Tap to catch a take';
+    hint.textContent = "Records up to 20s · plays back once · then it's gone forever";
+    timerEl.style.display = 'none';
+    btn.classList.remove('recording','playing');
+  }
+
+  // Wipe every trace of the take from memory
+  function purge(){
+    if(catchAudio){ try{ catchAudio.pause(); }catch(e){} catchAudio.src=''; catchAudio=null; }
+    if(catchURL){ try{ URL.revokeObjectURL(catchURL); }catch(e){} catchURL=null; }
+    chunks = [];
+    if(catchStream){ catchStream.getTracks().forEach(function(t){ t.stop(); }); catchStream=null; }
+    mediaRec = null;
+  }
+
+  function updateTimer(){
+    if(mode!=='recording') return;
+    var el = (Date.now()-startTs)/1000;
+    timerEl.textContent = el.toFixed(1)+'s';
+    rafId = requestAnimationFrame(updateTimer);
+  }
+
+  function startRecording(){
+    if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+      hint.textContent = 'Recording needs microphone access (open in Safari/Chrome).';
+      return;
+    }
+    navigator.mediaDevices.getUserMedia({ audio:true }).then(function(stream){
+      catchStream = stream;
+      chunks = [];
+      try {
+        mediaRec = new MediaRecorder(stream);
+      } catch(e){
+        hint.textContent = 'This browser can’t record audio.';
+        purge(); resetLabel(); return;
+      }
+      mediaRec.ondataavailable = function(e){ if(e.data && e.data.size) chunks.push(e.data); };
+      mediaRec.onstop = function(){ playBack(); };
+      mediaRec.start();
+      mode = 'recording';
+      startTs = Date.now();
+      btn.classList.add('recording');
+      label.textContent = 'Stop';
+      hint.textContent = 'Listening… tap Stop when you’re done';
+      timerEl.style.display = 'block';
+      timerEl.textContent = '0.0s';
+      updateTimer();
+      stopTimer = setTimeout(stopRecording, CATCH_MAX_MS); // hard cap
+    }).catch(function(){
+      hint.textContent = 'Microphone unavailable. Allow mic access and try again.';
+      resetLabel();
+    });
+  }
+
+  function stopRecording(){
+    if(stopTimer){ clearTimeout(stopTimer); stopTimer=null; }
+    if(rafId){ cancelAnimationFrame(rafId); rafId=null; }
+    if(mediaRec && mediaRec.state!=='inactive'){ try{ mediaRec.stop(); }catch(e){} }
+  }
+
+  function playBack(){
+    if(!chunks.length){ purge(); resetLabel(); mode='idle'; return; }
+    var blob = new Blob(chunks, { type: (mediaRec && mediaRec.mimeType) || 'audio/webm' });
+    catchURL = URL.createObjectURL(blob);
+    catchAudio = new Audio(catchURL);
+    mode = 'playing';
+    btn.classList.remove('recording');
+    btn.classList.add('playing');
+    label.textContent = 'Playing back…';
+    hint.textContent = 'Have a listen — then it’s gone';
+    timerEl.style.display = 'none';
+    // release the mic while playing (we already have the audio in memory)
+    if(catchStream){ catchStream.getTracks().forEach(function(t){ t.stop(); }); catchStream=null; }
+    catchAudio.onended = function(){
+      purge();            // auto-purge the moment playback finishes
+      mode = 'idle';
+      resetLabel();
+    };
+    catchAudio.play().catch(function(){
+      // if autoplay is blocked, still purge to honour the ephemeral promise
+      hint.textContent = 'Tap again to catch a take';
+      purge(); mode='idle'; resetLabel();
+    });
+  }
+
+  btn.addEventListener('click', function(){
+    if(mode==='idle') startRecording();
+    else if(mode==='recording') stopRecording();
+    else if(mode==='playing'){ purge(); mode='idle'; resetLabel(); } // tap during playback = discard now
+  });
+
+  // Tapping away / leaving the page wipes any take in progress
+  window.addEventListener('pagehide', function(){ stopRecording(); purge(); });
+  document.addEventListener('visibilitychange', function(){
+    if(document.hidden && mode!=='idle'){ stopRecording(); purge(); mode='idle'; resetLabel(); }
+  });
+})();
 
 // ── Countdowns ──
 function renderCountdowns(){
@@ -1832,6 +2609,21 @@ document.getElementById('reportGenerateBtn').addEventListener('click', function(
 document.getElementById('backupBtn').addEventListener('click', function(){
   document.getElementById('backupSheet').classList.add('show');
 });
+var _appTitle = document.getElementById('appTitle');
+if(_appTitle){ _appTitle.style.cursor = 'pointer'; _appTitle.addEventListener('click', changeName); }
+(function(){
+  var save = document.getElementById('nameSaveBtn');
+  var cancel = document.getElementById('nameCancelBtn');
+  var close = document.getElementById('nameClose');
+  var sheet = document.getElementById('nameSheet');
+  var input = document.getElementById('nameInput');
+  function hide(){ if(sheet) sheet.classList.remove('show'); }
+  if(save) save.addEventListener('click', saveName);
+  if(cancel) cancel.addEventListener('click', hide);
+  if(close) close.addEventListener('click', hide);
+  if(sheet) sheet.addEventListener('click', function(e){ if(e.target===this) hide(); });
+  if(input) input.addEventListener('keydown', function(e){ if(e.key==='Enter'){ saveName(); } });
+})();
 function closeBackup(){ document.getElementById('backupSheet').classList.remove('show'); }
 document.getElementById('backupClose').addEventListener('click', closeBackup);
 document.getElementById('backupCancelBtn').addEventListener('click', closeBackup);
@@ -1908,11 +2700,36 @@ function saveDailyNote(field, value){
 
 // ── Init ──
 function renderAll(){
+  renderTitle();
   renderStreak();
   renderCalendar();
   renderCategories();
   renderQuote();
   renderCountdowns();
+}
+function renderTitle(){
+  var el = document.getElementById('appTitle');
+  if(!el) return;
+  var name = (state.profile && state.profile.name) ? state.profile.name : '';
+  el.textContent = name ? ('🎻 ' + name + '\u2019s Practice Journal') : '🎻 Practice Journal';
+}
+function changeName(){
+  var sheet = document.getElementById('nameSheet');
+  var input = document.getElementById('nameInput');
+  if(sheet && input){
+    input.value = (state.profile && state.profile.name) ? state.profile.name : '';
+    sheet.classList.add('show');
+    setTimeout(function(){ try{ input.focus(); }catch(e){} }, 50);
+  }
+}
+function saveName(){
+  var input = document.getElementById('nameInput');
+  if(!state.profile) state.profile = {};
+  state.profile.name = input ? input.value.trim() : '';
+  save();
+  renderTitle();
+  var sheet = document.getElementById('nameSheet');
+  if(sheet) sheet.classList.remove('show');
 }
 
 load();
