@@ -573,6 +573,9 @@ header {
 }
 .tool-toggle-btn.primary { background: var(--forest); color: #fff; border-color: var(--forest); }
 .tool-toggle-btn.active { background: #a33; color: #fff; border-color: #a33; }
+/* A tool row with a single button: centre it and size to its content, not full width */
+.tool-row { justify-content: center; }
+.tool-toggle-btn:only-child { flex: 0 0 auto; min-width: 150px; padding-left: 24px; padding-right: 24px; }
 .speed-burst-row {
   display: flex; align-items: center; gap: 8px;
   font-size: 0.78rem; color: var(--muted);
@@ -654,7 +657,7 @@ header {
 }
 #bdInput::-webkit-outer-spin-button, #bdInput::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .bd-climb { margin-top: 14px; border-top: 1px dashed var(--warm); padding-top: 12px; }
-.bd-climb .tool-toggle-btn { width: 100%; }
+.bd-climb .tool-toggle-btn { display: block; margin: 0 auto; }
 #bdClimbBtn.active { background: var(--forest); color: #fff; border-color: var(--forest); }
 .bd-climb-status {
   margin-top: 10px; text-align: center;
@@ -1096,9 +1099,13 @@ header {
   </div>
 
 
-  <!-- Tuner -->
-  <div class="tool-block">
-    <div class="tool-block-title">🎯 Tuner</div>
+  <!-- Tuner (collapsible) -->
+  <div class="tool-block collapsible">
+    <button class="tool-collapse-head open" data-collapse="tuner">
+      <span class="tool-block-title">🎯 Tuner</span>
+      <span class="tool-collapse-chevron">▾</span>
+    </button>
+    <div class="tool-body" id="body-tuner">
     <div id="tunerDisplay" class="tuner-display">
       <div class="tuner-note" id="tunerNote">—</div>
       <div class="tuner-cents-bar"><div class="tuner-needle" id="tunerNeedle"></div><div class="tuner-center-line"></div></div>
@@ -1114,13 +1121,14 @@ header {
     <div class="tool-row">
       <button class="tool-toggle-btn primary" id="tunerBtn">▶ Start tuner</button>
     </div>
+    </div>
   </div>
 
 
   <!-- Metronome (collapsible) -->
   <div class="tool-block collapsible">
     <button class="tool-collapse-head open" data-collapse="metronome">
-      <span class="tool-block-title">🎯 Metronome</span>
+      <span class="tool-block-title">⏳ Metronome</span>
       <span class="tool-collapse-chevron">▾</span>
     </button>
     <div class="tool-body" id="body-metronome">
@@ -1200,9 +1208,13 @@ header {
     </div>
   </div>
 
-  <!-- Drone -->
-  <div class="tool-block">
-    <div class="tool-block-title">🎻 Tuning drone</div>
+  <!-- Drone (collapsible) -->
+  <div class="tool-block collapsible">
+    <button class="tool-collapse-head open" data-collapse="drone">
+      <span class="tool-block-title">🎻 Tuning drone</span>
+      <span class="tool-collapse-chevron">▾</span>
+    </button>
+    <div class="tool-body" id="body-drone">
     <div class="tool-row">
       <select id="droneNote">
         <option value="C">C</option>
@@ -1232,12 +1244,17 @@ header {
     <div class="tool-row">
       <button class="tool-toggle-btn primary" id="dronePlayBtn">▶ Play drone</button>
     </div>
+    </div>
   </div>
 
 
-  <!-- Dynamics / decibel meter -->
-  <div class="tool-block">
-    <div class="tool-block-title">📢 Dynamics meter</div>
+  <!-- Dynamics / decibel meter (collapsible) -->
+  <div class="tool-block collapsible">
+    <button class="tool-collapse-head open" data-collapse="dbmeter">
+      <span class="tool-block-title">📢 Dynamics meter</span>
+      <span class="tool-collapse-chevron">▾</span>
+    </button>
+    <div class="tool-body" id="body-dbmeter">
     <div class="db-meter-wrap">
       <div class="db-bar-track"><div class="db-bar-fill" id="dbBarFill"></div></div>
       <div class="db-readout" id="dbReadout">—</div>
@@ -1246,7 +1263,23 @@ header {
       <button class="tool-toggle-btn primary" id="dbBtn">▶ Start meter</button>
     </div>
     <div style="font-size:0.68rem;color:var(--muted);margin-top:6px">Relative loudness (pp → ff), not a calibrated dB level.</div>
+    </div>
   </div>
+
+  <!--
+    ADD A NEW COLLAPSIBLE TOOL — copy this pattern:
+    <div class="tool-block collapsible">
+      <button class="tool-collapse-head" data-collapse="MYTOOL">
+        <span class="tool-block-title">🎵 My tool</span>
+        <span class="tool-collapse-chevron">▾</span>
+      </button>
+      <div class="tool-body" id="body-MYTOOL" style="display:none">
+        ...tool contents...
+      </div>
+    </div>
+    Add "open" to the head's class and drop the style="display:none" if you
+    want it to start expanded. The collapse handler wires it up automatically.
+  -->
 
   <!-- Note flashcards (collapsible) -->
   <div class="tool-block collapsible">
@@ -2501,6 +2534,9 @@ Array.prototype.forEach.call(document.querySelectorAll('.tool-collapse-head'), f
       this.classList.remove('open');
       // collapsing — stop any running audio for that tool
       if(key==='metronome' && metroPlaying) stopMetronome();
+      if(key==='tuner' && typeof stopTuner==='function' && tunerRunning) stopTuner();
+      if(key==='drone' && typeof stopDrone==='function' && dronePlaying) stopDrone();
+      if(key==='dbmeter' && typeof stopDbMeter==='function' && dbRunning) stopDbMeter();
     } else {
       body.style.display = 'block';
       this.classList.add('open');
