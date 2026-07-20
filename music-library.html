@@ -585,6 +585,145 @@ header {
   transition: opacity 0.08s;
 }
 .metronome-flash.flash { opacity: 0.15; }
+.metronome-flash.flash-strong { opacity: 0.24; }
+
+/* ── COLLAPSIBLE TOOL SECTIONS ── */
+.tool-block.collapsible { padding-top: 0; padding-bottom: 0; }
+.tool-collapse-head {
+  width: 100%; display: flex; align-items: center; justify-content: space-between;
+  background: none; border: none; cursor: pointer; padding: 16px 0; margin: 0;
+}
+.tool-collapse-head .tool-block-title { margin-bottom: 0; }
+.tool-collapse-chevron { color: var(--muted); font-size: 0.9rem; transition: transform 0.2s; }
+.tool-collapse-head.open .tool-collapse-chevron { transform: rotate(180deg); }
+.tool-body { padding-bottom: 16px; }
+
+/* ── METRONOME MODES (speed-up trainer + bow division) ── */
+.metro-mode { margin-top: 12px; border-top: 1px solid var(--warm); padding-top: 12px; }
+.metro-mode-head { display: flex; align-items: center; justify-content: space-between; }
+.metro-mode-title { font-size: 0.82rem; font-weight: 700; color: var(--navy); }
+.metro-mode-toggle {
+  border: 1.5px solid #ccdaec; background: transparent; color: var(--muted);
+  font-family: 'Special Elite', cursive; font-size: 0.72rem;
+  padding: 5px 14px; border-radius: 999px; cursor: pointer; min-width: 54px;
+}
+.metro-mode-toggle.on { background: #D6EEE3; color: var(--deep-green); border-color: #AFCBAF; }
+.metro-mode-body { margin-top: 12px; }
+.metro-mode-hint { font-size: 0.74rem; color: var(--muted); line-height: 1.5; margin-bottom: 12px; }
+/* Speed-up trainer stats */
+.su-stat-row { display: flex; gap: 8px; margin-bottom: 12px; }
+.su-stat {
+  flex: 1; text-align: center; background: var(--light-blue);
+  border-radius: 10px; padding: 10px 6px; border: 1px solid #B9DFF6;
+}
+.su-stat-num { font-family: 'DM Serif Display', serif; font-size: 1.5rem; color: var(--navy); line-height: 1; }
+.su-stat-label { font-size: 0.56rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-top: 5px; }
+.su-step-row { display: flex; align-items: center; gap: 6px; margin-bottom: 12px; }
+.su-step-label { font-size: 0.72rem; color: var(--muted); margin-right: 4px; }
+.su-step-btn {
+  border: 1.5px solid #ccdaec; background: transparent; color: var(--ink);
+  font-family: 'Special Elite', cursive; font-size: 0.8rem;
+  padding: 6px 12px; border-radius: 8px; cursor: pointer;
+}
+.su-step-btn.sel { background: var(--light-blue); color: var(--navy); border-color: #B9DFF6; }
+.su-reset {
+  display: block; width: 100%; margin-top: 10px; border: none; background: transparent;
+  color: var(--muted); font-family: 'Special Elite', cursive;
+  font-size: 0.7rem; cursor: pointer; text-decoration: underline;
+}
+/* Bow division */
+.bd-choice-row { display: flex; gap: 6px; margin-bottom: 12px; }
+.bd-choice-btn {
+  flex: 1; border: 1.5px solid #ccdaec; background: transparent; color: var(--ink);
+  font-family: 'DM Serif Display', serif; font-size: 1.2rem;
+  padding: 10px 0; border-radius: 10px; cursor: pointer;
+}
+.bd-choice-btn.sel { background: #D6EEE3; color: var(--deep-green); border-color: #AFCBAF; }
+.bd-stepper-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 12px; }
+.bd-stepper-label { font-size: 0.72rem; color: var(--muted); margin-right: 2px; }
+.bd-step-btn {
+  width: 36px; height: 36px; border-radius: 9px; border: 1.5px solid #ccdaec;
+  background: transparent; color: var(--ink); font-size: 1.2rem; cursor: pointer;
+  line-height: 1; display: flex; align-items: center; justify-content: center;
+}
+.bd-step-btn:active { background: var(--warm); }
+#bdInput {
+  width: 56px; text-align: center; padding: 7px 4px; border: 1.5px solid #ccdaec;
+  border-radius: 9px; font-family: 'DM Serif Display', serif; font-size: 1.2rem; color: var(--ink);
+  background: #fff; -moz-appearance: textfield;
+}
+#bdInput::-webkit-outer-spin-button, #bdInput::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.bd-climb { margin-top: 14px; border-top: 1px dashed var(--warm); padding-top: 12px; }
+.bd-climb .tool-toggle-btn { width: 100%; }
+#bdClimbBtn.active { background: var(--forest); color: #fff; border-color: var(--forest); }
+.bd-climb-status {
+  margin-top: 10px; text-align: center;
+  background: var(--navy); color: #fff;
+  border-radius: 10px; padding: 12px; border: 1px solid rgba(255,255,255,0.15);
+}
+.bd-climb-level { font-family: 'DM Serif Display', serif; font-size: 1.8rem; line-height: 1; }
+.bd-climb-sub { font-size: 0.66rem; letter-spacing: 0.06em; color: var(--mid-blue); text-transform: uppercase; margin-top: 6px; }
+.bd-climb-count { font-size: 0.62rem; color: rgba(255,255,255,0.6); }
+.bd-climb-legend { display: flex; justify-content: center; gap: 18px; margin-top: 10px; }
+.bd-legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.7rem; color: var(--muted); }
+.bd-legend-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+.bd-readout { text-align: center; font-size: 0.78rem; color: var(--muted); }
+/* Fireworks */
+.fireworks-layer { position: fixed; inset: 0; pointer-events: none; z-index: 260; overflow: hidden; }
+.fw-spark { position: absolute; width: 7px; height: 7px; border-radius: 50%; opacity: 1; will-change: transform, opacity; }
+@keyframes fwFly { to { transform: translate(var(--fx), var(--fy)) scale(0.3); opacity: 0; } }
+.fw-banner {
+  position: fixed; left: 50%; top: 38%; transform: translate(-50%,-50%) scale(0.6);
+  z-index: 261; pointer-events: none; text-align: center;
+  font-family: 'DM Serif Display', serif; color: var(--navy);
+  background: #fff; border-radius: 16px; padding: 18px 26px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.25); opacity: 0;
+}
+.fw-banner.show { animation: fwPop 2.4s ease forwards; }
+@keyframes fwPop {
+  15% { opacity: 1; transform: translate(-50%,-50%) scale(1.05); }
+  80% { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%,-50%) scale(1); }
+}
+.fw-banner-big { font-size: 1.6rem; }
+.fw-banner-small { font-size: 0.8rem; font-family: 'Special Elite', cursive; color: var(--muted); margin-top: 4px; }
+
+/* ── NOTE FLASHCARDS ── */
+.fc-intro { font-size: 0.78rem; color: var(--muted); line-height: 1.5; margin-bottom: 12px; }
+.fc-clef-row { display: flex; gap: 6px; margin-bottom: 12px; }
+.fc-clef-btn {
+  flex: 1; padding: 8px 0; border: 1.5px solid #ccdaec; background: transparent;
+  border-radius: 999px; color: var(--muted); cursor: pointer;
+  font-family: 'Special Elite', cursive; font-size: 0.78rem;
+}
+.fc-clef-btn.sel { background: var(--light-blue); color: var(--navy); border-color: #B9DFF6; }
+.fc-card {
+  background: #fff; border: 1.5px solid #ccdaec; border-radius: 14px;
+  padding: 18px 16px; text-align: center; user-select: none;
+}
+.fc-stave-wrap { display: flex; justify-content: center; }
+.fc-answer {
+  font-family: 'DM Serif Display', serif; font-size: 1.6rem; color: var(--navy);
+  min-height: 1.8rem; margin-top: 8px; opacity: 0; transition: opacity 0.15s;
+}
+.fc-answer.show { opacity: 1; }
+.fc-letters { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.fc-letter-btn {
+  width: 42px; height: 42px; border-radius: 50%;
+  border: 1.5px solid #ccdaec; background: #fff; color: var(--navy);
+  font-family: 'DM Serif Display', serif; font-size: 1.15rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; padding: 0;
+  transition: all 0.12s;
+}
+.fc-letter-btn:active { background: var(--paper); }
+.fc-letter-btn.correct { background: #D6EEE3; border-color: #AFCBAF; color: var(--deep-green); }
+.fc-letter-btn.wrong { background: #F5D9D6; border-color: #E0A9A2; color: #8B2820; }
+.fc-letter-btn.reveal { background: #D6EEE3; border-color: #AFCBAF; color: var(--deep-green); }
+.fc-letter-btn:disabled { cursor: default; opacity: 0.55; }
+.fc-letter-btn.correct:disabled, .fc-letter-btn.wrong:disabled, .fc-letter-btn.reveal:disabled { opacity: 1; }
+.fc-result { text-align: center; font-size: 0.85rem; min-height: 1.2rem; margin-top: 10px; font-family: 'Special Elite', cursive; }
+.fc-result.right { color: var(--deep-green); }
+.fc-result.wrong { color: #8B2820; }
 
 /* ── TOAST ── */
 .toast {
@@ -749,6 +888,38 @@ header {
 /* Gold gradient chart bars */
 .dash-chart-bar { width: 70%; background: linear-gradient(180deg, #F6D79A, #C68A3C); border-radius: 4px 4px 0 0; }
 
+/* ── BACKUP REMINDER BANNER ── */
+.backup-banner {
+  position: relative;
+  display: flex; align-items: center; gap: 12px;
+  background: var(--light-blue);
+  border: 1px solid rgba(26,58,107,0.15);
+  border-radius: var(--radius);
+  padding: 13px 14px; margin-bottom: 14px;
+  box-shadow: var(--shadow);
+  animation: bannerIn 0.4s ease;
+}
+@keyframes bannerIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+.backup-banner-icon { font-size: 1.6rem; line-height: 1; flex-shrink: 0; }
+.backup-banner-body { flex: 1; min-width: 0; }
+.backup-banner-title {
+  font-family: 'DM Serif Display', serif;
+  color: var(--navy); font-size: 1rem; line-height: 1.2;
+}
+.backup-banner-sub { font-size: 0.72rem; color: var(--navy); line-height: 1.4; margin-top: 2px; opacity: 0.8; }
+.backup-banner-cta {
+  flex-shrink: 0; border: none; cursor: pointer;
+  background: var(--navy); color: #fff;
+  font-family: 'Special Elite', cursive;
+  font-size: 0.78rem; padding: 10px 13px; border-radius: 10px;
+}
+.backup-banner-x {
+  position: absolute; top: 5px; right: 8px;
+  border: none; background: none; cursor: pointer;
+  color: rgba(26,58,107,0.5); font-size: 1.15rem; line-height: 1;
+  padding: 2px 4px;
+}
+
 </style>
 </head>
 <body>
@@ -770,6 +941,17 @@ header {
 
 <!-- TODAY VIEW -->
 <div class="view active" id="view-today">
+
+  <!-- Monthly backup reminder banner -->
+  <div id="backupBanner" class="backup-banner" style="display:none">
+    <button class="backup-banner-x" id="backupBannerDismiss" aria-label="Dismiss">&times;</button>
+    <div class="backup-banner-icon">💾</div>
+    <div class="backup-banner-body">
+      <div class="backup-banner-title" id="backupBannerTitle">Time for your monthly backup</div>
+      <div class="backup-banner-sub">Tap to save your journal so nothing gets lost.</div>
+    </div>
+    <button class="backup-banner-cta" id="backupBannerCta">Back up now</button>
+  </div>
 
   <div class="date-heading" id="todayHeading"></div>
   <div class="date-sub" id="todayStreak"></div>
@@ -935,9 +1117,13 @@ header {
   </div>
 
 
-  <!-- Metronome -->
-  <div class="tool-block">
-    <div class="tool-block-title">🎯 Metronome</div>
+  <!-- Metronome (collapsible) -->
+  <div class="tool-block collapsible">
+    <button class="tool-collapse-head open" data-collapse="metronome">
+      <span class="tool-block-title">🎯 Metronome</span>
+      <span class="tool-collapse-chevron">▾</span>
+    </button>
+    <div class="tool-body" id="body-metronome">
     <div class="metronome-display">
       <div class="bpm-number" id="bpmDisplay">92</div>
       <div class="bpm-label">BPM</div>
@@ -955,6 +1141,63 @@ header {
       <input type="checkbox" id="speedBurstCheck">
       <span>Speed Burst — +2 BPM every 4 beats (caps at 184)</span>
     </label>
+
+    <!-- Speed-up trainer -->
+    <div class="metro-mode">
+      <div class="metro-mode-head">
+        <span class="metro-mode-title">🐭 Speed-up trainer</span>
+        <button class="metro-mode-toggle" id="speedUpToggle">Off</button>
+      </div>
+      <div class="metro-mode-body" id="speedUpBody" style="display:none">
+        <p class="metro-mode-hint">Play the passage until it feels comfortable, then nudge the speed up a little. Repeat — aim to get it faster than you need it.</p>
+        <div class="su-stat-row">
+          <div class="su-stat"><div class="su-stat-num" id="suStart">—</div><div class="su-stat-label">Started at</div></div>
+          <div class="su-stat"><div class="su-stat-num" id="suGain">—</div><div class="su-stat-label">Gained</div></div>
+          <div class="su-stat"><div class="su-stat-num" id="suNow">—</div><div class="su-stat-label">Now</div></div>
+        </div>
+        <div class="su-step-row">
+          <span class="su-step-label">Step size</span>
+          <button class="su-step-btn" data-su-step="3">+3</button>
+          <button class="su-step-btn sel" data-su-step="4">+4</button>
+          <button class="su-step-btn" data-su-step="5">+5</button>
+        </div>
+        <div class="tool-row">
+          <button class="tool-toggle-btn primary" id="suNudgeBtn">✓ Comfortable — nudge up</button>
+          <button class="tool-toggle-btn" id="suEaseBtn">Ease off</button>
+        </div>
+        <button class="su-reset" id="suResetBtn">Reset starting point to current speed</button>
+      </div>
+    </div>
+
+    <!-- Bow division counter -->
+    <div class="metro-mode">
+      <div class="metro-mode-head">
+        <span class="metro-mode-title">🎻 Bow division</span>
+        <button class="metro-mode-toggle" id="bowDivToggle">Off</button>
+      </div>
+      <div class="metro-mode-body" id="bowDivBody" style="display:none">
+        <p class="metro-mode-hint">Fit an equal number of beats into one bow. The first beat of each bow is accented — change bow on the high click.</p>
+        <div class="bd-choice-row" id="bdChoices"></div>
+        <div class="bd-stepper-row">
+          <span class="bd-stepper-label">Or set your own:</span>
+          <button class="bd-step-btn" id="bdMinus">−</button>
+          <input type="number" id="bdInput" min="1" max="30" value="4" inputmode="numeric">
+          <button class="bd-step-btn" id="bdPlus">+</button>
+        </div>
+        <div class="bd-readout" id="bdReadout">4 beats per bow</div>
+
+        <div class="bd-climb">
+          <p class="metro-mode-hint">Or take the challenge: after a 4-beat count-in, climb the ladder — two bows of 2, then two of 3, all the way up to 20. Each bow lights the screen a different colour so you can see the change. 🎆</p>
+          <button class="tool-toggle-btn" id="bdClimbBtn">🚀 Climb 2 → 20</button>
+          <div class="bd-climb-legend">
+            <span class="bd-legend-item"><span class="bd-legend-dot" style="background:var(--mid-blue)"></span>1st bow</span>
+            <span class="bd-legend-item"><span class="bd-legend-dot" style="background:var(--forest)"></span>2nd bow</span>
+          </div>
+          <div class="bd-climb-status" id="bdClimbStatus" style="display:none"></div>
+        </div>
+      </div>
+    </div>
+    </div>
   </div>
 
   <!-- Drone -->
@@ -1003,6 +1246,30 @@ header {
       <button class="tool-toggle-btn primary" id="dbBtn">▶ Start meter</button>
     </div>
     <div style="font-size:0.68rem;color:var(--muted);margin-top:6px">Relative loudness (pp → ff), not a calibrated dB level.</div>
+  </div>
+
+  <!-- Note flashcards (collapsible) -->
+  <div class="tool-block collapsible">
+    <button class="tool-collapse-head" data-collapse="flashcards">
+      <span class="tool-block-title">🎵 Note flashcards</span>
+      <span class="tool-collapse-chevron">▾</span>
+    </button>
+    <div class="tool-body" id="body-flashcards" style="display:none">
+    <p class="fc-intro">Read the note, then tap the letter you think it is.</p>
+    <div class="fc-clef-row" id="fcClefRow">
+      <button class="fc-clef-btn sel" data-fc-clef="treble">Treble</button>
+      <button class="fc-clef-btn" data-fc-clef="alto">Alto (viola)</button>
+    </div>
+    <div class="fc-card" id="fcCard">
+      <div class="fc-stave-wrap" id="fcStaveWrap"></div>
+      <div class="fc-answer" id="fcAnswer"></div>
+    </div>
+    <div class="fc-letters" id="fcLetters"></div>
+    <div class="fc-result" id="fcResult"></div>
+    <div class="tool-row">
+      <button class="tool-toggle-btn primary" id="fcNextBtn">Next note →</button>
+    </div>
+    </div>
   </div>
 
 
@@ -1868,6 +2135,18 @@ var metroBeatCount = 0;
 var metroPlaying = false;
 var MIN_BPM = 30, MAX_BPM = 240, SPEED_BURST_CAP = 184;
 
+// Bow division state
+var bowDivOn = false, bowDivBeats = 4;
+// Climb ladder state
+var climbOn = false;        // is the climb challenge running?
+var climbCountIn = 0;       // remaining count-in beats (4 -> 0)
+var climbLevel = 2;         // current beats-per-bow
+var climbBeatInBow = 0;     // beat position within the current bow
+var climbBowsDone = 0;      // bows completed at this level (need 2 to advance)
+var CLIMB_TOP = 20, CLIMB_BOWS_PER_LEVEL = 2;
+// Speed-up trainer state
+var speedUpOn = false, suStartBpm = null, suStep = 4;
+
 var bpmSlider = document.getElementById('bpmSlider');
 var bpmDisplay = document.getElementById('bpmDisplay');
 
@@ -1877,41 +2156,146 @@ function setBpm(v){
   bpmSlider.value = v;
   bpmDisplay.textContent = v;
   if(metroPlaying) restartMetronomeTiming();
+  if(speedUpOn) updateSpeedUpStats();
 }
 
 bpmSlider.addEventListener('input', function(){ setBpm(parseInt(this.value,10)); });
 document.getElementById('bpmDown').addEventListener('click', function(){ setBpm(bpm-2); });
 document.getElementById('bpmUp').addEventListener('click', function(){ setBpm(bpm+2); });
 
-function clickSound(){
+function clickSound(accent){
   var ctx = getAudioCtx();
   if(!ctx) return;
   var osc = ctx.createOscillator();
   var gain = ctx.createGain();
   osc.type = 'square';
-  osc.frequency.value = 1000;
-  gain.gain.setValueAtTime(0.4, ctx.currentTime);
+  osc.frequency.value = accent ? 1600 : 1000;
+  gain.gain.setValueAtTime(accent ? 0.55 : 0.4, ctx.currentTime);
   gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+0.05);
   osc.connect(gain); gain.connect(ctx.destination);
   osc.start(ctx.currentTime);
   osc.stop(ctx.currentTime+0.05);
 }
 
-function flashBeat(){
+// A softer, lower count-in tone for the climb count-in
+function countInSound(){
+  var ctx = getAudioCtx();
+  if(!ctx) return;
+  var osc = ctx.createOscillator();
+  var gain = ctx.createGain();
+  osc.type = 'triangle';
+  osc.frequency.value = 660;
+  gain.gain.setValueAtTime(0.5, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+0.12);
+  osc.connect(gain); gain.connect(ctx.destination);
+  osc.start(ctx.currentTime);
+  osc.stop(ctx.currentTime+0.13);
+}
+
+function flashBeat(color, strong){
   var f = document.getElementById('metronomeFlash');
   if(!f) return;
-  f.classList.add('flash');
-  setTimeout(function(){ f.classList.remove('flash'); }, 80);
+  f.style.background = color || '';
+  f.classList.add(strong ? 'flash-strong' : 'flash');
+  setTimeout(function(){ f.classList.remove('flash', 'flash-strong'); }, 80);
 }
 
 function metronomeTick(){
-  clickSound();
+  // Climb challenge takes over the click pattern when running
+  if(climbOn){
+    climbTick();
+    metroBeatCount++;
+    return;
+  }
+  // Bow division: accent the first beat of each bow
+  var accent = false;
+  if(bowDivOn){
+    accent = (metroBeatCount % bowDivBeats === 0);
+  }
+  clickSound(accent);
   flashBeat();
   metroBeatCount++;
   var speedBurst = document.getElementById('speedBurstCheck').checked;
   if(speedBurst && metroBeatCount % 4 === 0 && bpm < SPEED_BURST_CAP){
     setBpm(bpm+2);
   }
+}
+
+// One tick of the climb: count-in first, then two bows per level up to the top.
+var CLIMB_BOW_COLORS = ['#7BB8E8', '#2E7D32']; // bow 1 = mid-blue, bow 2 = forest
+function climbTick(){
+  // Count-in phase: four distinct beeps
+  if(climbCountIn > 0){
+    countInSound();
+    flashBeat('#6B85A0');  // neutral tint for the count-in
+    updateClimbStatus('Get ready…', 'count-in: '+climbCountIn);
+    climbCountIn--;
+    if(climbCountIn === 0){
+      climbBeatInBow = 0;
+      climbBowsDone = 0;
+    }
+    return;
+  }
+  // Playing phase: accent the first beat of each bow
+  var accent = (climbBeatInBow === 0);
+  clickSound(accent);
+  var bowColor = CLIMB_BOW_COLORS[climbBowsDone % CLIMB_BOW_COLORS.length];
+  flashBeat(bowColor, accent);
+  updateClimbStatus(climbLevel + ' per bow', 'bow ' + (climbBowsDone+1) + ' of ' + CLIMB_BOWS_PER_LEVEL, bowColor);
+  climbBeatInBow++;
+  if(climbBeatInBow >= climbLevel){
+    climbBeatInBow = 0;
+    climbBowsDone++;
+    if(climbBowsDone >= CLIMB_BOWS_PER_LEVEL){
+      climbBowsDone = 0;
+      if(climbLevel >= CLIMB_TOP){
+        finishClimb();
+      } else {
+        climbLevel++;
+      }
+    }
+  }
+}
+
+function updateClimbStatus(level, sub, color){
+  var el = document.getElementById('bdClimbStatus');
+  if(!el) return;
+  el.style.borderLeft = '';
+  var levelStyle = color ? (' style="color:'+color+'"') : '';
+  var subStyle = color ? (' style="color:'+color+';opacity:0.85"') : '';
+  el.innerHTML = '<div class="bd-climb-level"'+levelStyle+'>'+escHtml(String(level))+'</div>'
+    + '<div class="bd-climb-count"'+subStyle+'>'+escHtml(sub)+'</div>';
+}
+
+function startClimb(){
+  climbOn = true;
+  climbCountIn = 4;
+  climbLevel = 2;
+  climbBeatInBow = 0;
+  climbBowsDone = 0;
+  metroBeatCount = 0;
+  var btn = document.getElementById('bdClimbBtn');
+  if(btn){ btn.classList.add('active'); btn.textContent = '■ Stop climb'; }
+  var status = document.getElementById('bdClimbStatus');
+  if(status) status.style.display = 'block';
+  updateClimbStatus('Get ready…', 'count-in: 4');
+  if(!metroPlaying) startMetronome();
+}
+
+function stopClimb(silent){
+  climbOn = false;
+  var btn = document.getElementById('bdClimbBtn');
+  if(btn){ btn.classList.remove('active'); btn.textContent = '🚀 Climb 2 → 20'; }
+  var status = document.getElementById('bdClimbStatus');
+  if(status && silent) status.style.display = 'none';
+  if(metroPlaying) stopMetronome();
+}
+
+function finishClimb(){
+  stopClimb(false);   // stops the climb and the metronome
+  updateClimbStatus('🎆 20!', 'you made it to the top');
+  fireFireworks();
+  showToast('Fantastic — all the way to 20! 🎆');
 }
 
 function restartMetronomeTiming(){
@@ -1936,6 +2320,7 @@ function stopMetronome(){
   if(metroTimer){ clearInterval(metroTimer); metroTimer=null; }
   var btn = document.getElementById('metroPlayBtn');
   if(btn){ btn.textContent = '▶ Start'; btn.classList.remove('active'); }
+  if(climbOn){ stopClimb(true); }  // stopping the metronome cancels a running climb
 }
 document.getElementById('metroPlayBtn').addEventListener('click', function(){
   var ctx = getAudioCtx();
@@ -1958,10 +2343,170 @@ document.getElementById('tapTempoBtn').addEventListener('click', function(){
     var tappedBpm = Math.round(60000/avg);
     setBpm(tappedBpm);
   }
-  // reset tap sequence if too slow between taps
   setTimeout(function(){
     if(tapTimes.length && Date.now()-tapTimes[tapTimes.length-1] > 2000) tapTimes=[];
   }, 2100);
+});
+
+// ── Speed-up trainer ──
+function updateSpeedUpStats(){
+  var startEl = document.getElementById('suStart');
+  var gainEl = document.getElementById('suGain');
+  var nowEl = document.getElementById('suNow');
+  if(!startEl) return;
+  if(suStartBpm===null) suStartBpm = bpm;
+  startEl.textContent = suStartBpm;
+  nowEl.textContent = bpm;
+  var g = bpm - suStartBpm;
+  gainEl.textContent = (g>0?'+':'') + g;
+}
+document.getElementById('speedUpToggle').addEventListener('click', function(){
+  speedUpOn = !speedUpOn;
+  this.classList.toggle('on', speedUpOn);
+  this.textContent = speedUpOn ? 'On' : 'Off';
+  document.getElementById('speedUpBody').style.display = speedUpOn ? 'block' : 'none';
+  if(speedUpOn){
+    suStartBpm = bpm;
+    updateSpeedUpStats();
+  }
+});
+document.getElementById('suNudgeBtn').addEventListener('click', function(){
+  setBpm(bpm + suStep);
+  showToast('Up to '+bpm+' BPM — settle in before the next nudge');
+});
+document.getElementById('suEaseBtn').addEventListener('click', function(){
+  setBpm(bpm - Math.max(1, Math.round(suStep/2)));
+});
+document.getElementById('suResetBtn').addEventListener('click', function(){
+  suStartBpm = bpm;
+  updateSpeedUpStats();
+  showToast('Starting point set to '+bpm+' BPM');
+});
+Array.prototype.forEach.call(document.querySelectorAll('[data-su-step]'), function(btn){
+  btn.addEventListener('click', function(){
+    suStep = parseInt(this.getAttribute('data-su-step'),10);
+    Array.prototype.forEach.call(document.querySelectorAll('[data-su-step]'), function(b){
+      b.classList.toggle('sel', b===btn);
+    });
+  });
+});
+
+// ── Bow division counter ──
+var BD_MIN = 1, BD_MAX = 30;
+function setBowDiv(n){
+  n = parseInt(n, 10);
+  if(isNaN(n)) n = bowDivBeats;
+  n = Math.max(BD_MIN, Math.min(BD_MAX, n));
+  bowDivBeats = n;
+  metroBeatCount = 0;  // restart the accent cycle so beat 1 is the accented downbeat
+  var input = document.getElementById('bdInput');
+  if(input && input.value !== String(n)) input.value = n;
+  var readout = document.getElementById('bdReadout');
+  if(readout) readout.textContent = n + (n===1 ? ' beat per bow' : ' beats per bow');
+  renderBowDivChoices();
+}
+function renderBowDivChoices(){
+  var wrap = document.getElementById('bdChoices');
+  if(!wrap) return;
+  var html = '';
+  for(var n=2;n<=6;n++){
+    html += '<button class="bd-choice-btn'+(n===bowDivBeats?' sel':'')+'" data-bd="'+n+'">'+n+'</button>';
+  }
+  wrap.innerHTML = html;
+  Array.prototype.forEach.call(wrap.querySelectorAll('[data-bd]'), function(btn){
+    btn.addEventListener('click', function(){
+      setBowDiv(this.getAttribute('data-bd'));
+    });
+  });
+}
+document.getElementById('bowDivToggle').addEventListener('click', function(){
+  bowDivOn = !bowDivOn;
+  this.classList.toggle('on', bowDivOn);
+  this.textContent = bowDivOn ? 'On' : 'Off';
+  document.getElementById('bowDivBody').style.display = bowDivOn ? 'block' : 'none';
+  metroBeatCount = 0;
+  if(bowDivOn){ renderBowDivChoices(); setBowDiv(bowDivBeats); }
+  else if(climbOn){ stopClimb(true); }  // leaving bow-div cancels a running climb
+});
+document.getElementById('bdMinus').addEventListener('click', function(){ setBowDiv(bowDivBeats - 1); });
+document.getElementById('bdPlus').addEventListener('click', function(){ setBowDiv(bowDivBeats + 1); });
+document.getElementById('bdInput').addEventListener('input', function(){
+  var v = parseInt(this.value, 10);
+  if(!isNaN(v)) setBowDiv(v);
+});
+document.getElementById('bdInput').addEventListener('blur', function(){
+  this.value = bowDivBeats;
+});
+document.getElementById('bdClimbBtn').addEventListener('click', function(){
+  var ctx = getAudioCtx();
+  if(ctx && ctx.state === 'suspended'){ ctx.resume(); }
+  if(climbOn) stopClimb(true);
+  else startClimb();
+});
+
+// ── Fireworks celebration ──
+function fireFireworks(){
+  var layer = document.createElement('div');
+  layer.className = 'fireworks-layer';
+  document.body.appendChild(layer);
+
+  var colors = ['#7BB8E8','#2E7D32','#D6EAF8','#1A3A6B','#1B3A2D'];
+  function burst(cx, cy){
+    var n = 18;
+    for(var i=0;i<n;i++){
+      var s = document.createElement('div');
+      s.className = 'fw-spark';
+      s.style.left = cx+'px';
+      s.style.top = cy+'px';
+      s.style.background = colors[Math.floor(Math.random()*colors.length)];
+      var ang = (Math.PI*2*i/n) + Math.random()*0.3;
+      var dist = 60 + Math.random()*90;
+      s.style.setProperty('--fx', (Math.cos(ang)*dist).toFixed(1)+'px');
+      s.style.setProperty('--fy', (Math.sin(ang)*dist).toFixed(1)+'px');
+      s.style.animation = 'fwFly '+(0.8+Math.random()*0.6).toFixed(2)+'s ease-out forwards';
+      layer.appendChild(s);
+    }
+  }
+  var W = window.innerWidth, H = window.innerHeight;
+  var shots = [
+    [W*0.5, H*0.35, 0],
+    [W*0.25, H*0.45, 250],
+    [W*0.75, H*0.42, 450],
+    [W*0.4, H*0.28, 750],
+    [W*0.62, H*0.5, 1000]
+  ];
+  shots.forEach(function(sh){ setTimeout(function(){ burst(sh[0], sh[1]); }, sh[2]); });
+
+  var banner = document.createElement('div');
+  banner.className = 'fw-banner show';
+  banner.innerHTML = '<div class="fw-banner-big">🎆 20 beats to a bow! 🎆</div>'
+    + '<div class="fw-banner-small">You climbed the whole ladder — brilliant work.</div>';
+  document.body.appendChild(banner);
+
+  setTimeout(function(){
+    if(layer.parentNode) layer.parentNode.removeChild(layer);
+    if(banner.parentNode) banner.parentNode.removeChild(banner);
+  }, 2600);
+}
+
+// ── Collapsible tool sections ──
+Array.prototype.forEach.call(document.querySelectorAll('.tool-collapse-head'), function(head){
+  head.addEventListener('click', function(){
+    var key = this.getAttribute('data-collapse');
+    var body = document.getElementById('body-'+key);
+    if(!body) return;
+    var isOpen = body.style.display !== 'none';
+    if(isOpen){
+      body.style.display = 'none';
+      this.classList.remove('open');
+      // collapsing — stop any running audio for that tool
+      if(key==='metronome' && metroPlaying) stopMetronome();
+    } else {
+      body.style.display = 'block';
+      this.classList.add('open');
+      if(key==='flashcards' && typeof renderFlashcards==='function') renderFlashcards();
+    }
+  });
 });
 
 
@@ -2260,6 +2805,148 @@ document.getElementById('dbBtn').addEventListener('click', function(){
   var ctx = getAudioCtx(); if(ctx && ctx.state==='suspended') ctx.resume();
   if(dbRunning) stopDbMeter(); else startDbMeter();
 });
+
+// ══════════════════════════════════════════════════════════════
+// NOTE FLASHCARDS — read a note on the stave, tap the letter.
+// Notes are drawn in SVG. staffStep = diatonic steps above the
+// stave's BOTTOM line (even = on a line, odd = in a space).
+// Treble bottom line = E4;  Alto (viola) bottom line = F3.
+// ══════════════════════════════════════════════════════════════
+var LETTER_ORDER = ['C','D','E','F','G','A','B'];
+function diatonicIndex(letter, octave){ return octave*7 + LETTER_ORDER.indexOf(letter); }
+
+function buildNotePool(clef){
+  var bottom = (clef==='treble') ? {L:'E',O:4} : {L:'F',O:3};
+  var bottomIdx = diatonicIndex(bottom.L, bottom.O);
+  var lo = (clef==='treble') ? -5 : -3;
+  var hi = (clef==='treble') ? 14 : 16;
+  var pool = [];
+  for(var step = lo; step <= hi; step++){
+    var idx = bottomIdx + step;
+    var oct = Math.floor(idx/7);
+    var letter = LETTER_ORDER[((idx%7)+7)%7];
+    pool.push({ name: letter, octave: oct, step: step });
+  }
+  return pool;
+}
+
+var FC_CLEF = 'treble';
+var fcCurrent = null;
+var fcAnswered = false;
+
+function fcRenderStave(note){
+  var W = 200;
+  var lineGap = 12;
+  var labelH = 26;
+  var pool = buildNotePool(FC_CLEF);
+  var maxStep = pool[pool.length-1].step;
+  var minStep = pool[0].step;
+  var aboveHalfGaps = Math.max(0, maxStep - 8);
+  var belowHalfGaps = Math.max(0, -minStep);
+  var headroom = aboveHalfGaps*(lineGap/2) + 10;
+  var footroom = belowHalfGaps*(lineGap/2) + 10;
+  var top = labelH + headroom;
+  var bottomLineY = top + 4*lineGap;
+  var H = bottomLineY + footroom;
+  var cx = 105;
+  var svg = '<svg viewBox="0 0 '+W+' '+H+'" width="200" height="'+H+'" aria-label="note on the stave">';
+  svg += '<text x="'+(W/2)+'" y="16" text-anchor="middle" font-family="Special Elite, monospace" font-size="11" fill="#6B85A0">'
+       + (FC_CLEF==='treble' ? 'Treble clef' : 'Alto clef (viola)') + '</text>';
+  for(var i=0;i<5;i++){
+    var y = top + i*lineGap;
+    svg += '<line x1="18" y1="'+y+'" x2="'+(W-12)+'" y2="'+y+'" stroke="#1A3A6B" stroke-width="1.3"/>';
+  }
+  var noteY = bottomLineY - note.step*(lineGap/2);
+  var ledger = '';
+  if(note.step < 0){
+    for(var s=-2; s>=note.step; s-=2){
+      var ly = bottomLineY - s*(lineGap/2);
+      ledger += '<line x1="'+(cx-11)+'" y1="'+ly+'" x2="'+(cx+11)+'" y2="'+ly+'" stroke="#1A3A6B" stroke-width="1.3"/>';
+    }
+  } else if(note.step > 8){
+    for(var s2=10; s2<=note.step; s2+=2){
+      var ly2 = bottomLineY - s2*(lineGap/2);
+      ledger += '<line x1="'+(cx-11)+'" y1="'+ly2+'" x2="'+(cx+11)+'" y2="'+ly2+'" stroke="#1A3A6B" stroke-width="1.3"/>';
+    }
+  }
+  svg += ledger;
+  svg += '<ellipse cx="'+cx+'" cy="'+noteY+'" rx="8" ry="6" fill="#1A3A6B" transform="rotate(-20 '+cx+' '+noteY+')"/>';
+  svg += '</svg>';
+  return svg;
+}
+
+function fcRenderLetters(){
+  var wrap = document.getElementById('fcLetters');
+  if(!wrap) return;
+  wrap.innerHTML = LETTER_ORDER.map(function(L){
+    return '<button class="fc-letter-btn" data-fc-letter="'+L+'">'+L+'</button>';
+  }).join('');
+  Array.prototype.forEach.call(wrap.querySelectorAll('[data-fc-letter]'), function(b){
+    b.addEventListener('click', function(){ fcGuess(this.getAttribute('data-fc-letter')); });
+  });
+}
+
+function fcNewNote(){
+  var pool = buildNotePool(FC_CLEF);
+  var pick;
+  do { pick = pool[Math.floor(Math.random()*pool.length)]; }
+  while(fcCurrent && pool.length>1 && pick.name===fcCurrent.name && pick.step===fcCurrent.step);
+  fcCurrent = pick;
+  fcAnswered = false;
+  var wrap = document.getElementById('fcStaveWrap');
+  if(wrap) wrap.innerHTML = fcRenderStave(pick);
+  var ans = document.getElementById('fcAnswer');
+  if(ans){ ans.textContent = pick.name; ans.classList.remove('show'); }
+  var res = document.getElementById('fcResult');
+  if(res){ res.textContent = ''; res.className = 'fc-result'; }
+  Array.prototype.forEach.call(document.querySelectorAll('[data-fc-letter]'), function(b){
+    b.classList.remove('correct','wrong','reveal');
+    b.disabled = false;
+  });
+}
+
+function fcGuess(letter){
+  if(fcAnswered || !fcCurrent) return;
+  fcAnswered = true;
+  var correct = (letter === fcCurrent.name);
+  var res = document.getElementById('fcResult');
+  var ans = document.getElementById('fcAnswer');
+  if(ans) ans.classList.add('show');
+  Array.prototype.forEach.call(document.querySelectorAll('[data-fc-letter]'), function(b){
+    var L = b.getAttribute('data-fc-letter');
+    if(L === fcCurrent.name){ b.classList.add(correct ? 'correct' : 'reveal'); }
+    else if(L === letter){ b.classList.add('wrong'); }
+    b.disabled = true;
+  });
+  if(res){
+    if(correct){ res.textContent = '✓ Correct!'; res.className = 'fc-result right'; }
+    else { res.textContent = '✗ That was ' + fcCurrent.name; res.className = 'fc-result wrong'; }
+  }
+}
+
+function renderFlashcards(){
+  Array.prototype.forEach.call(document.querySelectorAll('[data-fc-clef]'), function(b){
+    b.classList.toggle('sel', b.getAttribute('data-fc-clef')===FC_CLEF);
+  });
+  var wrap = document.getElementById('fcStaveWrap');
+  if(!fcCurrent || (wrap && wrap.innerHTML==='')){ fcNewNote(); }
+}
+
+(function(){
+  fcRenderLetters();
+  var next = document.getElementById('fcNextBtn');
+  if(next) next.addEventListener('click', fcNewNote);
+  Array.prototype.forEach.call(document.querySelectorAll('[data-fc-clef]'), function(b){
+    b.addEventListener('click', function(){
+      FC_CLEF = this.getAttribute('data-fc-clef');
+      Array.prototype.forEach.call(document.querySelectorAll('[data-fc-clef]'), function(x){
+        x.classList.toggle('sel', x===b);
+      });
+      fcNewNote();
+    });
+  });
+  fcNewNote();
+})();
 
 // ── Quick-fire recorder (ephemeral: RAM only, auto-purge) ──
 (function(){
@@ -2605,6 +3292,49 @@ document.getElementById('reportGenerateBtn').addEventListener('click', function(
   showToast('Report opened — use Share to save as PDF');
 });
 
+// ── Backup reminder banner ──
+function renderBackupBanner(){
+  var banner = document.getElementById('backupBanner');
+  if(!banner) return;
+  var now = new Date();
+  var thisMonth = now.getFullYear()+'-'+pad(now.getMonth()+1);
+  // Respect a dismissal, but only for the current calendar month
+  if(state.backupBannerDismissedMonth === thisMonth){
+    banner.style.display = 'none';
+    return;
+  }
+  var show = false, never = false;
+  if(!state.lastBackup){
+    // Never backed up — only start nudging once there's a little data worth saving
+    var practicedDays = state.practiced ? Object.keys(state.practiced).length : 0;
+    if(practicedDays >= 3){ show = true; never = true; }
+  } else {
+    var days = (Date.now() - state.lastBackup) / 86400000;
+    if(days >= 30) show = true;
+  }
+  if(show){
+    var titleEl = document.getElementById('backupBannerTitle');
+    if(titleEl){
+      titleEl.textContent = never ? 'Back up your practice journal'
+                                  : 'It\u2019s been a month since your last backup';
+    }
+    banner.style.display = 'flex';
+  } else {
+    banner.style.display = 'none';
+  }
+}
+var _bbCta = document.getElementById('backupBannerCta');
+if(_bbCta) _bbCta.addEventListener('click', function(){
+  document.getElementById('backupSheet').classList.add('show');
+});
+var _bbDismiss = document.getElementById('backupBannerDismiss');
+if(_bbDismiss) _bbDismiss.addEventListener('click', function(){
+  var now = new Date();
+  state.backupBannerDismissedMonth = now.getFullYear()+'-'+pad(now.getMonth()+1);
+  save();
+  renderBackupBanner();
+});
+
 // ── Backup & Restore ──
 document.getElementById('backupBtn').addEventListener('click', function(){
   document.getElementById('backupSheet').classList.add('show');
@@ -2642,6 +3372,10 @@ document.getElementById('doBackupBtn').addEventListener('click', function(){
   document.body.appendChild(a); a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+  state.lastBackup = Date.now();
+  state.backupBannerDismissedMonth = null;
+  save();
+  renderBackupBanner();
   showToast('Backup saved');
   closeBackup();
 });
@@ -2662,6 +3396,8 @@ document.getElementById('restoreFileInput').addEventListener('change', function(
       if(!state.ticked) state.ticked={};
       if(!state.tickHistory) state.tickHistory={};
       if(!state.dailyFocus) state.dailyFocus={};
+      state.lastBackup = Date.now();
+      state.backupBannerDismissedMonth = null;
       save();
       renderAll();
       showToast('Restored from backup');
@@ -2706,6 +3442,7 @@ function renderAll(){
   renderCategories();
   renderQuote();
   renderCountdowns();
+  renderBackupBanner();
 }
 function renderTitle(){
   var el = document.getElementById('appTitle');
