@@ -3516,6 +3516,30 @@ var realEl = document.getElementById('todayRealisations');
 if(winsEl) winsEl.addEventListener('input', function(){ saveDailyNote('wins', this.value); });
 if(realEl) realEl.addEventListener('input', function(){ saveDailyNote('realisations', this.value); });
 
+// ── Auto day-rollover ──
+// The visible day only changes when we re-render, so watch for the day key
+// changing (past the 1am reset) and refresh the Today view on its own.
+var currentDayKey = todayKey();
+function refreshForNewDay(force){
+  var nowKey = todayKey();
+  if(nowKey === currentDayKey) return;              // still the same day
+  // Don't pull the page out from under an active edit — wait until they tap away.
+  var ae = document.activeElement;
+  if(!force && ae && (ae.tagName === 'TEXTAREA' || ae.tagName === 'INPUT')) return;
+  currentDayKey = nowKey;
+  renderAll();          // fresh calendar, ticks, focus notes, streak, quote, countdowns
+  loadDailyNotes();     // reset wins/realisations to the new (empty) day
+  var dash = document.getElementById('view-history');
+  if(dash && dash.classList.contains('active')) renderDashboard();
+}
+// Check once a minute while the app is open
+setInterval(function(){ refreshForNewDay(false); }, 60000);
+// And the moment the app is brought back to the foreground
+document.addEventListener('visibilitychange', function(){
+  if(!document.hidden) refreshForNewDay(true);
+});
+window.addEventListener('focus', function(){ refreshForNewDay(true); });
+
 })();
 </script>
 </body>
