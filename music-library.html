@@ -512,6 +512,19 @@ header {
 }
 .countdown-field-block input:focus { outline: none; border-color: var(--mid-blue); }
 .countdown-field-block input:last-child { margin-bottom: 0; }
+/* iOS Safari renders date inputs as a native control that centres its text and
+   ignores width — force it to line up and fill the box like the name field. */
+.countdown-field-block input[type="date"] {
+  -webkit-appearance: none; appearance: none;
+  text-align: left; min-height: 40px; box-sizing: border-box; line-height: 1.2;
+  display: block;
+}
+.countdown-field-block input[type="date"]::-webkit-date-and-time-value {
+  text-align: left; margin: 0;
+}
+.countdown-field-block input[type="date"]::-webkit-calendar-picker-indicator {
+  margin-left: auto;
+}
 
 /* ── REPORT ── */
 .report-quick-row {
@@ -1410,6 +1423,16 @@ function todayKey(){
   return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
 }
 function pad(n){ return n<10?'0'+n:String(n); }
+// Whole calendar days from "today" (per the 1am reset) to a YYYY-MM-DD date.
+// Compares UTC midnights so daylight-saving changes can't shift the count by a day.
+function daysUntil(dateStr){
+  if(!dateStr) return null;
+  var tk = todayKey().split('-');
+  var todayUTC = Date.UTC(parseInt(tk[0],10), parseInt(tk[1],10)-1, parseInt(tk[2],10));
+  var t = dateStr.split('-');
+  var targetUTC = Date.UTC(parseInt(t[0],10), parseInt(t[1],10)-1, parseInt(t[2],10));
+  return Math.round((targetUTC - todayUTC) / 86400000);
+}
 function dateKey(y,m,d){ return y+'-'+pad(m)+'-'+pad(d); }
 function friendlyDate(d){
   var days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
@@ -2058,8 +2081,7 @@ function renderDashboard(){
 
   // Countdowns reminder (wide) — if any upcoming
   var upcoming = (state.countdowns || []).filter(function(c){ return c.date; }).map(function(c){
-    var target = new Date(c.date+'T00:00:00');
-    var days = Math.ceil((target - new Date(new Date().toDateString()))/(1000*60*60*24));
+    var days = daysUntil(c.date);
     return { name: c.name, days: days };
   }).filter(function(c){ return c.days>=0; }).sort(function(a,b){ return a.days-b.days; });
 
@@ -3113,10 +3135,8 @@ function renderCountdowns(){
 
   var html = '<div class="countdowns-wrap">';
   active.forEach(function(c){
-    var today = new Date();
-    today.setHours(0,0,0,0);
     var target = new Date(c.date+'T00:00:00');
-    var diff = Math.round((target - today) / (1000*60*60*24));
+    var diff = daysUntil(c.date);
     var daysText, label, cls='countdown-days';
     if(diff < 0){
       daysText = Math.abs(diff);
